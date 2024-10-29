@@ -42,7 +42,7 @@
         <div class="flex-wrap gap-3 mb-8 d-flex flex-stack fs-base fw-semibold">
             <div></div>
             <!--begin::Link-->
-            <a href="/password/reset" class="link-primary">Lupa Password ?</a>
+            <a href="{{ route('password.email') }}" class="link-primary">Lupa Password ?</a>
             <!--end::Link-->
         </div>
         <!--end::Wrapper-->

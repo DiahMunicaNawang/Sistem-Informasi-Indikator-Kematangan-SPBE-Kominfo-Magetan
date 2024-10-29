@@ -13,7 +13,7 @@ class ResetPasswordController extends Controller
 {
     public function showLinkRequestForm()
     {
-        return view('auth.passwords.email'); // Buat view ini
+        return view('auth.reset-password.new-password'); // Buat view ini
     }
 
     public function sendResetLink(Request $request)
@@ -35,7 +35,7 @@ class ResetPasswordController extends Controller
     public function showResetForm(Request $request, $token)
     {
         $username = $request->query('username');
-        return view('auth.passwords.reset', compact('token', 'username')); // Pastikan untuk mengoper username
+        return view('auth.reset-password.reset-password', compact('token', 'username')); // Pastikan untuk mengoper username
     }
 
     public function reset(Request $request)
