@@ -4,13 +4,12 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
-
-Route::get('/index', function () {
-    return view('layouts/index');
+Route::get('/', function () {
+    return view('dashboard/index');
 });
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/login', [AuthController::class, 'authenticating']);
+Route::post('/login', [AuthController::class, 'authenticating'])->name('authenticating');
 Route::get('/logout', [AuthController::class, 'logout']);
 
 // reset password
