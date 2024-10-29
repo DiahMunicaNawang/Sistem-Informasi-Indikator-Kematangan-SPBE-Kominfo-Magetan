@@ -4,8 +4,9 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
-Route::get('/', function () {
-    return view('layouts.index');
+
+Route::get('/dashboard', function () {
+    return view('dashboard/index');
 });
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
