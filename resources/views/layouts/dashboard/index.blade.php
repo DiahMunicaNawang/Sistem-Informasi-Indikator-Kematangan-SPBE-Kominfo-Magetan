@@ -1,18 +1,7 @@
 <!DOCTYPE html>
-<!--
-Author: Keenthemes
-Product Name: Metronic | Bootstrap HTML, VueJS, React, Angular, Asp.Net Core, Rails, Spring, Blazor, Django, Flask & Laravel Admin Dashboard Theme
-Purchase: https://1.envato.market/EA4JP
-Website: http://www.keenthemes.com
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Dribbble: www.dribbble.com/keenthemes
-Like: www.facebook.com/keenthemes
-License: For each use you must have a valid license purchased only from above link in order to legally use the theme for your project.
--->
 <html lang="en">
 	<!--begin::Head-->
-	@include('layouts.header')
+	@include('layouts.dashboard.header')
 	<!--end::Head-->
 	<!--begin::Body-->
 	<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
@@ -26,36 +15,25 @@ License: For each use you must have a valid license purchased only from above li
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
                 
 				<!--begin::Header-->
-				@include('layouts.navbar')
+				@include('layouts.dashboard.navbar')
 				<!--end::Header-->
 
 				<!--begin::Wrapper-->
 				<div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
 					
 					<!--begin::Sidebar-->
-					@include('layouts.sidebar')
+					@include('layouts.dashboard.sidebar')
 					<!--end::Sidebar-->
 
 					<!--begin::Main-->
 					<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
 						<!--begin::Content wrapper-->
 						<div class="d-flex flex-column flex-column-fluid">
-							<!--begin::Toolbar-->
-							@include('layouts.toolbar')
-							<!--end::Toolbar-->
-
                             <!--begin::Content-->
                             <div id="kt_app_content" class="app-content flex-column-fluid">
 								<!--begin::Content container-->
 								<div id="kt_app_content_container" class="app-container container-fluid">
-									<!--begin::Row-->
-									<div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-										<!--begin::Col-->
-										<div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-                                           @yield('content')
-										</div>
-										<!--end::Col-->
-									</div>
+									@yield('content')
 								</div>
 								<!--end::Content container-->
 							</div>

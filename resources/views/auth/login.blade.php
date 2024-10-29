@@ -15,7 +15,7 @@
             <h1 class="mb-3 text-dark fw-bolder">Masuk</h1>
             <!--end::Title-->
             <!--begin::Subtitle-->
-            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div>
+            {{-- <div class="text-gray-500 fw-semibold fs-6">Selamat Datang!</div> --}}
             <!--end::Subtitle=-->
         </div>
         <!--begin::Heading-->
