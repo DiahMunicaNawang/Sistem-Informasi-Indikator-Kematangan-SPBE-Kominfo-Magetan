@@ -24,11 +24,11 @@
         <!--begin::Wrapper-->
         <div class="mb-1">
             <!--begin::Input wrapper-->
+            <label for="password">Password</label>
             <div class="mb-3 position-relative">
-                <label for="password">Password</label>
                 <input class="bg-transparent form-control" type="password" name="password" autocomplete="off" id="password" required/>
-                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" id="togglePassword">
-                    <i class="bi bi-eye-slash fs-2" id="toggleIcon"></i>
+                <span class="top-50 btn btn-sm btn-icon position-absolute translate-middle end-0 me-n2" id="togglePassword">
+                    <i class="bi bi-eye-slash fs-2" id="toggleIconPassword"></i>
                 </span>
             </div>
             <!--end::Input wrapper-->
@@ -43,7 +43,12 @@
     <div class="mb-8 fv-row">
         <!--begin::Repeat Password-->
         <label for="password_confirmation">Konfirmasi Password</label>
-        <input type="password" name="password_confirmation" autocomplete="off" class="bg-transparent form-control" id="password_confirmation" required/>
+        <div class="mb-3 position-relative">
+            <input type="password" name="password_confirmation" autocomplete="off" class="bg-transparent form-control" id="password_confirmation" required/>
+            <span class="top-50 btn btn-sm btn-icon position-absolute translate-middle end-0 me-n2" id="togglePasswordConfirmation">
+                <i class="bi bi-eye-slash fs-2" id="toggleIconConfirmation"></i>
+            </span>
+        </div>
         <!--end::Repeat Password-->
     </div>
     <!--end::Input group=-->
@@ -62,17 +67,26 @@
     // JavaScript untuk fitur Tampilkan Password
     const togglePassword = document.querySelector('#togglePassword');
     const passwordField = document.querySelector('#password');
-    const toggleIcon = document.querySelector('#toggleIcon');
-    
+    const toggleIconPassword = document.querySelector('#toggleIconPassword');
+
     togglePassword.addEventListener('click', function () {
-        // Cek tipe input dan ubah sesuai kebutuhan
         const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordField.setAttribute('type', type);
-        
-        // Ubah icon sesuai tipe input
-        toggleIcon.classList.toggle('bi-eye');
-        toggleIcon.classList.toggle('bi-eye-slash');
+        toggleIconPassword.classList.toggle('bi-eye');
+        toggleIconPassword.classList.toggle('bi-eye-slash');
     });
-    </script>
+
+    // JavaScript untuk fitur Tampilkan Password Confirmation
+    const togglePasswordConfirmation = document.querySelector('#togglePasswordConfirmation');
+    const confirmPasswordField = document.querySelector('#password_confirmation');
+    const toggleIconConfirmation = document.querySelector('#toggleIconConfirmation');
+
+    togglePasswordConfirmation.addEventListener('click', function () {
+        const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPasswordField.setAttribute('type', type);
+        toggleIconConfirmation.classList.toggle('bi-eye');
+        toggleIconConfirmation.classList.toggle('bi-eye-slash');
+    });
+</script>
 
 @endsection

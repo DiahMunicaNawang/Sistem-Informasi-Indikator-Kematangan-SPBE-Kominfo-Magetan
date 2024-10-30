@@ -22,18 +22,20 @@
         <!--begin::Input group=-->
         <div class="mb-8 fv-row">
             <!--begin::Email-->
-            <input type="text" placeholder="Username" name="username" class="bg-transparent form-control" autocomplete="off" id="username" required>
+            <label for="username">Username</label>
+            <input type="text" name="username" class="bg-transparent form-control" autocomplete="off" id="username" required>
             <!--end::Email-->
         </div>
         <!--end::Input group=-->
         <div class="mb-3 fv-row">
             <!--begin::Password-->
-            <div class="input-group">
-                <input type="password" placeholder="Password" name="password" class="bg-transparent form-control" autocomplete="off" id="password" required>
-
-                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                    <i class="bi bi-eye-slash" id="toggleIcon"></i>
-                </button>
+            
+            <label for="password">Password</label>
+            <div class="mb-3 position-relative">
+                <input type="password" name="password" class="bg-transparent form-control" autocomplete="off" id="password" required/>
+                <span class="top-50 btn btn-sm btn-icon position-absolute translate-middle end-0 me-n2" id="togglePassword">
+                    <i class="bi bi-eye-slash fs-2" id="toggleIcon"></i>
+                </span>
             </div>
             <!--end::Password-->
         </div>
@@ -54,4 +56,23 @@
         </div>
         <!--end::Submit button-->
     </form>
+
+    
+        <!--begin::Show Password-->
+        <script>
+            const togglePassword = document.querySelector('#togglePassword');
+            const passwordField = document.querySelector('#password');
+            const toggleIcon = document.querySelector('#toggleIcon');
+
+            togglePassword.addEventListener('click', function() {
+                // Cek tipe input dan ubah sesuai kebutuhan
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+
+                // Ubah icon sesuai tipe input
+                toggleIcon.classList.toggle('bi-eye');
+                toggleIcon.classList.toggle('bi-eye-slash');
+            });
+        </script>
+        <!--end::Show Password-->
 @endsection
