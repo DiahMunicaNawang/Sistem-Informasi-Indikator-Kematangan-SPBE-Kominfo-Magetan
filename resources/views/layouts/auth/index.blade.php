@@ -11,7 +11,15 @@
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root" id="kt_app_root">
 			<!--begin::Page bg image-->
-			<style>body { background-image: url('assets/media/auth/bg4.jpg'); } [data-theme="dark"] body { background-image: url('assets/media/auth/bg4-dark.jpg'); }</style>
+			<style>
+				body { 
+					background-image: url('{{ asset('assets/media/auth/bg4.jpg') }}'); 
+				} 
+
+				[data-theme="dark"] body { 
+					background-image: url('{{ asset('assets/media/auth/bg4-dark.jpg') }}'); 
+				}
+			</style>
 			<!--end::Page bg image-->
 			<!--begin::Authentication - Sign-in -->
 			<div class="d-flex flex-column flex-column-fluid flex-lg-row justify-content-center">
@@ -35,23 +43,6 @@
 		</div>
 		<!--end::Root-->
 		<!--begin::Javascript-->
-        <!--begin::Show Password-->
-        <script>
-            const togglePassword = document.querySelector('#togglePassword');
-            const passwordField = document.querySelector('#password');
-            const toggleIcon = document.querySelector('#toggleIcon');
-
-            togglePassword.addEventListener('click', function() {
-                // Cek tipe input dan ubah sesuai kebutuhan
-                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordField.setAttribute('type', type);
-
-                // Ubah icon sesuai tipe input
-                toggleIcon.classList.toggle('bi-eye');
-                toggleIcon.classList.toggle('bi-eye-slash');
-            });
-        </script>
-        <!--end::Show Password-->
 		<!--end::Javascript-->
 	</body>
 	<!--end::Body-->

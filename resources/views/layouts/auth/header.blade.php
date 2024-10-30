@@ -10,4 +10,16 @@
     <link href="{{ asset("assets/plugins/global/plugins.bundle.css") }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset("assets/css/style.bundle.css") }}" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
+    <style>
+        body {
+    background-image: url('assets/media/auth/bg4.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* tambahkan untuk tema dark */
+[data-theme="dark"] body {
+    background-image: url('assets/media/auth/bg4-dark.jpg');
+}
+    </style>
 </head>
