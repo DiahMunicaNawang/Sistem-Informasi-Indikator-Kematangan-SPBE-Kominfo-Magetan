@@ -29,7 +29,7 @@
         <!--end::Input group=-->
         <div class="mb-3 fv-row">
             <!--begin::Password-->
-            
+
             <label for="password">Password</label>
             <div class="mb-3 position-relative">
                 <input type="password" name="password" class="bg-transparent form-control" autocomplete="off" id="password" required/>
@@ -53,11 +53,13 @@
             <button type="submit" class="btn btn-primary">
                 Masuk
             </button>
+            <br>
+            <a href="" class="link-primary text-center">Registrasi Akun</a>
         </div>
         <!--end::Submit button-->
     </form>
 
-    
+
         <!--begin::Show Password-->
         <script>
             const togglePassword = document.querySelector('#togglePassword');
