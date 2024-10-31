@@ -14,8 +14,8 @@
     <!--begin::Input group=-->
     <div class="mb-8 fv-row">
         <!--begin::Repeat Password-->
-        <label for="username">Username</label>
-        <input type="text" name="username" autocomplete="off" class="bg-transparent form-control" id="username" required/>
+        <label for="email">Email</label>
+        <input type="text" name="email" autocomplete="off" class="bg-transparent form-control" id="email" required/>
         <!--end::Repeat Password-->
     </div>
     <!--end::Input group=-->
@@ -34,9 +34,6 @@
             <!--end::Input wrapper-->
         </div>
         <!--end::Wrapper-->
-        <!--begin::Hint-->
-        <div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
-        <!--end::Hint-->
     </div>
     <!--end::Input group=-->
     <!--begin::Input group=-->

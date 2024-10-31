@@ -22,8 +22,8 @@
         <!--begin::Input group=-->
         <div class="mb-8 fv-row">
             <!--begin::Email-->
-            <label for="username">Username</label>
-            <input type="text" name="username" class="bg-transparent form-control" autocomplete="off" id="username" required>
+            <label for="login">Email atau Username</label>
+            <input type="text" name="login" class="bg-transparent form-control" autocomplete="off" id="login" required>
             <!--end::Email-->
         </div>
         <!--end::Input group=-->
@@ -44,7 +44,7 @@
         <div class="flex-wrap gap-3 mb-8 d-flex flex-stack fs-base fw-semibold">
             <div></div>
             <!--begin::Link-->
-            <a href="{{ route('password.email') }}" class="link-primary">Lupa Password ?</a>
+            <a href="{{ route('password.resetLink') }}" class="link-primary">Lupa Password ?</a>
             <!--end::Link-->
         </div>
         <!--end::Wrapper-->
