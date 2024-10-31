@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -17,11 +18,17 @@ class AuthController extends Controller
     public function authenticating(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'login' => ['required'],
             'password' => ['required']
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $login = $credentials['login'];
+
+        $user = User::where('email', $login)
+            ->orWhere('username', $login)
+            ->first();
+
+        if ($user && Auth::attempt(['id' => $user->id, 'password' => $credentials['password']])) {
             $request->session()->regenerate();
 
             $user_informations = Auth::user();

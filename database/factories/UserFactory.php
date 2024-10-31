@@ -26,9 +26,9 @@ class UserFactory extends Factory
     {
         $faker = faker::create();
         return [
+            'email' => $faker->unique()->safeEmail(),
             'username' => $faker->userName(),
             'password' => Hash::make('admin123'),
-            'email' => $faker->unique()->safeEmail(),
             'role' => $faker->randomElement(['admin', 'user']),
             'remember_token' => Str::random(10),
         ];

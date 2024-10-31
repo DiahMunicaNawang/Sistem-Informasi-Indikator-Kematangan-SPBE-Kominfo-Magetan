@@ -22,8 +22,8 @@
         <!--begin::Input group=-->
         <div class="mb-8 fv-row">
             <!--begin::Email-->
-            <label for="email">Email</label>
-            <input type="text" name="email" class="bg-transparent form-control" autocomplete="off" id="email" required>
+            <label for="login">Email atau Username</label>
+            <input type="text" name="login" class="bg-transparent form-control" autocomplete="off" id="login" required>
             <!--end::Email-->
         </div>
         <!--end::Input group=-->
