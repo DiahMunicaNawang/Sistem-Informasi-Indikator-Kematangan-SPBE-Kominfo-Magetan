@@ -6,7 +6,7 @@
     <div class="alert alert-success">{{ session('status') }}</div>
 @endif
 
-<form class="form w-100" action="{{ route('password.email') }}" method="POST">
+<form class="form w-100" action="{{ route('password.resetEmail') }}" method="POST">
     @csrf
     <!--begin::Heading-->
     <div class="mb-10 text-center">
@@ -14,16 +14,16 @@
         <h1 class="mb-3 text-dark fw-bolder">Lupa Password ?</h1>
         <!--end::Title-->
         <!--begin::Link-->
-        <div class="text-gray-500 fw-semibold fs-6">Masukkan username Anda untuk mereset password.</div>
+        <div class="text-gray-500 fw-semibold fs-6">Masukkan email Anda untuk mereset password.</div>
         <!--end::Link-->
     </div>
     <!--begin::Heading-->
     <!--begin::Input group=-->
     <div class="mb-8 fv-row">
-        <!--begin::Username-->
-        <label for="username">Username</label>
-        <input type="text" name="username" autocomplete="off" class="bg-transparent form-control" id="username" required/>
-        <!--end::Username-->
+         <!--begin::Email-->
+         <label for="email">Email</label>
+         <input type="email" name="email" autocomplete="off" class="bg-transparent form-control" id="email" required/>
+         <!--end::Email-->
     </div>
     <!--begin::Actions-->
     <div class="flex-wrap d-flex justify-content-center pb-lg-0">
