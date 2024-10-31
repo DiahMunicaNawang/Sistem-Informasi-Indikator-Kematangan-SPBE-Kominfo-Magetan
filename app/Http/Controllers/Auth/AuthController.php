@@ -27,7 +27,9 @@ class AuthController extends Controller
             $user_informations = Auth::user();
             session([
                 'user_informations' => [
-                    'username' => $user_informations->username
+                    'username' => $user_informations->username,
+                    'email' => $user_informations->email,
+                    'role' => $user_informations->role,
                 ]
             ]);
 

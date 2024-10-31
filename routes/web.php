@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('dashboard/index');
-})->middleware('auth');
+Route::get('/', [DashboardController::class, 'index'])->middleware('auth');
 
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login');
