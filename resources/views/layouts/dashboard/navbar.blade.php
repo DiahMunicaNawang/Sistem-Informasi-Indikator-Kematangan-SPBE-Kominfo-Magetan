@@ -157,9 +157,9 @@
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
                                 <div class="d-flex flex-column">
-                                    <div class="fw-bold d-flex align-items-center fs-5">Max Smith
+                                    <div class="fw-bold d-flex align-items-center fs-5">{{ $user_username }}
                                     <span class="px-2 py-1 badge badge-light-success fw-bold fs-8 ms-2">Pro</span></div>
-                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">max@kt.com</a>
+                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ $user_email }}</a>
                                 </div>
                                 <!--end::Username-->
                             </div>
