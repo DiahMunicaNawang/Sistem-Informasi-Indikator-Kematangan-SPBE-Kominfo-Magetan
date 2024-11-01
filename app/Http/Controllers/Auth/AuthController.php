@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         if ($user && Auth::attempt(['id' => $user->id, 'password' => $credentials['password']])) {
             if (!$user->hasVerifiedEmail()) {
-                Auth::logout(); // Logout jika belum diverifikasi
+                // Auth::logout(); // Logout jika belum diverifikasi
                 return redirect('/login')->with('warning', 'Silakan verifikasi email Anda terlebih dahulu.');
             }
 
