@@ -6,6 +6,10 @@
     <div class="alert alert-success">{{ session('status') }}</div>
 @endif
 
+@if (session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
+
 <form class="form w-100" action="{{ route('password.resetEmail') }}" method="POST">
     @csrf
     <!--begin::Heading-->

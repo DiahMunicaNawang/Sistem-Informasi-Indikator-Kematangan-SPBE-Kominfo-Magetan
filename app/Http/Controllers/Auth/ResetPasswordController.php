@@ -29,7 +29,7 @@ class ResetPasswordController extends Controller
             : back()->withErrors(['email' => trans($response)]);
     }
 
-    public function showResetForm(Request $request, $token = null)
+    public function showResetForm(Request $request, $token)
     {
         return view('auth.reset-password.reset-password')->with(
             ['token' => $token, 'email' => $request->email]
@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|confirmed',
             'token' => 'required',
         ]);
 
@@ -86,30 +86,30 @@ class ResetPasswordController extends Controller
 //         return view('auth.reset-password.reset-password', compact('token', 'username')); // Pastikan untuk mengoper username
 //     }
 
-//     public function reset(Request $request)
-//     {
-//         $request->validate([
-//             'username' => 'required|exists:users,username',
-//             'password' => 'required|min:8|confirmed',
-//         ]);
+    // public function reset(Request $request)
+    // {
+    //     $request->validate([
+    //         'username' => 'required|exists:users,username',
+    //         'password' => 'required|min:8|confirmed',
+    //     ]);
 
-//         $username = $request->username;
-//         $token = $request->token;
+    //     $username = $request->username;
+    //     $token = $request->token;
 
-//         // Verifikasi token
-//         $resetToken = DB::table('password_reset_tokens')->where('username', $username)->first();
+    //     // Verifikasi token
+    //     $resetToken = DB::table('password_reset_tokens')->where('username', $username)->first();
 
-//         if (!$resetToken || $resetToken->token !== $token) {
-//             return redirect()->back()->withErrors(['token' => 'This password reset token is invalid.']);
-//         }
+    //     if (!$resetToken || $resetToken->token !== $token) {
+    //         return redirect()->back()->withErrors(['token' => 'This password reset token is invalid.']);
+    //     }
 
-//         // Reset password
-//         $user = User::where('username', $username)->first();
-//         $user->password = Hash::make($request->password);
-//         $user->save();
+    //     // Reset password
+    //     $user = User::where('username', $username)->first();
+    //     $user->password = Hash::make($request->password);
+    //     $user->save();
 
-//         // Hapus token setelah reset
-//         DB::table('password_reset_tokens')->where('username', $username)->delete();
+    //     // Hapus token setelah reset
+    //     DB::table('password_reset_tokens')->where('username', $username)->delete();
 
-//         return redirect()->route('login')->with('status', 'Password has been reset successfully!');
-//     }
+    //     return redirect()->route('login')->with('status', 'Password has been reset successfully!');
+    // }
