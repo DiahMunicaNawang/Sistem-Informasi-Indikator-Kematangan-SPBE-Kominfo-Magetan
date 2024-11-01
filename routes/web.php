@@ -35,14 +35,14 @@ Route::get('/register', [RegisteredUserController::class, 'create'])->name('regi
 Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 
 //verifikasi email
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-
-    return redirect('/login')->with('status', 'Email Anda telah diverifikasi! Silakan masuk.');
-})->middleware(['auth', 'signed'])->name('verification.verify');
 Route::get('/email/verify', function () {
     return view('auth.register.verify-email');
 })->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/login')->with('verify', 'Email Anda telah diverifikasi!');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 
 
