@@ -54,7 +54,7 @@
                 Masuk
             </button>
             <br>
-            <a href="" class="link-primary text-center">Registrasi Akun</a>
+            <a href="{{ route('register.create') }}" class="link-primary text-center">Registrasi Akun</a>
         </div>
         <!--end::Submit button-->
     </form>
