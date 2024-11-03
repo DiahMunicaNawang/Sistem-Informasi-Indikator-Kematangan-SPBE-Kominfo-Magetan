@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<!--begin::Head-->
-	@include('layouts.dashboard.header')
+	@include('layouts.main.header')
 	<!--end::Head-->
 	<!--begin::Body-->
 	<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
@@ -15,14 +15,14 @@
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
                 
 				<!--begin::Header-->
-				@include('layouts.dashboard.navbar')
+				@include('layouts.main.navbar')
 				<!--end::Header-->
 
 				<!--begin::Wrapper-->
 				<div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
 					
 					<!--begin::Sidebar-->
-					@include('layouts.dashboard.sidebar')
+					@include('layouts.main.sidebar')
 					<!--end::Sidebar-->
 
 					<!--begin::Main-->
@@ -33,6 +33,7 @@
                             <div id="kt_app_content" class="app-content flex-column-fluid">
 								<!--begin::Content container-->
 								<div id="kt_app_content_container" class="app-container container-fluid">
+									<h1 class="py-6 my-0 page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center">@yield('page-name')</h1>
 									@yield('content')
 								</div>
 								<!--end::Content container-->

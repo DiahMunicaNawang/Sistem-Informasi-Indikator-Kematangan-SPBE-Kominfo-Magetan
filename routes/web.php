@@ -2,15 +2,33 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 
 
-Route::get('/', [DashboardController::class, 'index'])->middleware('auth', 'verified');
+// Main routes
+Route::middleware('auth', 'verified')->group(function () {
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Role
+    // Route::get('roles', [RoleController::class, 'index'])->name('roles');
+    Route::resource('role', RoleController::class);
+
+    // Menu
+    // Route::get('menus', [MenuController::class, 'index'])->name('menus');
+    Route::resource('menu', MenuController::class);
+
+    // User
+    // Route::get('users', [UserController::class, 'index'])->name('users');
+    Route::resource('user', UserController::class);
+});
 
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login');

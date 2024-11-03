@@ -32,11 +32,21 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user_informations = Auth::user();
+            // get all menus
+            $menu_menus = $user_informations->role->menus->map(function ($menu) {
+                return [
+                    'name' => $menu->name,
+                    'url' => $menu->url,
+                    'order' => $menu->order,
+                ];
+            })->toArray();
+
             session([
                 'user_informations' => [
                     'username' => $user_informations->username,
                     'email' => $user_informations->email,
-                    'role' => $user_informations->role,
+                    'role' => $user_informations->role->name, // role is a relationship
+                    'menus' => $menu_menus,
                 ]
             ]);
 

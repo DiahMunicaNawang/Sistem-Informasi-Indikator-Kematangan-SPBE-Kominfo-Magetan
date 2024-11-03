@@ -157,9 +157,9 @@
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
                                 <div class="d-flex flex-column">
-                                    <div class="fw-bold d-flex align-items-center fs-5">{{ $user_username }}
+                                    <div class="fw-bold d-flex align-items-center fs-5">{{ session('user_informations.username') }}
                                     <span class="px-2 py-1 badge badge-light-success fw-bold fs-8 ms-2">Pro</span></div>
-                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ $user_email }}</a>
+                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{ session('user_informations.email') }}</a>
                                 </div>
                                 <!--end::Username-->
                             </div>
