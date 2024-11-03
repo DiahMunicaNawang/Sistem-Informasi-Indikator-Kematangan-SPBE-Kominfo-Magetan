@@ -7,6 +7,19 @@
         </div>
     @endif
 
+    @if (session('verify'))
+        <div class="alert alert-success" role="alert">
+            {{ session('verify') }}
+        </div>
+    @endif
+
+    @if (session('warning'))
+        <div class="alert alert-warning" role="alert">
+            {{ session('warning') }}
+        </div>
+    @endif
+
+
     <form class="form w-100" action="{{ route('authenticating') }}" method="POST">
         @csrf
         <!--begin::Heading-->
