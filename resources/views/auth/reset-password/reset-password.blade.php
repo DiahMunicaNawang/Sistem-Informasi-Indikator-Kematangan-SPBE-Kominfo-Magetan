@@ -1,7 +1,21 @@
 @extends('layouts.auth.index')
 
 @section('content')
-    
+
+@if (session('status'))
+    <div class="alert alert-success">{{ session('status') }}</div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <form class="form w-100" action="{{ route('password.update', ['token' => $token]) }}" method="POST">
     @csrf
     <!--begin::Heading-->
@@ -10,30 +24,22 @@
         <h1 class="mb-3 text-dark fw-bolder">Buat Password Baru</h1>
         <!--end::Title-->
     </div>
-    <!--begin::Heading-->
+    <!--end::Heading-->
     <!--begin::Input group=-->
     <div class="mb-8 fv-row">
-        <!--begin::Repeat Password-->
-        <label for="email">Email</label>
-        <input type="text" name="email" autocomplete="off" class="bg-transparent form-control" id="email" required/>
-        <!--end::Repeat Password-->
-    </div>
-    <!--end::Input group=-->
-    <!--begin::Input group-->
-    <div class="mb-8 fv-row" data-kt-password-meter="true">
-        <!--begin::Wrapper-->
-        <div class="mb-1">
-            <!--begin::Input wrapper-->
-            <label for="password">Password</label>
-            <div class="mb-3 position-relative">
-                <input class="bg-transparent form-control" type="password" name="password" autocomplete="off" id="password" required/>
-                <span class="top-50 btn btn-sm btn-icon position-absolute translate-middle end-0 me-n2" id="togglePassword">
-                    <i class="bi bi-eye-slash fs-2" id="toggleIconPassword"></i>
-                </span>
-            </div>
-            <!--end::Input wrapper-->
+        <div class="form-group">
+            <input type="hidden" name="email" id="email" class="form-control" value="{{ $email }}" required>
         </div>
-        <!--end::Wrapper-->
+        <br>
+        <!--begin::Password-->
+        <label for="password">Password</label>
+        <div class="mb-3 position-relative">
+            <input class="bg-transparent form-control" type="password" name="password" autocomplete="off" id="password" required/>
+            <span class="top-50 btn btn-sm btn-icon position-absolute translate-middle end-0 me-n2" id="togglePassword">
+                <i class="bi bi-eye-slash fs-2" id="toggleIconPassword"></i>
+            </span>
+        </div>
+        <!--end::Password-->
     </div>
     <!--end::Input group=-->
     <!--begin::Input group=-->

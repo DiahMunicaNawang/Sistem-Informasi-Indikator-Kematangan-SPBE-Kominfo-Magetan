@@ -23,14 +23,16 @@ class AuthController extends Controller
         ]);
 
         $login = $credentials['login'];
-
         $user = User::where('email', $login)
             ->orWhere('username', $login)
             ->first();
 
         if ($user && Auth::attempt(['id' => $user->id, 'password' => $credentials['password']])) {
-            $request->session()->regenerate();
+            if (!$user->hasVerifiedEmail()) {
+                return redirect('/login')->with('warning', 'Silakan verifikasi email Anda terlebih dahulu.');
+            }
 
+            $request->session()->regenerate();
             $user_informations = Auth::user();
             // get all menus
             $menu_menus = $user_informations->role->menus->map(function ($menu) {

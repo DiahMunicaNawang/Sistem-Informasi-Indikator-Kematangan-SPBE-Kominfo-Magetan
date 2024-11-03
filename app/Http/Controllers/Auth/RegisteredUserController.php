@@ -20,26 +20,28 @@ class RegisteredUserController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'username' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|confirmed|min:8',
-    ]);
+    {
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
 
-    $user_role = Role::where('name', 'user')->first();
+        $user_role = Role::where('name', 'user')->first();
 
-    $user = User::create([
-        'username' => $request->username,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role_id' => $user_role->id,
-    ]);
+        // Buat pengguna baru
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id' => $user_role->id,
+        ]);
 
-    // Kirim email verifikasi
-    $user->sendEmailVerificationNotification();
+        // Kirim email verifikasi
+        event(new Registered($user)); // Event untuk registrasi
 
-    return redirect()->route('login')->with('status', 'Registrasi berhasil! Silakan verifikasi email Anda.');
-    // return redirect()->route('verification.notice');
+        Auth::login($user);
+        // Redirect ke halaman verifikasi
+        return redirect()->route('verification.notice');
 }
 }
