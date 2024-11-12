@@ -1,20 +1,31 @@
-
-<div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
+<div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar"
+    data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px"
+    data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
     <!--begin::Logo-->
     <div class="px-6 app-sidebar-logo" id="kt_app_sidebar_logo">
         <!--begin::Logo image-->
         <a href="../../demo1/dist/index.html">
-            <img alt="Logo" src="{{ asset("assets/media/logos/logo-magetan.png") }}" class="h-30px app-sidebar-logo-default" />
-            <img alt="Logo" src="{{ asset("assets/media/logos/logo-magetan.png") }}" class="h-20px app-sidebar-logo-minimize" />
+            <img alt="Logo" src="{{ asset('assets/media/logos/logo-magetan.png') }}"
+                class="h-30px app-sidebar-logo-default" />
+            <img alt="Logo" src="{{ asset('assets/media/logos/logo-magetan.png') }}"
+                class="h-20px app-sidebar-logo-minimize" />
         </a>
         <!--end::Logo image-->
         <!--begin::Sidebar toggle-->
-        <div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize">
+        <div id="kt_app_sidebar_toggle"
+            class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
+            data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
+            data-kt-toggle-name="app-sidebar-minimize">
             <!--begin::Svg Icon | path: icons/duotune/arrows/arr079.svg-->
             <span class="rotate-180 svg-icon svg-icon-2">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path opacity="0.5" d="M14.2657 11.4343L18.45 7.25C18.8642 6.83579 18.8642 6.16421 18.45 5.75C18.0358 5.33579 17.3642 5.33579 16.95 5.75L11.4071 11.2929C11.0166 11.6834 11.0166 12.3166 11.4071 12.7071L16.95 18.25C17.3642 18.6642 18.0358 18.6642 18.45 18.25C18.8642 17.8358 18.8642 17.1642 18.45 16.75L14.2657 12.5657C13.9533 12.2533 13.9533 11.7467 14.2657 11.4343Z" fill="currentColor" />
-                    <path d="M8.2657 11.4343L12.45 7.25C12.8642 6.83579 12.8642 6.16421 12.45 5.75C12.0358 5.33579 11.3642 5.33579 10.95 5.75L5.40712 11.2929C5.01659 11.6834 5.01659 12.3166 5.40712 12.7071L10.95 18.25C11.3642 18.6642 12.0358 18.6642 12.45 18.25C12.8642 17.8358 12.8642 17.1642 12.45 16.75L8.2657 12.5657C7.95328 12.2533 7.95328 11.7467 8.2657 11.4343Z" fill="currentColor" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.5"
+                        d="M14.2657 11.4343L18.45 7.25C18.8642 6.83579 18.8642 6.16421 18.45 5.75C18.0358 5.33579 17.3642 5.33579 16.95 5.75L11.4071 11.2929C11.0166 11.6834 11.0166 12.3166 11.4071 12.7071L16.95 18.25C17.3642 18.6642 18.0358 18.6642 18.45 18.25C18.8642 17.8358 18.8642 17.1642 18.45 16.75L14.2657 12.5657C13.9533 12.2533 13.9533 11.7467 14.2657 11.4343Z"
+                        fill="currentColor" />
+                    <path
+                        d="M8.2657 11.4343L12.45 7.25C12.8642 6.83579 12.8642 6.16421 12.45 5.75C12.0358 5.33579 11.3642 5.33579 10.95 5.75L5.40712 11.2929C5.01659 11.6834 5.01659 12.3166 5.40712 12.7071L10.95 18.25C11.3642 18.6642 12.0358 18.6642 12.45 18.25C12.8642 17.8358 12.8642 17.1642 12.45 16.75L8.2657 12.5657C7.95328 12.2533 7.95328 11.7467 8.2657 11.4343Z"
+                        fill="currentColor" />
                 </svg>
             </span>
             <!--end::Svg Icon-->
@@ -25,9 +36,13 @@
     <!--begin::sidebar menu-->
     <div class="overflow-hidden app-sidebar-menu flex-column-fluid">
         <!--begin::Menu wrapper-->
-        <div id="kt_app_sidebar_menu_wrapper" class="my-5 app-sidebar-wrapper hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
+        <div id="kt_app_sidebar_menu_wrapper" class="my-5 app-sidebar-wrapper hover-scroll-overlay-y"
+            data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+            data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
+            data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
             <!--begin::Menu-->
-            <div class="px-3 menu menu-column menu-rounded menu-sub-indention" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
+            <div class="px-3 menu menu-column menu-rounded menu-sub-indention" id="#kt_app_sidebar_menu"
+                data-kt-menu="true" data-kt-menu-expand="false">
 
                 <!--begin:Menu item-->
                 {{-- <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
@@ -67,31 +82,146 @@
                     <!--end:Menu sub-->
                 </div> --}}
                 <!--end:Menu item-->
-                
+
                 @php
                     // Get the current URL
                     $currentUrl = url()->current();
                     // Sort the menus
-                    $menus = collect(session('user_informations.menus', []))->sortBy('order');
+                    $allMenus = Cache::remember('user_' . Auth::id() . '_menus', now()->addMinutes(30), function () {
+                        return Auth::user()
+                            ->role->menus()
+                            ->with([
+                                'dropdownChildren' => fn($query) => $query->orderBy('name'),
+                                'categoryChildren' => fn($query) => $query->orderBy('name'),
+                            ])
+                            ->orderBy('created_at', 'ASC')
+                            ->get();
+                    });
+
+                    // Langsung filter kategori dan menu biasa
+                    $categories = $allMenus->where('is_category', true);
+
                 @endphp
 
-                @foreach($menus as $menu)
-                    <!--begin:Menu item-->
-                    <div class="menu-item">
-                        <!--begin:Menu link-->
-                        <a class="menu-link
-                            {{ ($currentUrl === url($menu['url'])) || // Handle current route
-                                ($menu['url'] === '/' && $currentUrl === url('/')) || // Handle dashboard route ('/')
-                                // Handle CRUD routes
-                                (Request::is(trim($menu['url'], '/').'/*')) ? 'active' : '' }}" 
-                            href="{{ $menu['url'] }}">
-                            <span class="menu-title">{{ $menu['name'] }}</span>
-                        </a>
-                        <!--end:Menu link-->
+                {{-- Loop through categories --}}
+                @foreach ($categories as $category)
+                    <div class="pt-5 menu-item">
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">{{ $category->name }}</span>
+                        </div>
                     </div>
-                    <!--end:Menu item-->
+
+                    {{-- Get menus for this category --}}
+                    @foreach ($allMenus->where('category_id', $category->id) as $menu)
+                        @php
+                            $isActive =
+                                $currentUrl === url($menu->url) ||
+                                ($menu->url === '/' && $currentUrl === url('/')) ||
+                                Request::is(trim($menu->url, '/') . '/*')
+                                    ? 'active'
+                                    : '';
+                            // Check if any child menu is active
+                            $hasActiveChild = $menu->dropdownChildren->contains(function ($child) use ($currentUrl) {
+                                return $currentUrl === url($child->url) || Request::is(trim($child->url, '/') . '/*');
+                            });
+                        @endphp
+                        @if ($menu->dropdownChildren->isNotEmpty())
+                            <div class="menu-item menu-accordion @if ($hasActiveChild) hover show @endif"
+                                data-kt-menu-trigger="click">
+                                <span class="menu-link @if ($hasActiveChild) active @endif">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2"></span>
+                                    </span>
+                                    <span class="menu-title">{{ $menu->name }}</span>
+                                    <span class="menu-arrow"></span>
+                                </span>
+                                <div class="menu-sub menu-sub-accordion @if ($hasActiveChild) show @endif">
+                                    @foreach ($menu->dropdownChildren as $dropdown)
+                                        @php
+                                            $isDropdownActive =
+                                                $currentUrl === url($dropdown->url) ||
+                                                Request::is(trim($dropdown->url, '/') . '/*');
+                                        @endphp
+                                        <div class="menu-item">
+                                            <a class="menu-link @if ($isDropdownActive) active @endif"
+                                                href="{{ $dropdown->url }}">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title">{{ $dropdown->name }}</span>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @elseif (empty($menu->dropdown_id))
+                            <div class="menu-item">
+                                <a class="menu-link {{ $isActive ? 'active' : '' }}" href="{{ $menu->url }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2"></span>
+                                    </span>
+                                    <span class="menu-title">{{ $menu->name }}</span>
+                                </a>
+                            </div>
+                        @endif
+                    @endforeach
                 @endforeach
-                    
+
+                {{-- Uncategorized menus --}}
+                @foreach ($allMenus->whereNull('category_id')->where('is_category', false) as $menu)
+                    @php
+                        $isActive =
+                            $currentUrl === url($menu->url) ||
+                            ($menu->url === '/' && $currentUrl === url('/')) ||
+                            Request::is(trim($menu->url, '/') . '/*')
+                                ? 'active'
+                                : '';
+                        // Check if any child menu is active
+                        $hasActiveChild = $menu->dropdownChildren->contains(function ($child) use ($currentUrl) {
+                            return $currentUrl === url($child->url) || Request::is(trim($child->url, '/') . '/*');
+                        });
+                    @endphp
+                    @if ($menu->dropdownChildren->isNotEmpty())
+                        <div class="menu-item menu-accordion @if ($hasActiveChild) hover show @endif"
+                            data-kt-menu-trigger="click">
+                            <span class="menu-link @if ($hasActiveChild) active @endif">
+                                <span class="menu-icon">
+                                    <span class="svg-icon svg-icon-2"></span>
+                                </span>
+                                <span class="menu-title">{{ $menu->name }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion @if ($hasActiveChild) show @endif">
+                                @foreach ($menu->dropdownChildren as $dropdown)
+                                    @php
+                                        $isDropdownActive =
+                                            $currentUrl === url($dropdown->url) ||
+                                            Request::is(trim($dropdown->url, '/') . '/*');
+                                    @endphp
+                                    <div class="menu-item">
+                                        <a class="menu-link @if ($isDropdownActive) active @endif"
+                                            href="{{ $dropdown->url }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">{{ $dropdown->name }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @elseif (empty($menu->dropdown_id))
+                        <div class="menu-item">
+                            <a class="menu-link {{ $isActive ? 'active' : '' }}" href="{{ $menu->url }}">
+                                <span class="menu-icon">
+                                    <span class="svg-icon svg-icon-2"></span>
+                                </span>
+                                <span class="menu-title">{{ $menu->name }}</span>
+                            </a>
+                        </div>
+                    @endif
+                @endforeach
+
                 <!--begin:Menu item-->
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                     <!--begin:Menu link-->
@@ -124,66 +254,6 @@
                             <!--end:Menu link-->
                         </div>
                         <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="../../demo1/dist/pages/user-profile/projects.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Projects</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="../../demo1/dist/pages/user-profile/campaigns.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Campaigns</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="../../demo1/dist/pages/user-profile/documents.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Documents</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="../../demo1/dist/pages/user-profile/followers.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Followers</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="../../demo1/dist/pages/user-profile/activity.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Activity</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
                     </div>
                     <!--end:Menu sub-->
                 </div> --}}
@@ -198,7 +268,7 @@
                     <!--end:Menu content-->
                 </div> --}}
                 <!--end:Menu item-->
-                
+
             </div>
             <!--end::Menu-->
         </div>

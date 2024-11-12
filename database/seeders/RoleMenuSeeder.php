@@ -18,12 +18,13 @@ class RoleMenuSeeder extends Seeder
         $admin = Role::where('name', 'admin')->first();
         $user = Role::where('name', 'user')->first();
 
+        $menu_utama = Menu::where('url', null)->first();
         $dashboard = Menu::where('url', '/')->first();
         $user_management = Menu::where('url', '/user')->first();
         $role_management = Menu::where('url', '/role')->first();
         $menu_management = Menu::where('url', '/menu')->first();
 
-        $super_admin->menus()->attach([$dashboard->id, $user_management->id, $role_management->id, $menu_management->id]);
+        $super_admin->menus()->attach([$menu_utama->id, $dashboard->id, $user_management->id, $role_management->id, $menu_management->id]);
         $admin->menus()->attach([$dashboard->id, $user_management->id, $menu_management->id]);
         $user->menus()->attach([$dashboard->id]);
     }

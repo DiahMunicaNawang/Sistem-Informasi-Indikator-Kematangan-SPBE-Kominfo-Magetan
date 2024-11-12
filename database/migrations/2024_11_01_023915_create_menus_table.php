@@ -14,8 +14,14 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('url');
-            $table->integer('order');
+            $table->string('url')->nullable();
+            $table->boolean('is_category')->default(false);  // Penanda kategori
+            $table->unsignedBigInteger('dropdown_id')->nullable();    // untuk children dari sebuah dropdown
+            $table->unsignedBigInteger('category_id')->nullable();    // untuk children dari sebuah kategori
+            $table->timestamps();
+
+            $table->foreign('dropdown_id')->references('id')->on('menus')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('menus')->onDelete('cascade');
         });
     }
 

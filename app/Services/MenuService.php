@@ -5,134 +5,130 @@ namespace App\Services;
 use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class MenuService
 {
-    public function updateSessionMenus()
+    public function updateCacheMenus()
     {
-        $user = Auth::user();
+        $role = Auth::user()->role;
+        // Mendapatkan daftar menu terbaru sesuai role
+        $updatedMenus = $role->menus()->get();
 
-        // Mendapatkan daftar menu terbaru
-        $updatedMenus = $user->role->menus->map(function ($menu) {
-            return [
-                'name' => $menu->name,
-                'url' => $menu->url,
-                'order' => $menu->order,
-            ];
-        })->toArray();
-
-        // Update session
-        session()->put('user_informations.menus', $updatedMenus);
+        // Hapus cache lama untuk menu
+        Cache::forget('user_' . Auth::id() . '_menus');
+        // Update cache
+        Cache::put('user_' . Auth::id() . '_menus', $updatedMenus, now()->addMinutes(30));
     }
 
     public function getAllMenus()
     {
         // Eager load 'roles' untuk menghindari query N+1
-        return Menu::with('roles')->orderBy('order', 'ASC')->get();
+        return Menu::with('roles')->get();
     }
 
     public function createMenu() {
-        $roles = Role::all(); // Get all roles for dropdown
-        $menus = Menu::orderBy('order')->get();
-
+        $roles = Role::all();
+        $menus = Menu::all();
+        $categories = Menu::where('is_category', true)->get();
+    
+        $dropdownOptions = [];
+        foreach ($categories as $category) {
+            $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
+                ->where('url', null)
+                ->where('dropdown_id', null)
+                ->where('is_category', false)
+                ->get(['id', 'name']);
+        }
+    
         return [
             'roles' => $roles,
-            'menus' => $menus
+            'menus' => $menus,
+            'categories' => $categories,
+            'dropdownOptions' => $dropdownOptions
         ];
     }
-
+    
     public function storeMenu(array $data)
     {
-        // Tentukan urutan baru berdasarkan input 'order'
-        if ($data['order'] === 'beginning') {
-            // Jika user memilih 'beginning', set urutan menjadi 1
-            $newOrder = 1;
-    
-            // Geser semua menu lain ke bawah untuk memberi ruang di urutan pertama
-            Menu::where('order', '>=', 1)->increment('order');
-        } else {
-            // Pisahkan input 'order' menjadi bagian angka dan posisi (after/before)
-            [$baseOrder, $position] = explode('-', $data['order']);
-            $baseOrder = (int) $baseOrder;
-    
-            // Tentukan urutan baru berdasarkan posisi
-            $newOrder = $position === 'after' ? $baseOrder + 1 : $baseOrder;
-    
-            // Geser menu lain ke bawah untuk memberi ruang pada posisi baru
-            Menu::where('order', '>=', $newOrder)->increment('order');
-        }
-
-        // Convert URL to slug
-        $url = '/' . Str::slug($data['url']);
-        $menu = Menu::create([
+        $menuData = [
             'name' => $data['name'],
-            'url' => $url,
-            'order' => $newOrder,
-        ]);
+            'is_category' => $data['type'] === 'category',
+            'url' => $data['type'] === 'menu' ? '/' . Str::slug($data['url']) : null,
+            'category_id' => in_array($data['type'], ['menu', 'dropdown']) ? $data['category_id'] : null,
+            'dropdown_id' => $data['type'] === 'menu' ? ($data['dropdown_id'] ?? null) : null
+        ];
 
+        $menu = Menu::create($menuData);
         $menu->roles()->attach($data['roles']);
-
-        $this->updateSessionMenus();
-
+        
+        $this->updateCacheMenus();
         return $menu;
     }
+    
+    public function editMenu(Menu $menu) 
+    {
+        $roles = Role::all();
+        $roleOld = $menu->roles->pluck('id')->toArray();
+        $menus = Menu::all();
+        $categories = Menu::where('is_category', true)->get();
 
-    public function editMenu(Menu $menu) {
-        $roles = Role::all(); // Get all roles for dropdown
-        $roleOld = $menu->roles->pluck('id')->toArray(); // Get selected roles
-        $menus = Menu::orderBy('order')->get();
+        // Determine menu type
+        $menuType = 'menu';
+        if ($menu->is_category) {
+            $menuType = 'category';
+        } elseif (is_null($menu->url) && !is_null($menu->category_id)) {
+            $menuType = 'dropdown';
+        }
+
+        // Get all possible dropdowns for each category, including the current menu's dropdown
+        $dropdownOptions = [];
+        foreach ($categories as $category) {
+            $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
+                ->where('url', null)
+                ->where('dropdown_id', null)
+                ->where('is_category', false)
+                ->when($menu->exists, function($query) use ($menu) {
+                    return $query->orWhere('id', $menu->dropdown_id); // Include current dropdown if exists
+                })
+                ->get(['id', 'name']);
+        }
 
         return [
             'menu' => $menu,
             'roles' => $roles,
             'roleOld' => $roleOld,
-            'menus' => $menus
+            'menus' => $menus,
+            'categories' => $categories,
+            'dropdownOptions' => $dropdownOptions,
+            'menuType' => $menuType
         ];
     }
 
     public function updateMenu(Menu $menu, array $data)
     {
-        // Tentukan urutan baru berdasarkan input 'order'
-        if ($data['order'] === 'beginning') {
-            // Jika user memilih 'beginning', set urutan menjadi 1
-            $newOrder = 1;
-        } else {
-            // Pisahkan input 'order' menjadi bagian angka dan posisi (after/before)
-            [$baseOrder, $position] = explode('-', $data['order']);
-            $baseOrder = (int) $baseOrder;
+        $url = isset($data['url']) ? '/' . Str::slug($data['url']) : null;
+        
+        // Determine category_id based on dropdown selection or direct input
+        $categoryId = $data['dropdown_id'] 
+            ? Menu::find($data['dropdown_id'])->category_id 
+            : ($data['category_id'] ?? null);
 
-            // Temukan urutan tertinggi saat ini
-            $maxOrder = Menu::max('order');
-
-            // Tentukan urutan baru berdasarkan posisi dan urutan dasar
-            $newOrder = ($position === 'after' && $baseOrder >= $maxOrder) ? $maxOrder : ($position === 'after' ? $baseOrder + 1 : $baseOrder);
-        }
-
-        // Jika urutan baru lebih kecil, geser menu lain ke atas
-        if ($newOrder < $menu->order) {
-            Menu::whereBetween('order', [$newOrder, $menu->order - 1])
-                ->where('id', '!=', $menu->id)
-                ->increment('order');
-        } elseif ($newOrder > $menu->order) {
-            // Jika urutan baru lebih besar, geser menu lain ke bawah
-            Menu::whereBetween('order', [$menu->order + 1, $newOrder])
-                ->where('id', '!=', $menu->id)
-                ->decrement('order');
-        }
-
-        // Convert URL to slug
-        $url = '/' . Str::slug($data['url']);
-
+        // Update menu
         $menu->update([
             'name' => $data['name'],
             'url' => $url,
-            'order' => $newOrder,
+            'is_category' => $data['type'] === 'category',
+            'dropdown_id' => $data['dropdown_id'] ?? null,
+            'category_id' => $categoryId,
         ]);
 
+        // Sync roles
         $menu->roles()->sync($data['roles']);
-
-        $this->updateSessionMenus();
+        
+        // Update cache
+        $this->updateCacheMenus();
 
         return $menu;
     }
@@ -140,7 +136,7 @@ class MenuService
     public function deleteMenu(Menu $menu)
     {
         $menu->roles()->detach(); // Hapus hubungan dengan menus sebelum menghapus menu
-        $this->updateSessionMenus(); // Perbarui session setelah menghapus menu
+        $this->updateCacheMenus(); // Perbarui session setelah menghapus menu
 
         return $menu->delete();
     }

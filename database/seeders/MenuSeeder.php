@@ -15,29 +15,36 @@ class MenuSeeder extends Seeder
     {
         $menus = [
             [
+                'name' => 'Menu Utama',
+                'is_category' => true,
+            ],
+            [
                 'name' => 'Dashboard',
                 'url' => '/',
-                'order' => '1',
             ],
             [
                 'name' => 'User Management',
                 'url' => '/user',
-                'order' => '2',
             ],
             [
                 'name' => 'Role Management',
                 'url' => '/role',
-                'order' => '3',
             ],
             [
                 'name' => 'Menu Management',
                 'url' => '/menu',
-                'order' => '4',
             ],
         ];
 
+        $category = null;
+
         foreach ($menus as $menu) {
-            Menu::create($menu);
+            if (isset($menu['is_category']) && $menu['is_category']) {
+                $category = Menu::create($menu);
+            } else {
+                $menu['category_id'] = $category ? $category->id : null;
+                Menu::create($menu);
+            }
         }
     }
 }
