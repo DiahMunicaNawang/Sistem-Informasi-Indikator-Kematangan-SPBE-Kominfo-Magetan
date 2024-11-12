@@ -28,12 +28,12 @@ class MenuRequest extends FormRequest
             'category_id' => [
                 'nullable',
                 'exists:menus,id',
-                'forbidden_if:type,category'
+                // 'forbidden_if:type,category'
             ],
             'dropdown_id' => [
                 'nullable',
                 'exists:menus,id',
-                'forbidden_if:type,category,dropdown'
+                // 'forbidden_if:type,category,dropdown'
             ],
             'roles' => 'required|array',
             'roles.*' => 'exists:roles,id'
@@ -54,10 +54,10 @@ class MenuRequest extends FormRequest
             'url.string' => 'URL harus berupa text!',
 
             'category_id.exists' => 'Kategori yang dipilih tidak valid!',
-            'category_id.forbidden_if' => 'Kategori tidak boleh diisi untuk tipe category!',
+            // 'category_id.forbidden_if' => 'Kategori tidak boleh diisi untuk tipe category!',
 
             'dropdown_id.exists' => 'Dropdown yang dipilih tidak valid!',
-            'dropdown_id.forbidden_if' => 'Dropdown tidak boleh diisi untuk tipe category atau dropdown!',
+            // 'dropdown_id.forbidden_if' => 'Dropdown tidak boleh diisi untuk tipe category atau dropdown!',
 
             'roles.required' => 'Role wajib diisi!',
             'roles.array' => 'Role harus berupa array!',
