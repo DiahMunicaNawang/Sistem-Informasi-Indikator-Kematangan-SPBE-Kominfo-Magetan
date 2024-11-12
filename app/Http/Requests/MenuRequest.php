@@ -23,7 +23,8 @@ class MenuRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'url' => 'required',
+            'url' => 'required_if:is_category,false',  // URL hanya diperlukan jika bukan kategori
+            'parent_id' => 'required_if:is_category,false',  // parent_id hanya diperlukan jika bukan kategori
             'roles' => 'required|array',
         ];
     }
@@ -32,7 +33,8 @@ class MenuRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama Menu wajib diisi!',
-            'url.required' => 'URL wajib diisi!',
+            'url.required_if' => 'URL wajib diisi jika menu bukan kategori!',
+            'parent_id.required_if' => 'Parent ID wajib diisi jika menu bukan kategori!',
             'roles.required' => 'Role wajib diisi!',
             'roles.array' => 'Role harus berupa array!',
         ];
