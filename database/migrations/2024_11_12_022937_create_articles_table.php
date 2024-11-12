@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('article_summary');
+            $table->longText('article_content');
+            $table->string('article_status');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('validator_user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });
     }

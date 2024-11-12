@@ -133,7 +133,7 @@
     <h1 class="header-title">Jelajahi Artikel</h1>
 
     <div class="button-container mx-4">
-        <a href="#" class="btn-custom"><i class="fas fa-plus"></i> Buat Artikel</a>
+        <a href="{{ route('article.create') }}" class="btn-custom"><i class="fas fa-plus"></i> Buat Artikel</a>
         <div class="search-box">
             <input type="text" class="search-input" placeholder="Search articles...">
         </div>
