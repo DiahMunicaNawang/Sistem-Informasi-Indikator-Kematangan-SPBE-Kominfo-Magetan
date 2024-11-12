@@ -19,7 +19,7 @@ class MenuService
         // Hapus cache lama untuk menu
         Cache::forget('user_' . Auth::id() . '_menus');
         // Update cache
-        Cache::put('user_' . Auth::id() . '_menus', $updatedMenus, now()->addSeconds(5));
+        Cache::put('user_' . Auth::id() . '_menus', $updatedMenus, now()->addMinutes(30));
     }
 
     public function getAllMenus()

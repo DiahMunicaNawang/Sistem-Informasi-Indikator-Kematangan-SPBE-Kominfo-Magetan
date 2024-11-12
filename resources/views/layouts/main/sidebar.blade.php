@@ -87,7 +87,7 @@
                     // Get the current URL
                     $currentUrl = url()->current();
                     // Sort the menus
-                    $allMenus = Cache::remember('user_' . Auth::id() . '_menus', now()->addSeconds(5), function () {
+                    $allMenus = Cache::remember('user_' . Auth::id() . '_menus', now()->addMinutes(30), function () {
                         return Auth::user()
                             ->role->menus()
                             ->with([
