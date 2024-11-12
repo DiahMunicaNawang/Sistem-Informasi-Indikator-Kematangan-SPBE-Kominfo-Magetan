@@ -13,14 +13,14 @@
 		<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
 			<!--begin::Page-->
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-                
+
 				<!--begin::Header-->
 				@include('layouts.main.navbar')
 				<!--end::Header-->
 
 				<!--begin::Wrapper-->
 				<div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
-					
+
 					<!--begin::Sidebar-->
 					@include('layouts.main.sidebar')
 					<!--end::Sidebar-->
@@ -52,7 +52,7 @@
 			<!--end::Page-->
 		</div>
 		<!--end::App-->
-		
+
 		<!--begin::Scrolltop-->
 		<div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
 			<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
@@ -65,7 +65,7 @@
 			<!--end::Svg Icon-->
 		</div>
 		<!--end::Scrolltop-->
-        
+
 		<!--begin::Javascript-->
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
 		<script src="{{ asset("assets/plugins/global/plugins.bundle.js") }}"></script>

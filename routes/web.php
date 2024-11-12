@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArtikelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -28,6 +29,9 @@ Route::middleware('auth', 'verified')->group(function () {
     // User
     // Route::get('users', [UserController::class, 'index'])->name('users');
     Route::resource('user', UserController::class);
+
+    // Articles
+    Route::resource('article', ArtikelController::class);
 });
 
 Route::get('/login', [AuthController::class, 'login'])
@@ -62,12 +66,14 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/login')->with('verify', 'Email Anda telah berhasil diverifikasi!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-
-
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'Email verifikasi baru telah dikirim.');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+//Rating Article
+Route::get('/article/article-rating', [ArtikelController::class, 'addRating'])->name('article.addRating');
 
 
 // BATAS
