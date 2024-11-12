@@ -30,6 +30,12 @@ Route::middleware('auth', 'verified')->group(function () {
     // Route::get('users', [UserController::class, 'index'])->name('users');
     Route::resource('user', UserController::class);
 
+    // Manajemen Pengetahuan
+    Route::view('manajemen-pengetahuan', 'manajemen-pengetahuan.index')->name('manajemen-pengetahuan');
+
+    // Forum
+    Route::resource('forum', UserController::class);
+
     // Articles
     Route::resource('article', ArtikelController::class);
 });
