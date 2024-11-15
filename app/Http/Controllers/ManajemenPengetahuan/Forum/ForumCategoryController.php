@@ -46,7 +46,7 @@ class ForumCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ForumCategory $forumCategory)
+    public function show($id)
     {
         //
     }
@@ -54,27 +54,27 @@ class ForumCategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ForumCategory $forumCategory)
+    public function edit($id)
     {
-        $data = $this->forumCategoryService->editForumCategory($forumCategory);
+        $data = $this->forumCategoryService->editForumCategory($id);
         return view('manajemen-pengetahuan.forum.forum-category-edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ForumCategoryRequest $request, ForumCategory $forumCategory)
+    public function update(ForumCategoryRequest $request, $id)
     {
-        $this->forumCategoryService->updateForumCategory($forumCategory, $request->all());
+        $this->forumCategoryService->updateForumCategory($request->all(), $id);
         return redirect()->route('forum-category.index')->with('success', 'ForumCategory berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ForumCategory $forumCategory)
+    public function destroy($id)
     {
-        $this->forumCategoryService->deleteForumCategory($forumCategory);
+        $this->forumCategoryService->deleteForumCategory($id);
         return redirect()->route('forum-category.index')->with('success', 'ForumCategory berhasil dihapus');
     }
 }

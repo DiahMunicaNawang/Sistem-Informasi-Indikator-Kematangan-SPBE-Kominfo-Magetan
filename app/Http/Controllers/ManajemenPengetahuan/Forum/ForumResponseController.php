@@ -51,7 +51,7 @@ class ForumResponseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ForumResponse $forumResponse)
+    public function show($id)
     {
         //
     }
@@ -59,7 +59,7 @@ class ForumResponseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ForumResponse $forumResponse)
+    public function edit($id)
     {
         //
     }
@@ -67,7 +67,7 @@ class ForumResponseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ForumResponseRequest $request, ForumResponse $forumResponse)
+    public function update(ForumResponseRequest $request, $id)
     {
         // Tidak bisa comment jika diskusi selesai/tutup
         $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
@@ -76,16 +76,16 @@ class ForumResponseController extends Controller
             return redirect()->back()->with('error', 'Mohon maaf diskusi sudah ditutup');
         }
         
-        $this->forumResponseService->updateForumResponse($forumResponse, $request->all());
+        $this->forumResponseService->updateForumResponse($request->all(), $id);
         return redirect()->back()->with('success', 'Tanggapan berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ForumResponse $forumResponse)
+    public function destroy($id)
     {
-        $this->forumResponseService->deleteForumResponse($forumResponse);
+        $this->forumResponseService->deleteForumResponse($id);
         return redirect()->back()->with('success', 'Tanggapan berhasil dihapus');
     }
 }

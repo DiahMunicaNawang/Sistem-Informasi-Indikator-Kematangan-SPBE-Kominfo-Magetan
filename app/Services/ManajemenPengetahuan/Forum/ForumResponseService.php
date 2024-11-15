@@ -36,27 +36,30 @@ class ForumResponseService
         return $forum_response;
     }
     
-    public function updateForumResponse(ForumResponse $forumResponse, array $data)
+    public function updateForumResponse(array $data, int $id)
     {
         if (session('user_informations.role') === 'pengguna-umum') {
             return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memperbarui tanggapan');
         }
 
+        $forum_response = ForumResponse::findOrFail($id);
+
         $content = str_replace(["\r\n", "\r", "\n"], "\n", $data['content']);
 
-        $forumResponse->update([
+        $forum_response->update([
             'content' => $content,
-            'forum_discussion_id' => $forumResponse->forum_discussion_id,
-            'parent_id' => $forumResponse->parent_id ?? null,
+            'forum_discussion_id' => $forum_response->forum_discussion_id,
+            'parent_id' => $forum_response->parent_id ?? null,
             'user_id' => session('user_informations.user_id'),
         ]);
 
-        return $forumResponse;
+        return $forum_response;
     }
 
-    public function deleteForumResponse(ForumResponse $forumResponse)
+    public function deleteForumResponse($id)
     {
         // This will automatically delete all nested replies due to cascade
-        return $forumResponse->delete();
+        $forum_response = ForumResponse::findOrFail($id);
+        return $forum_response->delete();
     }
 }
