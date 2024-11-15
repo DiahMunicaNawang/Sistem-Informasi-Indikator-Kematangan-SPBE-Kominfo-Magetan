@@ -56,7 +56,7 @@ class ForumResponseService
         return $forum_response;
     }
 
-    public function deleteForumResponse($id)
+    public function deleteForumResponse(int $id)
     {
         // This will automatically delete all nested replies due to cascade
         $forum_response = ForumResponse::findOrFail($id);

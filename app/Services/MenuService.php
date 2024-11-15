@@ -25,7 +25,10 @@ class MenuService
     public function getAllMenus()
     {
         // Eager load 'roles' untuk menghindari query N+1
-        return Menu::with('roles')->get();
+        $menus = Menu::with('roles')->get();
+        return [
+            'menus' => $menus
+        ];
     }
 
     public function createMenu() {
@@ -67,8 +70,10 @@ class MenuService
         return $menu;
     }
     
-    public function editMenu(Menu $menu) 
+    public function editMenu(int $id) 
     {
+        $menu = Menu::findOrFail($id);
+
         $roles = Role::all();
         $roleOld = $menu->roles->pluck('id')->toArray();
         $menus = Menu::all();
@@ -106,8 +111,9 @@ class MenuService
         ];
     }
 
-    public function updateMenu(Menu $menu, array $data)
+    public function updateMenu(array $data, int $id)
     {
+        $menu = Menu::findOrFail($id);
         $url = isset($data['url']) ? '/' . Str::slug($data['url']) : null;
         
         // Determine category_id based on dropdown selection or direct input
@@ -133,8 +139,9 @@ class MenuService
         return $menu;
     }
 
-    public function deleteMenu(Menu $menu)
+    public function deleteMenu(int $id)
     {
+        $menu = Menu::findOrFail($id);
         $menu->roles()->detach(); // Hapus hubungan dengan menus sebelum menghapus menu
         $this->updateCacheMenus(); // Perbarui session setelah menghapus menu
 
