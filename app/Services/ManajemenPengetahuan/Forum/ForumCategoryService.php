@@ -19,21 +19,26 @@ class ForumCategoryService
         return $forumCategory;
     }
 
-    public function editForumCategory(ForumCategory $forumCategory) {
+    public function editForumCategory($id) {
+        $forum_category = ForumCategory::findOrFail($id);
+
         return [
-            'forum_category' => $forumCategory,
+            'forum_category' => $forum_category,
         ];
     }
 
-    public function updateForumCategory(ForumCategory $forumCategory, array $data)
+    public function updateForumCategory(array $data, int $id)
     {
-        $forumCategory->update($data);
+        $forum_category = ForumCategory::findOrFail($id);
+        $forum_category->update($data);
 
-        return $forumCategory;
+        return $forum_category;
     }
 
-    public function deleteForumCategory(ForumCategory $forumCategory)
+    public function deleteForumCategory($id)
     {
-        return $forumCategory->delete();
+        $forum_category = ForumCategory::findOrFail($id);
+
+        return $forum_category->delete();
     }
 }

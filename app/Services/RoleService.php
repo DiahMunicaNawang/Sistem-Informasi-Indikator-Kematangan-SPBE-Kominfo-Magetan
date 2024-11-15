@@ -30,8 +30,10 @@ class RoleService
     {
         
         // Eager load 'menus' untuk menghindari query N+1
-        $data = Role::with('menus')->get();
-        return $data;
+        $roles = Role::with('menus')->get();
+        return [
+            'roles' => $roles,
+        ];
     }
 
     public function createRole() {
