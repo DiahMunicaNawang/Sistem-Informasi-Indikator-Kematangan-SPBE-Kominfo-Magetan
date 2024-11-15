@@ -21,8 +21,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = $this->roleService->getAllRoles();
-        return view('role.index', ['roles' => $roles]);
+        $data = $this->roleService->getAllRoles();
+        return view('role.index', $data);
     }
 
     /**
