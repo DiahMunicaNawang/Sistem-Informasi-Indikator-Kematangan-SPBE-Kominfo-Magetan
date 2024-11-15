@@ -27,7 +27,7 @@ class RegisteredUserController extends Controller
             'password' => 'required|string|confirmed|min:8',
         ]);
 
-        $user_role = Role::where('name', 'user')->first();
+        $user_role = Role::where('name', 'pengguna-umum')->first();
 
         // Buat pengguna baru
         $user = User::create([
