@@ -1,12 +1,12 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('manajemen-pengetahuan') }}">
-        <i class="fas fa-arrow-left"></i>
-    </a>
+<a href="{{ route('article.index') }}">
+    <i class="fas fa-arrow-left"></i>
+</a>
 @endsection
 
-@section('page-name', 'Article')
+@section('page-name', 'Article Validate')
 
 @section('content')
     @if (session('success'))
@@ -20,8 +20,6 @@
         body {
             background-color: var(--background-color);
         }
-
-
 
         .header-title {
             margin: 20px 0;
@@ -38,7 +36,7 @@
             margin: 20px 0;
         }
 
-        .btn-theme {
+        .btn-custom {
             background-color: var(--button-bg-color);
             color: var(--button-text-color);
             border: none;
@@ -51,11 +49,11 @@
             gap: 5px;
         }
 
-        .btn-theme:hover {
+        .btn-custom:hover {
             background-color: var(--button-bg-hover-color);
         }
 
-        .search-b ox {
+        .search-box {
             display: flex;
             align-items: center;
             margin: 0 auto;
@@ -136,51 +134,20 @@
             --input-bg-color: #333333;
             --card-bg-color: #1e1e1e;
         }
-
-        .fas.fa-plus {
-            color: white;
-            margin-right: 4px
-        }
-
-        .fas.fa-check {
-            color: white;
-            margin-right: 4px
-        }
-
-        .fas.fa-print {
-            color: white;
-            margin-right: 4px
-        }
     </style>
 
-    <h1 class="header-title">Jelajahi Artikel</h1>
+    <h1 class="header-title">Validasi Artikel</h1>
 
-    <!-- Search Form -->
-    <form action="{{ route('article.index') }}" method="GET" class="search-form d-flex mb-2">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
-                value="{{ request()->get('search') }}">
-            <button type="submit" class="btn-theme">Cari</button>
+    <div class="button-container mx-4">
+        <div class="button-container mx-4">
+            <form action="{{ route('article.validateIndex') }}" method="GET" class="search-form">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
+                        value="{{ request()->get('search') }}">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                </div>
+            </form>
         </div>
-    </form>
-    <div class="button-container mx-4 mb-3">
-
-        <!-- Create Article Button -->
-        <a href="{{ route('article.create') }}" class="btn-theme d-block mb-2">
-            <i class="fas fa-plus"></i> Buat Artikel
-        </a>
-
-        <!-- Validation Button (Only visible for Admin and Superadmin) -->
-        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 2))
-            <a href="{{ route('article.validateIndex') }}" class="btn-theme d-block mb-2">
-                <i class="fas fa-check"></i> Validasi Artikel
-            </a>
-        @endif
-
-        <!-- Print Article Button -->
-        <a href="#" class="btn-theme d-block">
-            <i class="fas fa-print"></i> Cetak Artikel
-        </a>
     </div>
 
 
@@ -195,8 +162,7 @@
                     }
                 @endphp
 
-                <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}" class="img-fluid rounded"
-                        alt="Article Thumbnail"></a>
+                <a href="{{ route('article.validate', $data->id) }}"><img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail"></a>
 
                 <h5 class="card-title">{{ $data->title }}</h5>
                 <p class="card-text">{{ $data->article_summary }}</p>

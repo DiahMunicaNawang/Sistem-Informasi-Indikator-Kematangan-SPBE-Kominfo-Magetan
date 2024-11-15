@@ -32,8 +32,13 @@
                             <!--begin::Content-->
                             <div id="kt_app_content" class="app-content flex-column-fluid">
 								<!--begin::Content container-->
+                                <!-- Tombol Kembali -->
 								<div id="kt_app_content_container" class="app-container container-fluid">
-									<h1 class="py-6 my-0 page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center">@yield('page-name')</h1>
+                                    <div class="mt-4">
+                                        @yield('back-button')
+                                    </div>
+									<h1 class="py-6 my-0 page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center">
+                                        @yield('page-name')</h1>
 									@yield('content')
 								</div>
 								<!--end::Content container-->

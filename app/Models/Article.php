@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\ArticleCategories;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,35 +18,38 @@ class Article extends Model
         'article_status',
         'user_id',
         'validator_user_id',
+        'category_id',
+        'image',
     ];
 
-    // Relationship to the user who created the article
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    // Relationship to the user who validated the article
     public function validator()
     {
         return $this->belongsTo(User::class, 'validator_user_id');
     }
 
-    // Relationship to the article's validations
+    public function category()
+    {
+        return $this->belongsTo(ArticleCategory::class, 'category_id');
+    }
+
     public function validations()
     {
-        return $this->hasMany(ArticleValidation::class, 'article_id');
+        return $this->hasMany(ArticleValidation::class);
     }
 
-    // Relationship to the article's ratings
     public function ratings()
     {
-        return $this->hasMany(ArticleRating::class, 'article_id');
+        return $this->hasMany(ArticleRating::class);
     }
 
-    // Relationship to categories (assuming articles can belong to multiple categories)
-    public function categories()
+    // Accessor untuk mengambil rata-rata rating
+    public function getAverageRatingAttribute()
     {
-        return $this->belongsToMany(ArticleCategories::class, 'article_category_pivot', 'article_id', 'category_id');
+        return $this->ratings()->avg('rating_value');
     }
 }

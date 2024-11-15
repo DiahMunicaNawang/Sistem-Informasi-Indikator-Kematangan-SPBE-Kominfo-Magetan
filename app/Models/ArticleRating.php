@@ -17,6 +17,7 @@ class ArticleRating extends Model
         'rater_user_id',
         'rating_value',
         'rating_date',
+        'review', 
     ];
 
     // Relationship to the article being rated
@@ -26,7 +27,7 @@ class ArticleRating extends Model
     }
 
     // Relationship to the user who gave the rating
-    public function rater()
+    public function user()
     {
         return $this->belongsTo(User::class, 'rater_user_id');
     }

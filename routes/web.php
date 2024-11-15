@@ -37,7 +37,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('forum', UserController::class);
 
     // Articles
-    Route::resource('article', ArtikelController::class);
+    Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);
+    Route::get('/article/{id}/validate', [ArtikelController::class, 'validateArticle'])->name('article.validate');
+    Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation');
 });
 
 Route::get('/login', [AuthController::class, 'login'])
@@ -78,8 +80,24 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-//Rating Article
-Route::get('/article/article-rating', [ArtikelController::class, 'addRating'])->name('article.addRating');
+//Article
+Route::post('/article/store_rating', [ArtikelController::class, 'storeRating'])->name('article.storeRating');
+Route::get('/article/create_category', [ArtikelController::class, 'createCategory'])->name('article.createCategory');
+Route::post('/article/store_category', [ArtikelController::class, 'storeCategory'])->name('article.storeCategory');
+Route::get('/article/index_validate', [ArtikelController::class, 'validate_index'])->name('article.validateIndex');
+
+// Route::post('/upload-image', function (Request $request) {
+//     if ($request->hasFile('upload')) {
+//         $image = $request->file('upload');
+//         $path = $image->store('images', 'public');
+
+//         // Menggunakan asset langsung ke storage
+//         return response()->json([
+//             'url' => asset('storage/' . $path)
+//         ]);
+//     }
+//     return response()->json(['error' => 'Image upload failed'], 400);
+// });
 
 
 // BATAS

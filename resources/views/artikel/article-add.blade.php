@@ -1,8 +1,19 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ route('article.index') }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Buat Artikel')
 
 @section('content')
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <style>
         /* Default light theme variables */
         :root {
@@ -53,7 +64,8 @@
             <!-- Judul -->
             <div class="mb-3">
                 <label for="judul" class="form-label">Judul</label>
-                <input type="text" name="judul" id="judul" class="form-control" placeholder="Masukkan Judul Artikel">
+                <input type="text" name="judul" id="judul" class="form-control"
+                    placeholder="Masukkan Judul Artikel">
             </div>
 
             <!-- Ringkasan Artikel -->
@@ -69,10 +81,16 @@
                 <textarea name="konten" id="konten" class="form-control" rows="10"
                     placeholder="Masukkan konten artikel di sini"></textarea>
             </div>
+
             <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
             <script>
                 ClassicEditor
-                    .create(document.querySelector('#konten'))
+                    .create(document.querySelector('#konten'), {
+                        toolbar: [
+                            'heading', '|', 'bold', 'italic', 'link',
+                            'bulletedList', 'numberedList', 'blockQuote'
+                        ]
+                    })
                     .catch(error => {
                         console.error(error);
                     });
@@ -80,28 +98,24 @@
 
             <!-- Kategori -->
             <div class="mb-3">
-                <label for="kategori" class="form-label">Kategori</label>
+                <label for="kategori" class="form-label">Kategori
+                    @if (auth()->user() && auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
+                        | <a href="{{ route('article.createCategory') }}"">Add Category</a>
+                    @endif
+                </label>
                 <select name="kategori" id="kategori" class="form-select">
-                    <option value="">Cari Kategori</option>
-                    <option value="1">Perencanaan dan Implementasi Manajemen Perubahan</option>
-                    <option value="2">Penyelarasan Strategi dan Kebijakan SPBE</option>
-                    <option value="3">Pendidikan dan Pelatihan Pengguna SPBE</option>
-                    <option value="4">Keterlibatan Stakeholder dalam SPBE</option>
-                    <option value="5">Evaluasi dan Monitoring Implementasi SPBE</option>
-                    <option value="6">Perubahan Organisasi untuk Mendorong SPBE</option>
-                    <option value="7">Peran Teknologi dalam Meningkatkan Kinerja Pemerintahan</option>
-                    <option value="8">Strategi Inovasi dalam Transformasi Digital Pemerintahan</option>
-                    <option value="9">Pengelolaan Risiko dalam SPBE</option>
-                    <option value="10">Komunikasi dan Sosialisasi Implementasi SPBE</option>
-                    <option value="11">Sustainabilitas SPBE dalam Pemerintahan</option>
-                    <option value="12">Best Practices dalam Manajemen Perubahan SPBE</option>
+                    @foreach ($artikel_category as $data)
+                        <option value="{{ $data->id }}">{{ $data->category_name }}</option>
+                    @endforeach
                 </select>
             </div>
 
+
+
             <!-- Image Thumbnail -->
             <div class="mb-3">
-                <label for="thumbnail" class="form-label">Image thumbnail</label>
-                <input type="file" name="thumbnail" id="thumbnail" class="form-control">
+                <label for="image" class="form-label">Image thumbnail</label>
+                <input type="file" name="image" id="image" class="form-control">
             </div>
 
             <!-- Submit Button -->

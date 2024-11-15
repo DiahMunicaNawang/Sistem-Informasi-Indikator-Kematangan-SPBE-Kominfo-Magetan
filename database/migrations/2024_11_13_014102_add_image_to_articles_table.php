@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('articles', function (Blueprint $table) {
-            $table->unsignedBigInteger('category_id')->after('validator_user_id');
-
-            // Tambahkan foreign key untuk relasi ke tabel article_categories
-            $table->foreign('category_id')->references('id')->on('article_categories')->onDelete('cascade');
+            //
+            $table->string('image')->nullable()->after('category_id');
         });
     }
 
@@ -25,9 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('articles', function (Blueprint $table) {
-            // Hapus foreign key dan kolom category_id jika dibatalkan
-            $table->dropForeign(['category_id']);
-            $table->dropColumn('category_id');
+            //
+            $table->dropColumn('image');
         });
     }
 };
