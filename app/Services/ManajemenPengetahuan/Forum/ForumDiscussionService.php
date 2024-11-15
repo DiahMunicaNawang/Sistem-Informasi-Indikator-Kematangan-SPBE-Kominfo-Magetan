@@ -108,7 +108,7 @@ class ForumDiscussionService
         ];
     }
 
-    public function forumDiscussionApprovalReject($id) {
+    public function forumDiscussionApprovalReject(int $id) {
         $forum_discussion = ForumDiscussion::findOrFail($id);
 
         $forum_discussion->update([
@@ -126,7 +126,7 @@ class ForumDiscussionService
         ];
     }
     
-    public function forumDiscussionApprovalAccept($id) {
+    public function forumDiscussionApprovalAccept(int $id) {
         $forum_discussion = ForumDiscussion::findOrFail($id);
         
         return [

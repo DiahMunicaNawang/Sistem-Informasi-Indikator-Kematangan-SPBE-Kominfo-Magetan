@@ -22,8 +22,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userService->getAllUsers();
-        return view('user.index', ['users' => $users]);
+        $data = $this->userService->getAllUsers();
+        return view('user.index', $data);
     }
 
     /**
@@ -45,7 +45,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show($id)
     {
         //
     }
@@ -53,27 +53,27 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        $data = $this->userService->editUser($user);
+        $data = $this->userService->editUser($id);
         return view('user.user-edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, $id)
     {
-        $this->userService->updateUser($user, $request->all());
+        $this->userService->updateUser($request->all(), $id);
         return redirect()->route('user.index')->with('success', 'User berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $this->userService->deleteUser($user);
+        $this->userService->deleteUser($id);
         return redirect()->route('user.index')->with('success', 'User berhasil dihapus');
     }
 }

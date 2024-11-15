@@ -7,8 +7,10 @@ class ForumCategoryService
 {
     public function getAllForumCategories()
     {
-        $data = ForumCategory::all();
-        return $data;
+        $forum_categories = ForumCategory::all();
+        return [
+            'forum_categories' => $forum_categories
+        ];
     }
 
 
@@ -19,7 +21,7 @@ class ForumCategoryService
         return $forumCategory;
     }
 
-    public function editForumCategory($id) {
+    public function editForumCategory(int $id) {
         $forum_category = ForumCategory::findOrFail($id);
 
         return [
@@ -35,7 +37,7 @@ class ForumCategoryService
         return $forum_category;
     }
 
-    public function deleteForumCategory($id)
+    public function deleteForumCategory(int $id)
     {
         $forum_category = ForumCategory::findOrFail($id);
 

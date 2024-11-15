@@ -22,8 +22,8 @@ class ForumCategoryController extends Controller
      */
     public function index()
     {
-        $forum_categories = $this->forumCategoryService->getAllForumCategories();
-        return view('manajemen-pengetahuan.forum.forum-category-index', ['forum_categories' => $forum_categories]);
+        $data = $this->forumCategoryService->getAllForumCategories();
+        return view('manajemen-pengetahuan.forum.forum-category-index', $data);
     }
 
     /**
