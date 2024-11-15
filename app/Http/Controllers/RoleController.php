@@ -30,8 +30,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $menus = $this->roleService->createRole();
-        return view('role.role-create', ['menus' =>$menus]);
+        $data = $this->roleService->createRole();
+        return view('role.role-create', $data);
     }
 
     /**

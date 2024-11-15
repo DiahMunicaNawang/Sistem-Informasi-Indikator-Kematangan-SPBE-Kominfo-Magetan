@@ -37,7 +37,11 @@ class RoleService
     }
 
     public function createRole() {
-        return Menu::all(); // Get all menus for dropdown
+        $menus = Menu::all(); // Get all menus for dropdown
+        
+        return [
+            'menus' => $menus
+        ];
     }
 
 
