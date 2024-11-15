@@ -6,6 +6,9 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumCategoryController;
+use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumResponseController;
+use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumDiscussionController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -33,7 +36,24 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::view('manajemen-pengetahuan', 'manajemen-pengetahuan.index')->name('manajemen-pengetahuan');
 
     // Forum
-    Route::resource('forum', UserController::class);
+    Route::resource('forum-category', ForumCategoryController::class);
+    Route::resource('forum-discussion', ForumDiscussionController::class);
+    Route::resource('forum-response', ForumResponseController::class);
+
+    Route::get('forum-discussion-approval-user', [ForumDiscussionController::class, 'forum_discussion_approval_user'])->name('forum-discussion-approval-user');
+
+    Route::get('forum-discussion-approval-process', [ForumDiscussionController::class, 'forum_discussion_approval_process'])->name('forum-discussion-approval-process');
+
+    Route::get('forum-discussion-approval-reject/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_reject'])->name('forum-discussion-approval-reject');
+
+    Route::get('forum-discussion-approval-rejected', [ForumDiscussionController::class, 'forum_discussion_approval_rejected'])->name('forum-discussion-approval-rejected');
+
+    Route::get('forum-discussion-approval-accept/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept'])->name('forum-discussion-approval-accept');
+
+    Route::post('forum-discussion-approval-accept-availability/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept_availability'])->name('forum-discussion-approval-accept-availability');
+    
+    Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
+
 });
 
 Route::get('/login', [AuthController::class, 'login'])

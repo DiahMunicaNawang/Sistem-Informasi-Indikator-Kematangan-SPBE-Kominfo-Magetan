@@ -44,37 +44,29 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Role $role)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Role $role)
+    public function edit($id)
     {
-        $data = $this->roleService->editRole($role);
+        $data = $this->roleService->editRole($id);
         return view('role.role-edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleRequest $request, Role $role)
+    public function update(RoleRequest $request, $id)
     {
-        $this->roleService->updateRole($role, $request->all());
+        $this->roleService->updateRole($request->all(), $id);
         return redirect()->route('role.index')->with('success', 'Role berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
-        $this->roleService->deleteRole($role);
+        $this->roleService->deleteRole($id);
         return redirect()->route('role.index')->with('success', 'Role berhasil dihapus');
     }
 }
