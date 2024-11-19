@@ -1,6 +1,6 @@
 @extends('layouts.main.index')
 
-@section('page-name', 'Edit Role')
+@section('page-name', 'Edit Menu')
 
 @section('content')
 <form action="{{ route('menu.update', $menu->id) }}" method="POST">
@@ -103,6 +103,7 @@
     </div>
 </form>
 
+{{-- @push('script') --}}
 <script>
 $(document).ready(function() {
     // Initialize Select2
@@ -161,4 +162,7 @@ $(document).ready(function() {
         }
 });
 </script>
+{{-- @endpush --}}
 @endsection
+
+

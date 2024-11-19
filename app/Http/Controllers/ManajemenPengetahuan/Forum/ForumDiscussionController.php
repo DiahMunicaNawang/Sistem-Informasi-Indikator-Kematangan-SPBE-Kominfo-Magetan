@@ -67,6 +67,13 @@ class ForumDiscussionController extends Controller
      */
     public function update(ForumDiscussionRequest $request, $id)
     {
+        // Tidak bisa edit jika diskusi selesai/tutup
+        $diskusi_selesai = ForumDiscussion::where('id', $id)->where('availability_status', 'closed')->first();
+
+        if ($diskusi_selesai) {
+            return redirect()->route('forum-discussion-approval-user')->with('error', 'Mohon maaf, diskusi sudah selesai');
+        }
+
         $this->forumDiscussionService->updateForumDiscussion($request->all(), $id);
         return redirect()->route('forum-discussion.index')->with('success', 'Forum diskusi berhasil diupdate');
     }
@@ -103,7 +110,7 @@ class ForumDiscussionController extends Controller
 
     public function forum_discussion_approval_accept($id) {
         $data = $this->forumDiscussionService->forumDiscussionApprovalAccept($id);
-        return view('manajemen-pengetahuan.forum.forum-discussion-approval-accept', $data);
+        return view('manajemen-pengetahuan.forum.forum-discussion-approval-accept-availability', $data);
     }
 
     public function forum_discussion_approval_accept_availability(ForumDiscussionRequest $request, $id) {

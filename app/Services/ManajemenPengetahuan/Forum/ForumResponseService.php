@@ -19,10 +19,6 @@ class ForumResponseService
 
     public function storeForumResponse(array $data)
     {
-        if (session('user_informations.role') === 'pengguna-umum') {
-            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memperbarui tanggapan');
-        }
-
         // Pastikan content mempertahankan line breaks
         $content = str_replace(["\r\n", "\r", "\n"], "\n", $data['content']);
 
@@ -38,10 +34,6 @@ class ForumResponseService
     
     public function updateForumResponse(array $data, int $id)
     {
-        if (session('user_informations.role') === 'pengguna-umum') {
-            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memperbarui tanggapan');
-        }
-
         $forum_response = ForumResponse::findOrFail($id);
 
         $content = str_replace(["\r\n", "\r", "\n"], "\n", $data['content']);
