@@ -15,6 +15,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <style>
         /* CSS styling for both dark and light themes */
         body {
@@ -196,7 +202,7 @@
                     if (str_starts_with($data->image, 'http')) {
                         $imageSrc = $data->image;
                     } else {
-                        $imageSrc = asset('/' . $data->image);
+                        $imageSrc = asset('storage/' . $data->image);
                     }
                 @endphp
 

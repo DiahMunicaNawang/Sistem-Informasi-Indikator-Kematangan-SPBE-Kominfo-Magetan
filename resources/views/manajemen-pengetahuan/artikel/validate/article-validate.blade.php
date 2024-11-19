@@ -102,7 +102,7 @@
                     if (str_starts_with($article->image, 'http')) {
                         $imageSrc = $article->image;
                     } else {
-                        $imageSrc = asset('/' . $article->image);
+                        $imageSrc = asset('storage/' . $article->image);
                     }
                 @endphp
                 <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">

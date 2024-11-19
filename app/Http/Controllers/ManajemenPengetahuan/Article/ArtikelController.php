@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers\ManajemenPengetahuan\Article;
-
 use App\Services\ManajemenPengetahuan\Artikel\ArticleService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,6 +17,7 @@ class ArtikelController extends Controller
     public function index(Request $request)
     {
         $artikel = $this->articleService->getArticles($request->search);
+        // $user = Auth::user()->role->name;
         return view('manajemen-pengetahuan.artikel.index', compact('artikel'));
     }
 
@@ -68,7 +68,7 @@ class ArtikelController extends Controller
         return redirect()->back()->with('success', 'Penilaian berhasil ditambahkan');
     }
 
-    
+
     // Validate
     public function validate_index(Request $request)
     {
@@ -92,5 +92,22 @@ class ArtikelController extends Controller
         $this->articleService->storeValidation($id, $request->all());
 
         return redirect()->route('article.index')->with('success', 'Artikel berhasil divalidasi.');
+    }
+
+    // Category
+
+    public function createCategory(){
+        return view('manajemen-pengetahuan.artikel.article-add_category');
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $request->validate([
+            'category_name' => 'required',
+        ]);
+
+        $this->articleService->storeCategory($request->all());
+
+        return redirect()->route('article.index')->with('success', 'Category baru berhasil di tambahkan');
     }
 }

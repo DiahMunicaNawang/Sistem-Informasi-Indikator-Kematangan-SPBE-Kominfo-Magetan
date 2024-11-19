@@ -36,7 +36,7 @@
             margin: 20px 0;
         }
 
-        .btn-custom {
+        .btn-theme {
             background-color: var(--button-bg-color);
             color: var(--button-text-color);
             border: none;
@@ -49,7 +49,7 @@
             gap: 5px;
         }
 
-        .btn-custom:hover {
+        .btn-theme:hover {
             background-color: var(--button-bg-hover-color);
         }
 
@@ -158,7 +158,7 @@
                     if (str_starts_with($data->image, 'http')) {
                         $imageSrc = $data->image;
                     } else {
-                        $imageSrc = asset('/' . $data->image);
+                        $imageSrc = asset('storage/' . $data->image);
                     }
                 @endphp
 

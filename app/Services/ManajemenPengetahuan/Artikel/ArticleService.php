@@ -65,7 +65,7 @@ class ArticleService
     }
 
     // Menyimpan kategori artikel
-    public function createCategory($data)
+    public function storeCategory($data)
     {
         return ArticleCategory::create($data);
     }
