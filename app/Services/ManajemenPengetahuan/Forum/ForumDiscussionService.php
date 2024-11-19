@@ -17,6 +17,7 @@ class ForumDiscussionService
     public function getAllForumDiscussions()
     {
         $forum_discussions = ForumDiscussion::with('forum_category', 'user')->where('approval_status', 'accepted')->get();
+
         return [
             'forum_discussions' => $forum_discussions,
         ];
@@ -76,7 +77,7 @@ class ForumDiscussionService
             'description' => $data['description'],
             'forum_category_id' => $data['forum_category_id'],
             'user_id' => $forumDiscussion->user_id,
-            'approval_status' => $data['approval_status'] ?? 'process',
+            'approval_status' => 'process',
             'availability_status' => 'open',
             'discussion_created_at' => now(),
             'availability_status_updated_at' => null,
@@ -113,6 +114,7 @@ class ForumDiscussionService
 
         $forum_discussion->update([
             'approval_status' => 'rejected',
+            'availability_status' => 'closed',
         ]);
         
         return $forum_discussion;

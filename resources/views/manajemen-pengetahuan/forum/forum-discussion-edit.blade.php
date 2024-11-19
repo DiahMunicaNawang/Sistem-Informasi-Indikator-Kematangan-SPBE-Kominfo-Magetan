@@ -36,7 +36,7 @@
                     @enderror
                 </div>
                 
-                @if (session('user_informations.role') == 'admin' || session('user_informations.role') == 'super-admin')
+                {{-- @if (session('user_informations.role') == 'admin' || session('user_informations.role') == 'super-admin')
 
                 <div class="mb-8">
                     <label for="approval_status" class="required form-label">Status Persetujuan</label> 
@@ -62,7 +62,7 @@
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
-                @endif
+                @endif --}}
             </div>
             <div class="pt-0 card-footer">
                 <button type="submit" class="btn btn-sm btn-primary">Submit</button>

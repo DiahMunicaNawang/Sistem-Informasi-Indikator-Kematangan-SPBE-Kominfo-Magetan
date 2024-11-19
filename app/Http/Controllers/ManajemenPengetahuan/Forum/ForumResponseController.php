@@ -7,6 +7,7 @@ use App\Http\Requests\ManajemenPengetahuan\Forum\ForumResponseRequest;
 use App\Models\ManajemenPengetahuan\Forum\ForumDiscussion;
 use App\Models\ManajemenPengetahuan\Forum\ForumResponse;
 use App\Services\ManajemenPengetahuan\Forum\ForumResponseService;
+use Illuminate\Http\Request;
 
 class ForumResponseController extends Controller
 {
@@ -37,11 +38,15 @@ class ForumResponseController extends Controller
      */
     public function store(ForumResponseRequest $request)
     {
-        // Tidak bisa comment jika diskusi selesai/tutup
+        // Tidak bisa menanggapi jika diskusi selesai/tutup
         $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
 
         if ($diskusi_selesai) {
-            return redirect()->back()->with('error', 'Diskusi sudah selesai');
+            return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
+        }
+
+        if (session('user_informations.role') === 'pengguna-umum') {
+            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memberi tanggapan');
         }
 
         $this->forumResponseService->storeForumResponse($request->all());
@@ -69,11 +74,15 @@ class ForumResponseController extends Controller
      */
     public function update(ForumResponseRequest $request, $id)
     {
-        // Tidak bisa comment jika diskusi selesai/tutup
+        // Tidak bisa menanggapi jika diskusi selesai/tutup
         $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
 
         if ($diskusi_selesai) {
-            return redirect()->back()->with('error', 'Mohon maaf diskusi sudah ditutup');
+            return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
+        }
+
+        if (session('user_informations.role') === 'pengguna-umum') {
+            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memperbarui tanggapan');
         }
         
         $this->forumResponseService->updateForumResponse($request->all(), $id);
@@ -83,8 +92,19 @@ class ForumResponseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        // Tidak bisa menanggapi jika diskusi selesai/tutup
+        $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
+
+        if ($diskusi_selesai) {
+            return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
+        }
+
+        if (session('user_informations.role') === 'pengguna-umum') {
+            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa menghapus tanggapan');
+        }
+        
         $this->forumResponseService->deleteForumResponse($id);
         return redirect()->back()->with('success', 'Tanggapan berhasil dihapus');
     }

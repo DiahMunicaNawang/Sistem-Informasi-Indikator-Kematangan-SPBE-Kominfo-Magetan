@@ -60,6 +60,7 @@
                                     class="d-inline">
                                     @csrf
                                     @method('DELETE')
+                                    <input type="hidden" name="forum_discussion_id" value="{{ $forum_discussion->id }}">
                                     <button type="submit" class="btn btn-sm btn-light-danger"
                                         onclick="return confirm('Apakah Anda yakin ingin menghapus tanggapan ini?')">
                                         Hapus
@@ -80,6 +81,7 @@
                             @csrf
                             @method('PUT')
                             <div class="gap-2 d-flex flex-column">
+                                <input type="hidden" name="forum_discussion_id" value="{{ $forum_discussion->id }}">
                                 <textarea name="content" class="p-3 bg-transparent border border-gray-400 rounded w-100 text-dark" rows="3"
                                     style="resize: vertical;">{{ $response->content }}</textarea>
                                 <div class="gap-2 d-flex justify-content-end">
@@ -144,6 +146,7 @@
                                                     method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
+                                                    <input type="hidden" name="forum_discussion_id" value="{{ $forum_discussion->id }}">
                                                     <button type="submit" class="btn btn-sm btn-light-danger"
                                                         onclick="return confirm('Apakah Anda yakin ingin menghapus komentar ini?')">
                                                         Hapus

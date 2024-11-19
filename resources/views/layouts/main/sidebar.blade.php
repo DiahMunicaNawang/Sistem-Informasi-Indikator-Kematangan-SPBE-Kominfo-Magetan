@@ -84,26 +84,22 @@
                 <!--end:Menu item-->
 
                 @php
-                    // Get the current URL
                     $currentUrl = url()->current();
-                    // Sort the menus
-                    $allMenus = Cache::remember('user_' . Auth::id() . '_menus', now()->addMinutes(30), function () {
-                        return Auth::user()
-                            ->role->menus()
-                            ->with([
-                                'dropdownChildren' => fn($query) => $query->orderBy('name'),
-                                'categoryChildren' => fn($query) => $query->orderBy('name'),
-                            ])
-                            ->orderBy('created_at', 'ASC')
-                            ->get();
-                    });
+                    $allMenus = Auth::user()
+                        ->role->menus()
+                        ->with([
+                            'dropdownChildren' => function ($query) {
+                                $query->whereHas('roles', function ($q) {
+                                    $q->where('roles.id', Auth::user()->role_id);
+                                });
+                            },
+                        ])
+                        ->get();
 
-                    // Langsung filter kategori dan menu biasa
                     $categories = $allMenus->where('is_category', true);
-
                 @endphp
 
-                {{-- Loop through categories --}}
+                {{-- Categories and their menus --}}
                 @foreach ($categories as $category)
                     <div class="pt-5 menu-item">
                         <div class="menu-content">
@@ -111,7 +107,100 @@
                         </div>
                     </div>
 
-                    {{-- Get menus for this category --}}
+                    @foreach ($allMenus->where('category_id', $category->id) as $menu)
+                        @php
+                            $isActive =
+                                $currentUrl === url($menu->url) ||
+                                ($menu->url === '/' && $currentUrl === url('/')) ||
+                                Request::is(trim($menu->url, '/') . '/*');
+                            $hasActiveChild = $menu->dropdownChildren->contains(
+                                fn($child) => $currentUrl === url($child->url) ||
+                                    Request::is(trim($child->url, '/') . '/*'),
+                            );
+                        @endphp
+
+                        @if ($menu->dropdownChildren->isNotEmpty())
+                            {{-- Dropdown Menu --}}
+                            <div class="menu-item menu-accordion {{ $hasActiveChild ? 'hover show' : '' }}"
+                                data-kt-menu-trigger="click">
+                                <span class="menu-link {{ $hasActiveChild ? 'active' : '' }}">
+                                    <span class="menu-title">{{ $menu->name }}</span>
+                                    <span class="menu-arrow"></span>
+                                </span>
+                                <div class="menu-sub menu-sub-accordion {{ $hasActiveChild ? 'show' : '' }}">
+                                    @foreach ($menu->dropdownChildren as $child)
+                                        <div class="menu-item">
+                                            <a class="menu-link {{ $currentUrl === url($child->url) ? 'active' : '' }}"
+                                                href="{{ $child->url }}">
+                                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                                <span class="menu-title">{{ $child->name }}</span>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @elseif (empty($menu->dropdown_id))
+                            {{-- Regular Menu --}}
+                            <div class="menu-item">
+                                <a class="menu-link {{ $isActive ? 'active' : '' }}" href="{{ $menu->url }}">
+                                    <span class="menu-title">{{ $menu->name }}</span>
+                                </a>
+                            </div>
+                        @endif
+                    @endforeach
+                @endforeach
+
+                {{-- Uncategorized menus --}}
+                @foreach ($allMenus->whereNull('category_id')->where('is_category', false) as $menu)
+                    @php
+                        $isActive =
+                            $currentUrl === url($menu->url) ||
+                            ($menu->url === '/' && $currentUrl === url('/')) ||
+                            Request::is(trim($menu->url, '/') . '/*');
+                        $hasActiveChild = $menu->dropdownChildren->contains(
+                            fn($child) => $currentUrl === url($child->url) ||
+                                Request::is(trim($child->url, '/') . '/*'),
+                        );
+                    @endphp
+
+                    @if ($menu->dropdownChildren->isNotEmpty())
+                        {{-- Dropdown Menu --}}
+                        <div class="menu-item menu-accordion {{ $hasActiveChild ? 'hover show' : '' }}"
+                            data-kt-menu-trigger="click">
+                            <span class="menu-link {{ $hasActiveChild ? 'active' : '' }}">
+                                <span class="menu-title">{{ $menu->name }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion {{ $hasActiveChild ? 'show' : '' }}">
+                                @foreach ($menu->dropdownChildren as $child)
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ $currentUrl === url($child->url) ? 'active' : '' }}"
+                                            href="{{ $child->url }}">
+                                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                            <span class="menu-title">{{ $child->name }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @elseif (empty($menu->dropdown_id))
+                        {{-- Regular Menu --}}
+                        <div class="menu-item">
+                            <a class="menu-link {{ $isActive ? 'active' : '' }}" href="{{ $menu->url }}">
+                                <span class="menu-title">{{ $menu->name }}</span>
+                            </a>
+                        </div>
+                    @endif
+                @endforeach
+
+                {{-- Loop through categories --}}
+                {{-- @foreach ($categories as $category)
+                    <div class="pt-5 menu-item">
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">{{ $category->name }}</span>
+                        </div>
+                    </div>
+
                     @foreach ($allMenus->where('category_id', $category->id) as $menu)
                         @php
                             $isActive =
@@ -165,10 +254,10 @@
                             </div>
                         @endif
                     @endforeach
-                @endforeach
+                @endforeach --}}
 
                 {{-- Uncategorized menus --}}
-                @foreach ($allMenus->whereNull('category_id')->where('is_category', false) as $menu)
+                {{-- @foreach ($allMenus->whereNull('category_id')->where('is_category', false) as $menu)
                     @php
                         $isActive =
                             $currentUrl === url($menu->url) ||
@@ -220,7 +309,7 @@
                             </a>
                         </div>
                     @endif
-                @endforeach
+                @endforeach --}}
 
                 <!--begin:Menu item-->
                 {{-- <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
