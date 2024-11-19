@@ -8,10 +8,14 @@ use App\Models\User;
 class UserService
 {
     public function getAllUsers() {
-        return User::with('role')->orderBy('created_at', 'ASC')->get();
+        $users = User::with('role')->orderBy('created_at', 'ASC')->get();
+        return [
+            'users' => $users
+        ];
     }
 
-    public function editUser(User $user) {
+    public function editUser(int $id) {
+        $user = User::findOrFail($id);
         $users = User::with('role')->get();
         $roles = Role::all();
 
@@ -22,13 +26,15 @@ class UserService
         ];
     }
 
-    public function updateUser(User $user, array $data)
+    public function updateUser(array $data, int $id)
     {
+        $user = User::findOrFail($id);
         $user->update(['role_id' => $data['role_id']]);
         return $user;
     }
 
-    public function deleteUser(User $user) {
+    public function deleteUser(int $id) {
+        $user = User::findOrFail($id);
         return $user->delete();
     }
 }

@@ -99,7 +99,7 @@
             <!-- Kategori -->
             <div class="mb-3">
                 <label for="kategori" class="form-label">Kategori
-                    @if (auth()->user() && auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
+                    @if (auth()->user() && auth()->user()->role_id == 1)
                         | <a href="{{ route('article.createCategory') }}"">Add Category</a>
                     @endif
                 </label>

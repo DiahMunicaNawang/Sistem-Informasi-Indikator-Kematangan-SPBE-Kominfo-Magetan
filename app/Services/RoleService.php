@@ -30,8 +30,10 @@ class RoleService
     {
         
         // Eager load 'menus' untuk menghindari query N+1
-        $data = Role::with('menus')->get();
-        return $data;
+        $roles = Role::with('menus')->get();
+        return [
+            'roles' => $roles,
+        ];
     }
 
     public function createRole() {
@@ -51,7 +53,8 @@ class RoleService
         return $role;
     }
 
-    public function editRole(Role $role) {
+    public function editRole(int $id) {
+        $role = Role::findOrFail($id);
         $menus = Menu::all(); // Get all menus for dropdown
         $menuOld = $role->menus->pluck('id')->toArray(); // Get selected menus
 
@@ -62,9 +65,11 @@ class RoleService
         ];
     }
 
-    public function updateRole(Role $role, array $data)
+    public function updateRole(array $data, int $id)
     {
+        $role = Role::findOrFail($id);
         $name = Str::slug($data['name']); // Convert URL to slug
+
         $role->update(['name' => $name]);
         
         $role->menus()->sync($data['menus']);
@@ -74,8 +79,9 @@ class RoleService
         return $role;
     }
 
-    public function deleteRole(Role $role)
+    public function deleteRole(int $id)
     {
+        $role = Role::findOrFail($id);
         $role->menus()->detach(); // Hapus hubungan dengan menus sebelum menghapus role
         return $role->delete();
     }

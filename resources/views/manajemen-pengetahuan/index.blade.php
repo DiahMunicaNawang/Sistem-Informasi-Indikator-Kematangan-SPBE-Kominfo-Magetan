@@ -17,8 +17,12 @@
         <div class="card h-100">
             <div class="text-center card-body">
                 <h3>Forum</h3>
-                <a href="{{ route('forum.index') }}" class="btn btn-sm btn-primary">Lihat Forum</a>
-                <a href="" class="btn btn-sm btn-primary">Ajukan Pertanyaan</a>
+                <div class="flex-wrap gap-2 justify-content-center d-flex">
+
+                    <a href="{{ route('forum-category.index') }}" class="btn btn-sm btn-primary">Kategori Forum</a>
+                    <a href="{{ route('forum-discussion.index') }}" class="btn btn-sm btn-primary">Lihat Forum</a>
+                    <a href="{{ route('forum-discussion-approval-process') }}" class="btn btn-sm btn-primary">Persetujuan Forum</a>
+                </div>
             </div>
         </div>
     </div>

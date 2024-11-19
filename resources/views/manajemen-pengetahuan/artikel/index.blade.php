@@ -165,22 +165,27 @@
     </form>
     <div class="button-container mx-4 mb-3">
 
-        <!-- Create Article Button -->
-        <a href="{{ route('article.create') }}" class="btn-theme d-block mb-2">
-            <i class="fas fa-plus"></i> Buat Artikel
-        </a>
+        <!-- Create Article Button (Only visible for Superadmin and User )-->
+        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3))
+            <a href="{{ route('article.create') }}" class="btn-theme d-block mb-2">
+                <i class="fas fa-plus"></i> Buat Artikel
+            </a>
+        @endif
 
-        <!-- Validation Button (Only visible for Admin and Superadmin) -->
-        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 2))
+
+        <!-- Validation Button (Only visible for Superadmin) -->
+        @if (auth()->user() && auth()->user()->role_id == 1)
             <a href="{{ route('article.validateIndex') }}" class="btn-theme d-block mb-2">
                 <i class="fas fa-check"></i> Validasi Artikel
             </a>
         @endif
 
-        <!-- Print Article Button -->
-        <a href="#" class="btn-theme d-block">
-            <i class="fas fa-print"></i> Cetak Artikel
-        </a>
+        <!-- Print Article Button (Only visible for Superadmin, User, And Visitor)-->
+        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
+            <a href="#" class="btn-theme d-block">
+                <i class="fas fa-print"></i> Cetak Artikel
+            </a>
+        @endif
     </div>
 
 
@@ -195,8 +200,13 @@
                     }
                 @endphp
 
-                <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}" class="img-fluid rounded"
-                        alt="Article Thumbnail"></a>
+                <!-- Detail Article (Only can access for Superadmin, User, And Visitor)-->
+                @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
+                    <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}"
+                            class="img-fluid rounded" alt="Article Thumbnail"></a>
+                @else
+                    <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
+                @endif
 
                 <h5 class="card-title">{{ $data->title }}</h5>
                 <p class="card-text">{{ $data->article_summary }}</p>

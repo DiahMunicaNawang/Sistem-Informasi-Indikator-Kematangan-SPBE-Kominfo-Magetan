@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Controllers\ArtikelController;
+use App\Http\Controllers\ManajemenPengetahuan\Article\ArtikelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumCategoryController;
+use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumResponseController;
+use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumDiscussionController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -38,8 +41,35 @@ Route::middleware('auth', 'verified')->group(function () {
 
     // Articles
     Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);
+
+
+    // Article
+    Route::post('/article/store_rating', [ArtikelController::class, 'storeRating'])->name('article.storeRating');
+    Route::get('/article/create_category', [ArtikelController::class, 'createCategory'])->name('article.createCategory');
+    Route::post('/article/store_category', [ArtikelController::class, 'storeCategory'])->name('article.storeCategory');
+    Route::get('/article/index_validate', [ArtikelController::class, 'validate_index'])->name('article.validateIndex');
     Route::get('/article/{id}/validate', [ArtikelController::class, 'validateArticle'])->name('article.validate');
     Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation');
+
+
+    // Forum
+    Route::resource('forum-category', ForumCategoryController::class);
+    Route::resource('forum-discussion', ForumDiscussionController::class);
+    Route::resource('forum-response', ForumResponseController::class);
+
+    Route::get('forum-discussion-approval-user', [ForumDiscussionController::class, 'forum_discussion_approval_user'])->name('forum-discussion-approval-user');
+
+    Route::get('forum-discussion-approval-process', [ForumDiscussionController::class, 'forum_discussion_approval_process'])->name('forum-discussion-approval-process');
+
+    Route::get('forum-discussion-approval-reject/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_reject'])->name('forum-discussion-approval-reject');
+
+    Route::get('forum-discussion-approval-rejected', [ForumDiscussionController::class, 'forum_discussion_approval_rejected'])->name('forum-discussion-approval-rejected');
+
+    Route::get('forum-discussion-approval-accept/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept'])->name('forum-discussion-approval-accept');
+
+    Route::post('forum-discussion-approval-accept-availability/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept_availability'])->name('forum-discussion-approval-accept-availability');
+
+    Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
 });
 
 Route::get('/login', [AuthController::class, 'login'])
@@ -79,12 +109,6 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'Email verifikasi baru telah dikirim.');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-
-//Article
-Route::post('/article/store_rating', [ArtikelController::class, 'storeRating'])->name('article.storeRating');
-Route::get('/article/create_category', [ArtikelController::class, 'createCategory'])->name('article.createCategory');
-Route::post('/article/store_category', [ArtikelController::class, 'storeCategory'])->name('article.storeCategory');
-Route::get('/article/index_validate', [ArtikelController::class, 'validate_index'])->name('article.validateIndex');
 
 // Route::post('/upload-image', function (Request $request) {
 //     if ($request->hasFile('upload')) {

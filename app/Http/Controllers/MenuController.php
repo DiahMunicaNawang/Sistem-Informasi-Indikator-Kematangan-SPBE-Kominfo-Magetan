@@ -21,8 +21,8 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $menus = $this->menuService->getAllMenus();
-        return view('menu.index', ['menus' => $menus]);
+        $data = $this->menuService->getAllMenus();
+        return view('menu.index', $data);
     }
 
     /**
@@ -46,7 +46,7 @@ class MenuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Menu $menu)
+    public function show($id)
     {
         //
     }
@@ -54,27 +54,27 @@ class MenuController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Menu $menu)
+    public function edit($id)
     {
-        $data = $this->menuService->editMenu($menu);
+        $data = $this->menuService->editMenu($id);
         return view('menu.menu-edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(MenuRequest $request, Menu $menu)
+    public function update(MenuRequest $request, $id)
     {
-        $this->menuService->updateMenu($menu, $request->all());
+        $this->menuService->updateMenu($request->all(), $id);
         return redirect()->route('menu.index')->with('success', 'Menu berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Menu $menu)
+    public function destroy($id)
     {
-        $this->menuService->deleteMenu($menu);
+        $this->menuService->deleteMenu($id);
         return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus');
     }
 }
