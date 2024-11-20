@@ -14,12 +14,19 @@ class ForumDiscussionService
     }
 
     
-    public function getAllForumDiscussions()
+    public function getAllForumDiscussions($search = null)
     {
-        $forum_discussions = ForumDiscussion::with('forum_category', 'user')->where('approval_status', 'accepted')->get();
-
         return [
-            'forum_discussions' => $forum_discussions,
+            'forum_discussions' => ForumDiscussion::with('forum_category', 'user')
+                ->where('approval_status', 'accepted')
+                ->when($search, function ($query, $search) {
+                    $search = strtolower($search); // Pastikan pencarian lowercase
+                    $query->whereRaw('LOWER(title) LIKE ?', ["%$search%"])
+                        ->orWhereRaw('LOWER(description) LIKE ?', ["%$search%"])
+                        ->orWhereHas('forum_category', fn($q) => $q->whereRaw('LOWER(name) LIKE ?', ["%$search%"]));
+                })
+                ->orderBy('discussion_created_at', 'DESC')
+                ->paginate(10),
         ];
     }
 
