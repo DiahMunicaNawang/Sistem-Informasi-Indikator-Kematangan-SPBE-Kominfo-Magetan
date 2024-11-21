@@ -14,13 +14,6 @@
             {{ session('success') }}
         </div>
     @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <style>
         /* CSS styling for both dark and light themes */
         body {
@@ -188,115 +181,125 @@
 
         <!-- Print Article Button (Only visible for Superadmin, User, And Visitor)-->
         @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
-            <a href="#" class="btn-theme d-block">
-                <i class="fas fa-print"></i> Cetak Artikel
+            <a href="{{ route('article.printPDF', ['search' => request()->get('search')]) }}" class="btn-theme d-block">
+                <i class="fas fa-print"></i> Cetak Artikel PDF
             </a>
         @endif
     </div>
 
-
-    <div class="grid-container">
-        @foreach ($artikel as $data)
-            <div class="card">
-                @php
-                    if (str_starts_with($data->image, 'http')) {
-                        $imageSrc = $data->image;
-                    } else {
-                        $imageSrc = asset('storage/' . $data->image);
-                    }
-                @endphp
-
-                <!-- Detail Article (Only can access for Superadmin, User, And Visitor)-->
-                @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
-                    <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}"
-                            class="img-fluid rounded" alt="Article Thumbnail"></a>
-                @else
-                    <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
-                @endif
-
-                <h5 class="card-title">{{ $data->title }}</h5>
-                <p class="card-text">{{ $data->article_summary }}</p>
-
-                <!-- Tampilkan rating sebagai bintang -->
-                <div class="card-text">
-                    <span>Rating: </span>
+    @if ($artikel->isEmpty())
+        <div class="alert alert-warning text-center">
+            Tidak ada hasil yang ditemukan
+            @if (request()->get('search'))
+                untuk kata kunci <strong>"{{ request()->get('search') }}"</strong>.
+            @else
+                saat ini.
+            @endif
+        </div>
+    @else
+        <div class="grid-container">
+            @foreach ($artikel as $data)
+                <div class="card">
                     @php
-                        $averageRating = $data->average_rating;
-                        $fullStars = floor($averageRating); // Bintang penuh
-                        $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                        if (str_starts_with($data->image, 'http')) {
+                            $imageSrc = $data->image;
+                        } else {
+                            $imageSrc = asset('storage/' . $data->image);
+                        }
                     @endphp
 
-                    <!--  bintang penuh -->
-                    @for ($i = 0; $i < $fullStars; $i++)
-                        <i class="fas fa-star text-warning"></i>
-                    @endfor
-
-                    <!-- setengah bintang jika ada -->
-                    @if ($halfStar)
-                        <i class="fas fa-star-half-alt text-warning"></i>
+                    <!-- Detail Article (Only can access for Superadmin, User, And Visitor)-->
+                    @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
+                        <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}"
+                                class="img-fluid rounded" alt="Article Thumbnail"></a>
+                    @else
+                        <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
                     @endif
 
-                    <!-- bintang kosong jika kurang dari 5 -->
-                    @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
-                        <i class="far fa-star text-warning"></i>
-                    @endfor
+                    <h5 class="card-title">{{ $data->title }}</h5>
+                    <p class="card-text">{{ $data->article_summary }}</p>
 
-                    <!--  nilai rata-rata -->
-                    <span>({{ number_format($averageRating, 1) }})</span>
-                    <br>
-                    <span> By : {{ $data->ratings->count('rating_value') }} User </span>
+                    <!-- Tampilkan rating sebagai bintang -->
+                    <div class="card-text">
+                        <span>Rating: </span>
+                        @php
+                            $averageRating = $data->average_rating;
+                            $fullStars = floor($averageRating); // Bintang penuh
+                            $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                        @endphp
+
+                        <!--  bintang penuh -->
+                        @for ($i = 0; $i < $fullStars; $i++)
+                            <i class="fas fa-star text-warning"></i>
+                        @endfor
+
+                        <!-- setengah bintang jika ada -->
+                        @if ($halfStar)
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        @endif
+
+                        <!-- bintang kosong jika kurang dari 5 -->
+                        @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
+                            <i class="far fa-star text-warning"></i>
+                        @endfor
+
+                        <!--  nilai rata-rata -->
+                        <span>({{ number_format($averageRating, 1) }})</span>
+                        <br>
+                        <span> By : {{ $data->ratings->count('rating_value') }} User </span>
+                    </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#search').on('input', function() {
-                var searchTerm = $(this).val();
-                if (searchTerm.length > 2) {
-                    $.ajax({
-                        url: "{{ route('article.index') }}",
-                        method: 'GET',
-                        data: {
-                            term: searchTerm
-                        },
-                        success: function(data) {
-                            $('#search-results').empty();
-                            if (data.length > 0) {
-                                $.each(data, function(index, item) {
-                                    $('#search-results').append(
-                                        '<div class="search-result-item">' + item +
-                                        '</div>');
-                                });
-                                $('#search-results').show();
-                            } else {
-                                $('#search-results').hide();
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#search').on('input', function() {
+                    var searchTerm = $(this).val();
+                    if (searchTerm.length > 2) {
+                        $.ajax({
+                            url: "{{ route('article.index') }}",
+                            method: 'GET',
+                            data: {
+                                term: searchTerm
+                            },
+                            success: function(data) {
+                                $('#search-results').empty();
+                                if (data.length > 0) {
+                                    $.each(data, function(index, item) {
+                                        $('#search-results').append(
+                                            '<div class="search-result-item">' + item +
+                                            '</div>');
+                                    });
+                                    $('#search-results').show();
+                                } else {
+                                    $('#search-results').hide();
+                                }
+                            },
+                            error: function() {
+                                console.error('Error fetching data');
                             }
-                        },
-                        error: function() {
-                            console.error('Error fetching data');
-                        }
-                    });
-                } else {
-                    $('#search-results').hide();
-                }
-            });
+                        });
+                    } else {
+                        $('#search-results').hide();
+                    }
+                });
 
-            // Hide results when clicking outside
-            $(document).on('click', function(event) {
-                if (!$(event.target).closest('.search-box').length) {
-                    $('#search-results').hide();
-                }
-            });
+                // Hide results when clicking outside
+                $(document).on('click', function(event) {
+                    if (!$(event.target).closest('.search-box').length) {
+                        $('#search-results').hide();
+                    }
+                });
 
-            // Handle click on search result
-            $(document).on('click', '.search-result-item', function() {
-                $('#search').val($(this).text());
-                $('#search-results').hide();
+                // Handle click on search result
+                $(document).on('click', '.search-result-item', function() {
+                    $('#search').val($(this).text());
+                    $('#search-results').hide();
+                });
             });
-        });
-    </script>
+        </script>
+    @endif
 @endsection

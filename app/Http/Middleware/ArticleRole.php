@@ -21,9 +21,9 @@ class ArticleRole
         // Pisahkan roles dengan delimiter '|'
         $rolesArray = explode('|', $roles);
 
-        // Cek apakah user memiliki role yang sesuai
         if (!$user || !in_array($user->role->name, $rolesArray)) {
-            return redirect()->route('article.index')->with('error', 'Anda tidak memiliki akses!');
+            session()->flash('error', 'Anda tidak memiliki akses!');
+            return redirect()->back();
         }
 
         return $next($request);

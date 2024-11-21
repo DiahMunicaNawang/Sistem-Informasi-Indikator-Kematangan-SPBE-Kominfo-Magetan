@@ -102,7 +102,7 @@ class ArticleService
             'validation_date' => now(),
         ]);
 
-        $articleStatus = $data['validation_status'] == 'rejected' ? 'deleted' : 'published';
+        $articleStatus = $data['validation_status'] == 'rejected' ? 'rejected' : 'published';
         Article::where('id', $id)->update([
             'article_status' => $articleStatus,
             'updated_at' => now(),

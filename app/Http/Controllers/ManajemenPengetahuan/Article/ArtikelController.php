@@ -1,9 +1,16 @@
 <?php
+
 namespace App\Http\Controllers\ManajemenPengetahuan\Article;
-use App\Services\ManajemenPengetahuan\Artikel\ArticleService;
+
+use Carbon\Carbon;
+use App\Models\Article;
 use Illuminate\Http\Request;
+use App\Models\ArticleRating;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ManajemenPengetahuan\Artikel\ArticleService;
+use App\Http\Requests\ManajemenPengetahuan\Article\StoreArticleRequest;
 
 class ArtikelController extends Controller
 {
@@ -16,9 +23,10 @@ class ArtikelController extends Controller
 
     public function index(Request $request)
     {
-        $artikel = $this->articleService->getArticles($request->search);
-        // $user = Auth::user()->role->name;
-        return view('manajemen-pengetahuan.artikel.index', compact('artikel'));
+        $search = $request->search;
+        $artikel = $this->articleService->getArticles($search);
+
+        return view('manajemen-pengetahuan.artikel.index', compact('artikel', 'search'));
     }
 
     public function create()
@@ -27,21 +35,15 @@ class ArtikelController extends Controller
         return view('manajemen-pengetahuan.artikel.article-add', compact('artikel_category'));
     }
 
-    public function store(Request $request)
+    public function store(StoreArticleRequest $request)
     {
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'ringkasan' => 'required|string|max:255',
-            'konten' => 'required|string',
-            'kategori' => 'required|exists:article_categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        $validatedData = $request->validated();
 
         $imageName = $request->hasFile('image')
             ? $request->image->storeAs('images', time() . '.' . $request->image->extension(), 'public')
             : null;
 
-        $this->articleService->createArticle(array_merge($request->all(), ['image' => $imageName]));
+        $this->articleService->createArticle(array_merge($validatedData, ['image' => $imageName]));
 
         return redirect()->route('article.index')->with('success', 'Artikel berhasil dibuat');
     }
@@ -91,12 +93,13 @@ class ArtikelController extends Controller
 
         $this->articleService->storeValidation($id, $request->all());
 
-        return redirect()->route('article.index')->with('success', 'Artikel berhasil divalidasi.');
+        return redirect()->route('article.validateIndex')->with('success', 'Artikel berhasil divalidasi.');
     }
 
     // Category
 
-    public function createCategory(){
+    public function createCategory()
+    {
         return view('manajemen-pengetahuan.artikel.article-add_category');
     }
 
@@ -109,5 +112,36 @@ class ArtikelController extends Controller
         $this->articleService->storeCategory($request->all());
 
         return redirect()->route('article.index')->with('success', 'Category baru berhasil di tambahkan');
+    }
+
+
+    // PrintPDF
+    public function printPDF(Request $request)
+    {
+        // Ambil keyword pencarian
+        $search = $request->get('search');
+
+        // Query artikel berdasarkan pencarian
+        $articles = Article::where('title', 'like', "%$search%")
+            ->orWhere('article_summary', 'like', "%$search%")
+            ->get();
+
+        // Jika tidak ada artikel, return pesan
+        if ($articles->isEmpty()) {
+            return back()->with('error', 'Tidak ada artikel yang ditemukan untuk kata kunci tersebut.');
+        }
+
+        // Konfigurasi opsi PDF untuk mendukung URL eksternal
+        $pdfOptions = [
+            'isRemoteEnabled' => true, // Aktifkan akses URL eksternal
+            'isHtml5ParserEnabled' => true, // Mendukung parsing HTML5 (opsional)
+        ];
+
+        // Render PDF menggunakan view
+        $pdf = Pdf::loadView('manajemen-pengetahuan.artikel.printPDF.pdf', compact('articles'))
+            ->setPaper('a4', 'potrait')
+            ->setOptions($pdfOptions);
+
+        return $pdf->download('artikel.pdf');
     }
 }

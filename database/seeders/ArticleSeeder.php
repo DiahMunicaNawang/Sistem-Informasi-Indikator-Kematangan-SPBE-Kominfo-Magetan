@@ -16,18 +16,22 @@ class ArticleSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        $faker =  Faker::create();
+        $faker = Faker::create();
 
         $categories = ArticleCategory::all();
         $users = User::all();
 
         if ($users->isEmpty() || $categories->isEmpty()) {
-            $this->command->info('pastikan user dan category ada isinya brother');
+            $this->command->info('Pastikan user dan category ada isinya, brother.');
             return;
         }
 
         foreach (range(1, 20) as $index) {
+            // Generate random dates
+            $randomDate = $faker->dateTimeBetween('-6 months', 'now'); 
+            $createdAt = $randomDate;
+            $updatedAt = $faker->dateTimeBetween($createdAt, 'now');
+
             Article::create([
                 'title' => $faker->sentence,
                 'article_summary' => $faker->paragraph,
@@ -37,8 +41,8 @@ class ArticleSeeder extends Seeder
                 'validator_user_id' => $users->random()->id,
                 'category_id' => $categories->random()->id,
                 'image' => $faker->imageUrl(640, 480, 'articles', true),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $createdAt,
+                'updated_at' => $updatedAt,
             ]);
         }
     }

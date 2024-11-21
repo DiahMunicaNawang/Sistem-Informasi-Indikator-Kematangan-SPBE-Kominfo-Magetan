@@ -93,7 +93,7 @@
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $article->title }}</h2>
             <p class="text-center text-muted">{{ $article->article_summary }}</p>
-            <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->created_at->format('d M Y') }}
+            <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->created_at->format('d M Y') }} | {{ $article->category->category_name }}
             </p>
 
             <!-- Image -->
@@ -131,7 +131,7 @@
                     <input type="hidden" id="article_id" name="article_id" value="{{ $article->id }}">
 
                     <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">Simpan Validasi</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>

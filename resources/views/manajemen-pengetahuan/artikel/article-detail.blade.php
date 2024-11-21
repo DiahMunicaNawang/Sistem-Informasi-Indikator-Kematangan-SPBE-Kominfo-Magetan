@@ -89,7 +89,8 @@
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $artikel->title }}</h2>
             <p class="text-center text-muted">{{ $artikel->article_summary }}</p>
-            <p class="text-center text-muted">{{ $artikel->user->username }} | {{ $artikel->created_at->format('d M Y') }}
+            <p class="text-center text-muted">{{ $artikel->user->username }} | {{ $artikel->created_at->format('d M Y') }} |
+                {{ $artikel->category->category_name }}
             </p>
 
             <!-- Image -->
@@ -109,7 +110,9 @@
                 {!! $artikel->article_content !!}
             </div>
 
-            <!-- Rating Section -->
+
+
+            <!-- Rating Section , pengguna umum tidak bisa menilai-->
             <div class="mt-5">
                 <h5 class="text-primary">Penilaian Artikel</h5>
                 <div class="d-flex align-items-center mb-2">
@@ -135,13 +138,14 @@
                             <i class="far fa-star text-warning star-icon"></i>
                         @endfor
                     </div>
-
-                    @if (!$userRating)
-                        <!-- Tombol untuk menambah penilaian jika user belum memberikan penilaian -->
-                        <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
-                            Penilaian</button>
-                    @else
+                    @if (auth()->user() && auth()->user()->role_id != 4)
+                        @if (!$userRating)
+                            <!-- Tombol untuk menambah penilaian jika user belum memberikan penilaian -->
+                            <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
+                                Penilaian</button>
+                        @endif
                     @endif
+
                 </div>
 
                 <!-- User reviews -->
@@ -156,9 +160,11 @@
                                 <br>
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= $rating->rating_value)
-                                        <i class="fas fa-star" style="color: #FFD700;"></i> <!-- Bintang berwarna emas -->
+                                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                                        <!-- Bintang berwarna emas -->
                                     @else
-                                        <i class="fas fa-star" style="color: #ccc;"></i> <!-- Bintang berwarna abu-abu -->
+                                        <i class="fas fa-star" style="color: #ccc;"></i>
+                                        <!-- Bintang berwarna abu-abu -->
                                     @endif
                                 @endfor
 
