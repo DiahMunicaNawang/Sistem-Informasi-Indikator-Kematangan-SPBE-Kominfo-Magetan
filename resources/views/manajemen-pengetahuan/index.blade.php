@@ -19,9 +19,11 @@
                 <h3>Forum</h3>
                 <div class="flex-wrap gap-2 justify-content-center d-flex">
 
-                    <a href="{{ route('forum-category.index') }}" class="btn btn-sm btn-primary">Kategori Forum</a>
                     <a href="{{ route('forum-discussion.index') }}" class="btn btn-sm btn-primary">Lihat Forum</a>
-                    <a href="{{ route('forum-discussion-approval-process') }}" class="btn btn-sm btn-primary">Persetujuan Forum</a>
+                    @if (session('user_informations.role') == 'super-admin' || session('user_informations.role') == 'manajer-konten')
+                        <a href="{{ route('forum-category.index') }}" class="btn btn-sm btn-primary">Kategori Forum</a>
+                        <a href="{{ route('forum-discussion-approval-process') }}" class="btn btn-sm btn-primary">Verifikasi Forum</a>
+                    @endif
                 </div>
             </div>
         </div>

@@ -21,20 +21,26 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            // 'email' => 'required|email',
-            // 'username' => 'required',
-            // 'password' => 'required',
+        $rules = [
+            'email' => 'required|email',
+            'username' => 'required',
             'role_id' => 'required',
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['password'] = 'required';
+        }
+
+        return $rules;
     }
 
     public function messages(): array
     {
         return [
-            // 'email.required' => 'Email wajib diisi!',
-            // 'username.required' => 'Menu wajib diisi!',
-            // 'password.array' => 'Menu harus berupa array!',
+            'email.required' => 'Email wajib diisi!',
+            'username.required' => 'Username wajib diisi!',
+            'password.required' => 'Password wajib diisi!',
+            'password.array' => 'Menu harus berupa array!',
             'role_id' => 'Role wajib diisi!',
         ];
     }

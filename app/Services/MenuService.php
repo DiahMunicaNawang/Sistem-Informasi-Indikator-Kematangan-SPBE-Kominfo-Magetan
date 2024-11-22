@@ -10,21 +10,8 @@ use Illuminate\Support\Str;
 
 class MenuService
 {
-    public function updateCacheMenus()
-    {
-        $role = Auth::user()->role;
-        // Mendapatkan daftar menu terbaru sesuai role
-        $updatedMenus = $role->menus()->get();
-
-        // Hapus cache lama untuk menu
-        Cache::forget('user_' . Auth::id() . '_menus');
-        // Update cache
-        Cache::put('user_' . Auth::id() . '_menus', $updatedMenus, now()->addMinutes(30));
-    }
-
     public function getAllMenus()
     {
-        // Eager load 'roles' untuk menghindari query N+1
         $menus = Menu::with('roles')->get();
         return [
             'menus' => $menus
@@ -33,9 +20,8 @@ class MenuService
 
     public function createMenu() {
         $roles = Role::all();
-        $menus = Menu::all();
         $categories = Menu::where('is_category', true)->get();
-    
+
         $dropdownOptions = [];
         foreach ($categories as $category) {
             $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
@@ -44,15 +30,14 @@ class MenuService
                 ->where('is_category', false)
                 ->get(['id', 'name']);
         }
-    
+
         return [
             'roles' => $roles,
-            'menus' => $menus,
             'categories' => $categories,
             'dropdownOptions' => $dropdownOptions
         ];
     }
-    
+
     public function storeMenu(array $data)
     {
         $menuData = [
@@ -65,18 +50,16 @@ class MenuService
 
         $menu = Menu::create($menuData);
         $menu->roles()->attach($data['roles']);
-        
-        $this->updateCacheMenus();
+
         return $menu;
     }
-    
-    public function editMenu(int $id) 
+
+    public function editMenu(int $id)
     {
         $menu = Menu::findOrFail($id);
 
         $roles = Role::all();
         $roleOld = $menu->roles->pluck('id')->toArray();
-        $menus = Menu::all();
         $categories = Menu::where('is_category', true)->get();
 
         // Determine menu type
@@ -104,7 +87,6 @@ class MenuService
             'menu' => $menu,
             'roles' => $roles,
             'roleOld' => $roleOld,
-            'menus' => $menus,
             'categories' => $categories,
             'dropdownOptions' => $dropdownOptions,
             'menuType' => $menuType
@@ -115,10 +97,10 @@ class MenuService
     {
         $menu = Menu::findOrFail($id);
         $url = isset($data['url']) ? '/' . Str::slug($data['url']) : null;
-        
+
         // Determine category_id based on dropdown selection or direct input
-        $categoryId = $data['dropdown_id'] 
-            ? Menu::find($data['dropdown_id'])->category_id 
+        $categoryId = $data['dropdown_id']
+            ? Menu::find($data['dropdown_id'])->category_id
             : ($data['category_id'] ?? null);
 
         // Update menu
@@ -132,9 +114,6 @@ class MenuService
 
         // Sync roles
         $menu->roles()->sync($data['roles']);
-        
-        // Update cache
-        $this->updateCacheMenus();
 
         return $menu;
     }
@@ -143,7 +122,7 @@ class MenuService
     {
         $menu = Menu::findOrFail($id);
         $menu->roles()->detach(); // Hapus hubungan dengan menus sebelum menghapus menu
-        $this->updateCacheMenus(); // Perbarui session setelah menghapus menu
+        // $this->updateCacheMenus(); // Perbarui session setelah menghapus menu
 
         return $menu->delete();
     }

@@ -12,11 +12,12 @@ class UserController extends Controller
 {
     protected $userService;
 
+
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +32,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $data = $this->userService->createUser();
+        return view('user.user-create', $data);
     }
 
     /**
@@ -39,7 +41,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        //
+        $data = $this->userService->storeUser($request->all());
+        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan');
     }
 
     /**
@@ -73,6 +76,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $user = User::with('role')->find($id);
+
+        if ($user->role->name === 'super-admin') {
+            return redirect()->back()->with('error', 'Super admin tidak dapat dihapus');
+        }
+
         $this->userService->deleteUser($id);
         return redirect()->route('user.index')->with('success', 'User berhasil dihapus');
     }

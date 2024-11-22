@@ -5,26 +5,22 @@ namespace App\Services;
 use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class RoleService
 {
-    public function updateSessionMenus()
-    {
-        $user = Auth::user();
+    // public function updateCacheMenus()
+    // {
+    //     $role = Auth::user()->role;
+    //     // Mendapatkan daftar menu terbaru sesuai role
+    //     $updatedMenus = $role->menus()->get();
 
-        // Mendapatkan daftar menu terbaru
-        $updatedMenus = $user->role->menus->map(function ($menu) {
-            return [
-                'name' => $menu->name,
-                'url' => $menu->url,
-                'order' => $menu->order,
-            ];
-        })->toArray();
-
-        // Update session
-        session()->put('user_informations.menus', $updatedMenus);
-    }
+    //     // Hapus cache lama untuk menu
+    //     Cache::forget('user_' . Auth::id() . '_menus');
+    //     // Update cache
+    //     Cache::put('user_' . Auth::id() . '_menus', $updatedMenus, now()->addMinutes(30));
+    // }
     
     public function getAllRoles()
     {
@@ -37,7 +33,11 @@ class RoleService
     }
 
     public function createRole() {
-        return Menu::all(); // Get all menus for dropdown
+        $menus = Menu::all(); // Get all menus for dropdown
+        
+        return [
+            'menus' => $menus
+        ];
     }
 
 
@@ -48,7 +48,7 @@ class RoleService
 
         $role->menus()->attach($data['menus']);
 
-        $this->updateSessionMenus();
+        // $this->updateCacheMenus();
 
         return $role;
     }
@@ -74,7 +74,7 @@ class RoleService
         
         $role->menus()->sync($data['menus']);
         
-        $this->updateSessionMenus();
+        // $this->updateCacheMenus();
 
         return $role;
     }

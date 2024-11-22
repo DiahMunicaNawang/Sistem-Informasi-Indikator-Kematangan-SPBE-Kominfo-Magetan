@@ -13,12 +13,20 @@ class ForumDiscussionService
         $this->forumResponseService = $forumResponseService;
     }
 
-    
-    public function getAllForumDiscussions()
+
+    public function getAllForumDiscussions($search = null)
     {
-        $forum_discussions = ForumDiscussion::with('forum_category', 'user')->where('approval_status', 'accepted')->get();
         return [
-            'forum_discussions' => $forum_discussions,
+            'forum_discussions' => ForumDiscussion::with('forum_category', 'user')
+                ->where('approval_status', 'accepted')
+                ->when($search, function ($query, $search) {
+                    $search = strtolower($search); // Pastikan pencarian lowercase
+                    $query->whereRaw('LOWER(title) LIKE ?', ["%$search%"])
+                        ->orWhereRaw('LOWER(description) LIKE ?', ["%$search%"])
+                        ->orWhereHas('forum_category', fn($q) => $q->whereRaw('LOWER(name) LIKE ?', ["%$search%"]));
+                })
+                ->orderBy('discussion_created_at', 'DESC')
+                ->paginate(10),
         ];
     }
 
@@ -61,7 +69,7 @@ class ForumDiscussionService
 
         $forum_discussion = ForumDiscussion::findOrFail($id);
         $forum_categories = ForumCategory::get();
-        
+
         return [
             'forum_discussion' => $forum_discussion,
             'forum_categories' => $forum_categories,
@@ -76,7 +84,7 @@ class ForumDiscussionService
             'description' => $data['description'],
             'forum_category_id' => $data['forum_category_id'],
             'user_id' => $forumDiscussion->user_id,
-            'approval_status' => $data['approval_status'] ?? 'process',
+            'approval_status' => 'process',
             'availability_status' => 'open',
             'discussion_created_at' => now(),
             'availability_status_updated_at' => null,
@@ -113,8 +121,9 @@ class ForumDiscussionService
 
         $forum_discussion->update([
             'approval_status' => 'rejected',
+            'availability_status' => 'closed',
         ]);
-        
+
         return $forum_discussion;
     }
 
@@ -125,10 +134,10 @@ class ForumDiscussionService
             'forum_discussions' => $forum_discussions,
         ];
     }
-    
+
     public function forumDiscussionApprovalAccept(int $id) {
         $forum_discussion = ForumDiscussion::findOrFail($id);
-        
+
         return [
             'forum_discussion' => $forum_discussion,
         ];
@@ -136,7 +145,7 @@ class ForumDiscussionService
 
     public function forumDiscussionApprovalAcceptAvailability(array $data, int $id) {
         $forum_discussion = ForumDiscussion::findOrFail($id);
-        
+
         $forum_discussion->update([
             'approval_status' => 'accepted',
             'availability_status' => $data['action'],

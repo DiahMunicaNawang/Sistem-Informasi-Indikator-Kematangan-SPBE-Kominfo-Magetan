@@ -14,15 +14,9 @@
     <div class="card card-flush h-md-100">
         <!--begin::Header-->
         <div class="card-header pt-7">
-            <!--begin::Title-->
-            <h3 class="card-title align-items-start flex-column">			
-                <span class="text-gray-800 card-label fw-bold">Menus</span>
-            </h3>
-            <!--end::Title-->
-
             <!--begin::Toolbar-->
             <div class="card-toolbar">   
-                <a href="{{ route('menu.create') }}" class="btn btn-sm btn-light">Tambah Menu</a>             
+                <a href="{{ route('menu.create') }}" class="btn btn-sm btn-success">Tambah Menu</a>             
             </div>
             <!--end::Toolbar-->
         </div>
