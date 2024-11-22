@@ -82,29 +82,6 @@ Route::middleware('auth', 'verified')->group(function () {
 
     });
 
-    // Route::prefix('article')->middleware('auth')->group(function () {
-    //     // Menyusun artikel (SuperAdmin, Admin, User)
-    //     Route::get('/create', [ArtikelController::class, 'create'])
-    //         ->name('article.create')
-    //         ->middleware('article_role:super-admin|admin|user');
-
-    //     Route::post('/', [ArtikelController::class, 'store'])
-    //         ->name('article.store')
-    //         ->middleware('role:super-admin|admin|user');
-
-    //     // Melihat artikel (Semua role)
-    //     Route::get('/', [ArtikelController::class, 'index'])->name('article.index');
-    //     Route::get('/{id}', [ArtikelController::class, 'show'])->name('article.show');
-
-    //     Route::post('/article/store_rating', [ArtikelController::class, 'storeRating'])->name('article.storeRating')->middleware('article_role:super-admin|user|pengguna-umum');
-    //     Route::get('/article/create_category', [ArtikelController::class, 'createCategory'])->name('article.createCategory')->middleware('article_role:super-admin');;
-    //     Route::post('/article/store_category', [ArtikelController::class, 'storeCategory'])->name('article.storeCategory')->middleware('article_role:super-admin');;;
-    //     Route::get('/article/index_validate', [ArtikelController::class, 'validate_index'])->name('article.validateIndex')->middleware('article_role:super-admin');;;
-    // });
-
-
-
-
     // Forum
     Route::resource('forum-category', ForumCategoryController::class);
     Route::resource('forum-discussion', ForumDiscussionController::class);
