@@ -17,21 +17,6 @@ class ForumResponseController extends Controller
     {
         $this->forumResponseService = $forumResponseService;
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index($forum_discussion_id)
-    {
-        // Data akan diambil di method showForumDiscussion pada ForumDiscussionService
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -45,28 +30,12 @@ class ForumResponseController extends Controller
             return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
         }
 
-        if (session('user_informations.role') === 'pengguna-umum') {
+        if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
             return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memberi tanggapan');
         }
 
         $this->forumResponseService->storeForumResponse($request->all());
         return redirect()->back()->with('success', 'Tanggapan berhasil ditambahkan');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -81,7 +50,7 @@ class ForumResponseController extends Controller
             return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
         }
 
-        if (session('user_informations.role') === 'pengguna-umum') {
+        if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
             return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memperbarui tanggapan');
         }
         
@@ -101,7 +70,7 @@ class ForumResponseController extends Controller
             return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
         }
 
-        if (session('user_informations.role') === 'pengguna-umum') {
+        if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
             return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa menghapus tanggapan');
         }
         

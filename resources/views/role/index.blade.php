@@ -9,20 +9,20 @@
             {{ session('success') }}
         </div>
     @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     
     <!--begin::Table widget 14-->
     <div class="card card-flush h-md-100">
         <!--begin::Header-->
         <div class="card-header pt-7">
-            <!--begin::Title-->
-            <h3 class="card-title align-items-start flex-column">			
-                <span class="text-gray-800 card-label fw-bold">Roles</span>
-            </h3>
-            <!--end::Title-->
-
             <!--begin::Toolbar-->
             <div class="card-toolbar">   
-                <a href="{{ route('role.create') }}" class="btn btn-sm btn-light">Tambah Role</a>             
+                <a href="{{ route('role.create') }}" class="btn btn-sm btn-success">Tambah Role</a>             
             </div>
             <!--end::Toolbar-->
         </div>
@@ -49,7 +49,7 @@
                                     <form action="{{ route('role.destroy', $role->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
                                     </form>
                                 </td>
                             </tr>

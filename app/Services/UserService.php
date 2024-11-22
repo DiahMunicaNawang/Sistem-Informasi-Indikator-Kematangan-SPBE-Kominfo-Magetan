@@ -14,6 +14,26 @@ class UserService
         ];
     }
 
+    public function createUser() {
+        $roles = Role::all();
+
+        return [
+            'roles' => $roles
+        ];
+    }
+
+    public function storeUser(array $data) {
+        $user = User::create([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'role_id' => $data['role_id'],
+            'email_verified_at' => now()
+        ]);
+
+        return $user;
+    }
+
     public function editUser(int $id) {
         $user = User::findOrFail($id);
         $users = User::with('role')->get();
@@ -29,7 +49,13 @@ class UserService
     public function updateUser(array $data, int $id)
     {
         $user = User::findOrFail($id);
-        $user->update(['role_id' => $data['role_id']]);
+        $user->update([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => $user->password,
+            'role_id' => $data['role_id'],
+            'email_verified_at' => $user->email_verified_at
+        ]);
         return $user;
     }
 

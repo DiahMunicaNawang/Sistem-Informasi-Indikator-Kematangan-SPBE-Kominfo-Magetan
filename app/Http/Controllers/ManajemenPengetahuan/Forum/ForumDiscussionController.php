@@ -20,9 +20,10 @@ class ForumDiscussionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->forumDiscussionService->getAllForumDiscussions();
+        $search = $request->input('search');
+        $data = $this->forumDiscussionService->getAllForumDiscussions($search);
         return view('manajemen-pengetahuan.forum.forum-discussion-index', $data);
     }
 
