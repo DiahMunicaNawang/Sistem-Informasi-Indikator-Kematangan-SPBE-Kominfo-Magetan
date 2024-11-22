@@ -75,6 +75,15 @@
             background-color: #0048a1;
         }
 
+        .article-content {
+            word-wrap: break-word;
+            /* Bungkus kata panjang */
+            overflow-wrap: anywhere;
+            /* Alternatif jika tidak terbungkus */
+            white-space: normal;
+            /* Pastikan teks tidak memaksa dalam satu baris */
+        }
+
         /* Modal background */
         .modal-content {
             background-color: var(--modal-background-color);
@@ -93,7 +102,8 @@
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $article->title }}</h2>
             <p class="text-center text-muted">{{ $article->article_summary }}</p>
-            <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->created_at->format('d M Y') }} | {{ $article->category->category_name }}
+            <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->created_at->format('d M Y') }} |
+                {{ $article->category->category_name }}
             </p>
 
             <!-- Image -->

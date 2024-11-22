@@ -25,6 +25,15 @@
             --border-color: #ced4da;
         }
 
+        .article-content {
+            word-wrap: break-word;
+            /* Bungkus kata panjang */
+            overflow-wrap: anywhere;
+            /* Alternatif jika tidak terbungkus */
+            white-space: normal;
+            /* Pastikan teks tidak memaksa dalam satu baris */
+        }
+
         /* Variabel CSS untuk tema gelap */
         [data-theme="dark"] {
             --background-color: #1c1f24;

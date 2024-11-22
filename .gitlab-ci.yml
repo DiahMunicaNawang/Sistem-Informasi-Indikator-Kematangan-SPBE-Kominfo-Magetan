@@ -1,0 +1,39 @@
+stages:
+  - install
+  - test
+  - deploy
+
+# Job untuk instalasi dependencies
+install_dependencies:
+  stage: install
+  image: composer:latest
+  script:
+    - composer install --prefer-dist --no-interaction --optimize-autoloader
+  artifacts:
+    paths:
+      - vendor/ # Simpan folder vendor agar bisa digunakan di job lain
+    expire_in: 1 week
+
+# Job untuk testing
+run_tests:
+  stage: test
+  image: php:8.2
+  before_script:
+    - apt-get update && apt-get install -y git unzip libzip-dev
+    - docker-php-ext-install zip
+  script:
+    - php artisan test # Atau ganti dengan perintah pengujian yang Anda gunakan
+
+# Job untuk deploy
+deploy_to_all_branches:
+  stage: deploy
+  image: php:8.2
+  before_script:
+    - apt-get update && apt-get install -y git unzip libzip-dev
+    - docker-php-ext-install zip
+    - composer install --prefer-dist --no-interaction --optimize-autoloader
+  script:
+    - php artisan storage:link
+    - echo "Deploy success!"
+  only:
+    - branches # Jalankan di semua branch
