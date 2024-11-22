@@ -39,6 +39,45 @@ Route::middleware('auth', 'verified')->group(function () {
     // Forum
     Route::resource('forum', UserController::class);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     // Articles
     Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);
 
