@@ -79,7 +79,6 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation')->middleware('article_role:super-admin');
 
         Route::get('/article/print-pdf', [ArtikelController::class, 'printPDF'])->name('article.printPDF');
-
     });
 
     // Forum
