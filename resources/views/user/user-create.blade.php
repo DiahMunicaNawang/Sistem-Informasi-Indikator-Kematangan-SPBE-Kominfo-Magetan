@@ -1,5 +1,11 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endSection
+
 @section('page-name', 'Tambah User')
 
 @section('content')
