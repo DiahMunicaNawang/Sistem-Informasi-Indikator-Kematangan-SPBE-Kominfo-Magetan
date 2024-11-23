@@ -1,12 +1,12 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ url()->previous() }}">
+    <a href="{{ route('forum-category.index') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endSection
 
-@section('page-name', 'Tambah Forum Kategori')
+@section('page-name', 'Tambah Kategori Forum')
 
 @section('content')
     <form action="{{ route('forum-category.store') }}" method="POST">

@@ -96,6 +96,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('forum-discussion-approval-accept-availability/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept_availability'])->name('forum-discussion-approval-accept-availability');
 
     Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
+
+    Route::get('forum-discussion-approval-destroy', [ForumDiscussionController::class, 'forum_discussion_approval_destroy'])->name('forum-discussion-approval-destroy');
     
 });
 

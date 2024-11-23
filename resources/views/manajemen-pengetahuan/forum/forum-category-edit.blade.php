@@ -1,12 +1,12 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ url()->previous() }}">
+    <a href="{{ route('forum-category.index') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
 
-@section('page-name', 'Edit Role')
+@section('page-name', 'Edit Kategori Forum')
 
 @section('content')
 

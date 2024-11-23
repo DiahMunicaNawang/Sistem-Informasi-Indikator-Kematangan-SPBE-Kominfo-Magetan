@@ -106,7 +106,7 @@ class ForumDiscussionService
 
 
     public function forumDiscussionApprovalUser() {
-        $forum_discussions = ForumDiscussion::where('user_id', session('user_informations.user_id'))->withCount('responses')->get();
+        $forum_discussions = ForumDiscussion::where('user_id', session('user_informations.user_id'))->withCount('responses')->orderBy('discussion_created_at', 'DESC')->get();
 
         return [
             'forum_discussions' => $forum_discussions,
@@ -114,7 +114,7 @@ class ForumDiscussionService
     }
 
     public function forumDiscussionApprovalProcess() {
-        $forum_discussions = ForumDiscussion::where('approval_status', 'process')->get();
+        $forum_discussions = ForumDiscussion::where('approval_status', 'process')->orderBy('discussion_created_at', 'ASC')->get();
 
         return [
             'forum_discussions' => $forum_discussions,
@@ -133,7 +133,7 @@ class ForumDiscussionService
     }
 
     public function forumDiscussionApprovalRejected() {
-        $forum_discussions = ForumDiscussion::where('approval_status', 'rejected')->get();
+        $forum_discussions = ForumDiscussion::where('approval_status', 'rejected')->orderBy('discussion_created_at', 'DESC')->get();
 
         return [
             'forum_discussions' => $forum_discussions,
@@ -161,7 +161,7 @@ class ForumDiscussionService
     }
 
     public function forumDiscussionApprovalAccepted() {
-        $forum_discussions = ForumDiscussion::where('approval_status', 'accepted')->get();
+        $forum_discussions = ForumDiscussion::where('approval_status', 'accepted')->orderBy('discussion_created_at', 'DESC')->get();
 
         return [
             'forum_discussions' => $forum_discussions,

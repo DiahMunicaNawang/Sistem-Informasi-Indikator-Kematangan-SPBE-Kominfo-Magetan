@@ -6,7 +6,7 @@
         <div class="gap-3 d-flex align-items-start flex-grow-1">
             <div class="flex-grow-1">
                 <textarea name="content" class="form-control" rows="2" required maxlength="1000"
-                    placeholder="Tulis balasan Anda..."></textarea>
+                    placeholder="Tulis tanggapan Anda..."></textarea>
                 @error('content')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -135,7 +135,7 @@
                                         </div>
 
                                         @if ($reply->user_id === session('user_informations.user_id'))
-                                            <div class="gap-2 d-flex justify-content-end flex-column flex-md-row"">
+                                            <div class="gap-2 d-flex justify-content-end flex-column flex-md-row">
                                                 <button type="button" class="btn btn-light btn-sm"
                                                     onclick="toggleEditForm('{{ $reply->id }}')">
                                                     <i class="p-0 bi bi-pencil"></i>
@@ -165,6 +165,7 @@
                                         <form action="{{ route('forum-response.update', $reply) }}" method="POST">
                                             @csrf
                                             @method('PUT')
+                                            <input type="hidden" name="forum_discussion_id" value="{{ $forum_discussion->id }}">
                                             <div class="mb-3">
                                                 <textarea name="content" class="form-control bg-light" rows="2" placeholder="Tulis balasan Anda..." required
                                                     maxlength="1000">{{ $reply->content }}</textarea>
@@ -189,6 +190,26 @@
         </div>
     @endforeach
 </div>
+
+<script>
+    function toggleReplyForm(responseId) {
+        const form = document.getElementById(`reply-form-${responseId}`);
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleEditForm(responseId) {
+        const contentDiv = document.getElementById(`content-${responseId}`);
+        const editFormDiv = document.getElementById(`edit-form-${responseId}`);
+
+        if (contentDiv.style.display !== 'none') {
+            contentDiv.style.display = 'none';
+            editFormDiv.style.display = 'block';
+        } else {
+            contentDiv.style.display = 'block';
+            editFormDiv.style.display = 'none';
+        }
+    }
+</script>
 
 <style>
     .form-control {

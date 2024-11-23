@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ url()->previous() }}">
+    <a href="{{ route('forum-discussion.index') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
@@ -67,33 +67,4 @@
             @include('manajemen-pengetahuan.forum.forum-response-index')
         </div>
     </div>
-
-    <script>
-        function toggleReplyForm(responseId) {
-            const form = document.getElementById(`reply-form-${responseId}`);
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function toggleEditForm(responseId) {
-            const contentDiv = document.getElementById(`content-${responseId}`);
-            const editFormDiv = document.getElementById(`edit-form-${responseId}`);
-
-            if (contentDiv.style.display !== 'none') {
-                contentDiv.style.display = 'none';
-                editFormDiv.style.display = 'block';
-            } else {
-                contentDiv.style.display = 'block';
-                editFormDiv.style.display = 'none';
-            }
-        }
-
-        function toggleReplyForm(responseId) {
-            const replyForm = document.getElementById(`reply-form-${responseId}`);
-            if (replyForm.style.display === 'none') {
-                replyForm.style.display = 'block';
-            } else {
-                replyForm.style.display = 'none';
-            }
-        }
-    </script>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ url()->previous() }}">
+    <a href="{{ route('forum-discussion.index') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection

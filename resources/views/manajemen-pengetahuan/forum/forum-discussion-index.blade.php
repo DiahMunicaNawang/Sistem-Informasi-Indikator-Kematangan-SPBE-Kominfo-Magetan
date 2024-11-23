@@ -7,16 +7,18 @@
 
         {{-- Action Buttons and Search --}}
         <div class="mb-4 row g-3 align-items-center">
-            <div class="col-12 col-md-auto">
-                <a href="{{ route('forum-discussion.create') }}" class="btn btn-success w-100">
-                    <i class="bi bi-plus-circle me-2"></i>Ajukan Pertanyaan
-                </a>
-            </div>
-            <div class="col-12 col-md-auto">
-                <a href="{{ route('forum-discussion-approval-user') }}" class="btn btn-primary w-100">
-                    <i class="bi bi-list-ul me-2"></i>Lihat Pertanyaan Saya
-                </a>
-            </div>
+            @if (session('user_informations.role') !== 'pengguna-umum')
+                <div class="col-12 col-md-auto">
+                    <a href="{{ route('forum-discussion.create') }}" class="btn btn-success w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Ajukan Pertanyaan
+                    </a>
+                </div>
+                <div class="col-12 col-md-auto">
+                    <a href="{{ route('forum-discussion-approval-user') }}" class="btn btn-primary w-100">
+                        <i class="bi bi-list-ul me-2"></i>Lihat Pertanyaan Saya
+                    </a>
+                </div>
+            @endif
             <div class="col-12 col-md">
                 <form method="GET" action="{{ route('forum-discussion.index') }}">
                     <div class="input-group">
