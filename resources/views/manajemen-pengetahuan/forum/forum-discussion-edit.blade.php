@@ -1,5 +1,11 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Edit Role')
 
 @section('content')
@@ -35,34 +41,6 @@
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
-
-                {{-- @if (session('user_informations.role') == 'admin' || session('user_informations.role') == 'super-admin')
-
-                <div class="mb-8">
-                    <label for="approval_status" class="required form-label">Status Persetujuan</label>
-                    <select name="approval_status" id="approval_status" class="form-control @error('approval_status') is-invalid @enderror">
-                        <option value="" disabled selected>Pilih Status</option>
-                        <option value="accepted" {{ old('approval_status', $forum_discussion->approval_status) == 'accepted' ? 'selected' : '' }}>Terima</option>
-                        <option value="rejected" {{ old('approval_status', $forum_discussion->approval_status) == 'rejected' ? 'selected' : '' }}>Tolak</option>
-                        <option value="process" {{ old('approval_status', $forum_discussion->approval_status) == 'process' ? 'selected' : '' }}>Proses</option>
-                    </select>
-                    @error('approval_status')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="mb-8">
-                    <label for="availability_status" class="required form-label">Status Persetujuan</label>
-                    <select name="availability_status" id="availability_status" class="form-control @error('availability_status') is-invalid @enderror">
-                        <option value="" disabled selected>Pilih Status</option>
-                        <option value="open" {{ old('availability_status', $forum_discussion->availability_status) == 'open' ? 'selected' : '' }}>Buka</option>
-                        <option value="closed" {{ old('availability_status', $forum_discussion->availability_status) == 'closed' ? 'selected' : '' }}>Tutup</option>
-                    </select>
-                    @error('availability_status')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
-                </div>
-                @endif --}}
             </div>
             <div class="pt-0 card-footer">
                 <button type="submit" class="btn btn-sm btn-primary">Submit</button>

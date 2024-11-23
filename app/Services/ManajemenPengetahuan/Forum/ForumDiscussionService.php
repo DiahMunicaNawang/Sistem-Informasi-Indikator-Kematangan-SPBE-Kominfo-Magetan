@@ -16,8 +16,7 @@ class ForumDiscussionService
 
     public function getAllForumDiscussions($search = null)
     {
-        return [
-            'forum_discussions' => ForumDiscussion::with('forum_category', 'user')
+        $forum_discussions =  ForumDiscussion::with('forum_category:id,name')
                 ->where('approval_status', 'accepted')
                 ->when($search, function ($query, $search) {
                     $search = strtolower($search); // Pastikan pencarian lowercase
@@ -25,8 +24,12 @@ class ForumDiscussionService
                         ->orWhereRaw('LOWER(description) LIKE ?', ["%$search%"])
                         ->orWhereHas('forum_category', fn($q) => $q->whereRaw('LOWER(name) LIKE ?', ["%$search%"]));
                 })
+                ->withCount('responses') // Hitung jumlah respons melalui relasi 'responses'
                 ->orderBy('discussion_created_at', 'DESC')
-                ->paginate(10),
+                ->paginate(10);
+
+        return [
+            'forum_discussions' => $forum_discussions,
         ];
     }
 
@@ -40,7 +43,7 @@ class ForumDiscussionService
 
     public function storeForumDiscussion(array $data)
     {
-        $forumDiscussion = ForumDiscussion::create([
+        $forum_discussion = ForumDiscussion::create([
             'title' => $data['title'],
             'description' => $data['description'],
             'forum_category_id' => $data['forum_category_id'],
@@ -51,7 +54,7 @@ class ForumDiscussionService
             'availability_status_updated_at' => null,
         ]);
 
-        return $forumDiscussion;
+        return $forum_discussion;
     }
 
     public function showForumDiscussion($id) {
@@ -78,30 +81,32 @@ class ForumDiscussionService
 
     public function updateForumDiscussion(array $data, int $id)
     {
-        $forumDiscussion = ForumDiscussion::findOrFail($id);
-        $forumDiscussion->update([
+        $forum_discussion = ForumDiscussion::findOrFail($id);
+        $forum_discussion->update([
             'title' => $data['title'],
             'description' => $data['description'],
             'forum_category_id' => $data['forum_category_id'],
-            'user_id' => $forumDiscussion->user_id,
+            'user_id' => $forum_discussion->user_id,
             'approval_status' => 'process',
             'availability_status' => 'open',
             'discussion_created_at' => now(),
             'availability_status_updated_at' => null,
         ]);
 
-        return $forumDiscussion;
+        return $forum_discussion;
     }
 
     public function deleteForumDiscussion(int $id)
     {
-        $forumDiscussion = ForumDiscussion::where('user_id', session('user_informations.user_id'))->findOrFail($id);
-        return $forumDiscussion->delete();
+        // Pengguna terdaftar hanya bisa menghapus diskusi mereka sendiri (meningkatkan keamanan).
+        $forum_discussion = ForumDiscussion::where('user_id', session('user_informations.user_id'))->findOrFail($id);
+
+        return $forum_discussion->delete();
     }
 
 
     public function forumDiscussionApprovalUser() {
-        $forum_discussions = ForumDiscussion::where('user_id', session('user_informations.user_id'))->get();
+        $forum_discussions = ForumDiscussion::where('user_id', session('user_informations.user_id'))->withCount('responses')->get();
 
         return [
             'forum_discussions' => $forum_discussions,
@@ -161,5 +166,11 @@ class ForumDiscussionService
         return [
             'forum_discussions' => $forum_discussions,
         ];
+    }
+
+    public function forumDiscussionApprovalDelete(int $id) {
+        $forum_discussion = ForumDiscussion::findOrFail($id);
+
+        return $forum_discussion->delete();
     }
 }

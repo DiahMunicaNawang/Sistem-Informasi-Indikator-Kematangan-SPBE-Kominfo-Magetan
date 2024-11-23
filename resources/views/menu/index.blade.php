@@ -1,9 +1,14 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endSection
+
 @section('page-name', 'Menu Management')
 
 @section('content')
-// test
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -45,7 +50,7 @@
                                     <form action="{{ route('menu.destroy', $menu->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
