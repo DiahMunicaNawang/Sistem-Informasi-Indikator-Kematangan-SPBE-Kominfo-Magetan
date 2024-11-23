@@ -118,54 +118,105 @@ $(document).ready(function() {
         allowClear: true
     });
 
+    // Store initial values
+    const initialCategoryId = $('#category_id').val();
+    const initialDropdownId = $('#dropdown_id').val();
+
     // Filter dropdown options based on selected category
-    $('#category_id').on('change', function() {
-            const selectedCategoryId = $(this).val();
-            const dropdownSelect = $('#dropdown_id');
-            const currentDropdownId = '{{ $menu->dropdown_id }}'; // Get current dropdown_id
-            
-            $('.dropdown-option').hide();
-            
-            if (selectedCategoryId) {
-                $(`.dropdown-option.category-${selectedCategoryId}`).show();
-                
-                // If current selection is not in the shown options, clear selection
-                const visibleOptions = $(`.dropdown-option.category-${selectedCategoryId}:visible`);
-                const currentOptionVisible = visibleOptions.filter(`[value="${dropdownSelect.val()}"]`).length > 0;
-                
-                if (!currentOptionVisible) {
-                    dropdownSelect.val('');
-                }
-            } else {
-                $('.dropdown-option').show();
-            }
-        });
-    
-        // Handle menu type changes
-        $('input[name="type"]').on('change', function() {
-            const type = $(this).val();
-            
-            // Hide all fields first
-            $('#url_field, #category_id_field, #dropdown_id_field').hide();
-            
-            // Show relevant fields based on type without clearing their values
-            if (type === 'menu') {
-                $('#url_field, #category_id_field, #dropdown_id_field').show();
-            } else if (type === 'dropdown') {
-                $('#category_id_field').show();
-            }
-            
-            // Trigger change event for category
-            $('#category_id').trigger('change');
-        });
-    
-        // Make sure to show the correct fields on page load
-        $('input[name="type"]:checked').trigger('change');
+    function updateDropdownOptions(selectedCategoryId, keepSelection = false) {
+        const dropdownSelect = $('#dropdown_id');
+        const currentValue = dropdownSelect.val();
         
-        // If it's a menu type and has a category, trigger the category change to show proper dropdowns
-        if ($('input[name="type"]:checked').val() === 'menu' && $('#category_id').val()) {
-            $('#category_id').trigger('change');
+        $('.dropdown-option').hide();
+        
+        if (selectedCategoryId) {
+            $(`.dropdown-option.category-${selectedCategoryId}`).show();
+            
+            // Check if current selection is valid for new category
+            const visibleOptions = $(`.dropdown-option.category-${selectedCategoryId}:visible`);
+            const currentOptionVisible = visibleOptions.filter(`[value="${currentValue}"]`).length > 0;
+            
+            if (!currentOptionVisible && !keepSelection) {
+                dropdownSelect.val('');
+            }
+        } else {
+            $('.dropdown-option').show();
         }
+    }
+
+    // Handle menu type changes
+    function updateFieldsVisibility(type, isInitial = false) {
+        // Hide all fields first
+        $('#url_field, #category_id_field, #dropdown_id_field').hide();
+        
+        // Show relevant fields based on type
+        if (type === 'menu') {
+            $('#url_field, #category_id_field, #dropdown_id_field').show();
+            
+            if (isInitial) {
+                // On initial load, update dropdown options while keeping the initial selection
+                updateDropdownOptions(initialCategoryId, true);
+            } else {
+                updateDropdownOptions($('#category_id').val());
+            }
+        } else if (type === 'dropdown') {
+            $('#category_id_field').show();
+        }
+    }
+
+    // Category change handler
+    $('#category_id').on('change', function() {
+        updateDropdownOptions($(this).val());
+    });
+
+    // Type change handler
+    $('input[name="type"]').on('change', function() {
+        updateFieldsVisibility($(this).val());
+    });
+
+    // Initial setup
+    const initialType = $('input[name="type"]:checked').val();
+    updateFieldsVisibility(initialType, true);
+
+    // Add warning when changing category if dropdown is selected
+    $('#category_id').on('change', function() {
+        const dropdownId = $('#dropdown_id').val();
+        if (dropdownId && $(this).val() !== initialCategoryId) {
+            const confirmChange = confirm(
+                'Mengubah kategori akan mereset pilihan dropdown. Lanjutkan?'
+            );
+            if (!confirmChange) {
+                $(this).val(initialCategoryId);
+                return false;
+            }
+        }
+    });
+
+    // Add form submit validation
+    $('form').on('submit', function(e) {
+        const type = $('input[name="type"]:checked').val();
+        if (type === 'menu') {
+            const categoryId = $('#category_id').val();
+            const dropdownId = $('#dropdown_id').val();
+            const url = $('#url').val();
+
+            if (!url) {
+                alert('URL harus diisi untuk tipe Menu');
+                e.preventDefault();
+                return false;
+            }
+
+            if (!categoryId) {
+                alert('Kategori harus dipilih untuk tipe Menu');
+                e.preventDefault();
+                return false;
+            }
+        } else if (type === 'dropdown' && !$('#category_id').val()) {
+            alert('Kategori harus dipilih untuk tipe Dropdown');
+            e.preventDefault();
+            return false;
+        }
+    });
 });
 </script>
 {{-- @endpush --}}
