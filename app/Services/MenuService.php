@@ -12,7 +12,7 @@ class MenuService
 {
     public function getAllMenus()
     {
-        $menus = Menu::with('roles')->get();
+        $menus = Menu::with(['roles', 'categoryChildren', 'dropdownChildren'])->get();
         return [
             'menus' => $menus
         ];
@@ -57,9 +57,10 @@ class MenuService
     public function editMenu(int $id)
     {
         $menu = Menu::findOrFail($id);
-
         $roles = Role::all();
         $roleOld = $menu->roles->pluck('id')->toArray();
+        
+        // Get all categories
         $categories = Menu::where('is_category', true)->get();
 
         // Determine menu type
@@ -70,17 +71,21 @@ class MenuService
             $menuType = 'dropdown';
         }
 
-        // Get all possible dropdowns for each category, including the current menu's dropdown
+        // Get dropdown options for each category
         $dropdownOptions = [];
         foreach ($categories as $category) {
-            $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
+            $dropdownQuery = Menu::where('category_id', $category->id)
                 ->where('url', null)
                 ->where('dropdown_id', null)
                 ->where('is_category', false)
-                ->when($menu->exists, function($query) use ($menu) {
-                    return $query->orWhere('id', $menu->dropdown_id); // Include current dropdown if exists
-                })
-                ->get(['id', 'name']);
+                ->where('id', '!=', $id); // Exclude current menu if it's a dropdown
+
+            // If current menu has a dropdown_id, include its parent dropdown
+            if ($menu->dropdown_id) {
+                $dropdownQuery->orWhere('id', $menu->dropdown_id);
+            }
+
+            $dropdownOptions[$category->id] = $dropdownQuery->get(['id', 'name']);
         }
 
         return [
