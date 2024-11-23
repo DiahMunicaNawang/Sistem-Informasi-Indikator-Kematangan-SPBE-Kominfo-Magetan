@@ -9,12 +9,6 @@
 @section('page-name', 'Menu Management')
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!--begin::Table widget 14-->
     <div class="card card-flush h-md-100">
         <!--begin::Header-->
