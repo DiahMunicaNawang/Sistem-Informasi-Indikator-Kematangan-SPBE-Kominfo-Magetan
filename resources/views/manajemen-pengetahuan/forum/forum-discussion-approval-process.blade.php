@@ -1,5 +1,11 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Daftar Verifikasi Forum')
 
 @section('content')
@@ -7,15 +13,6 @@
         <a href="{{ route('forum-discussion-approval-rejected') }}" class="btn btn-sm btn-danger">Daftar Forum Ditolak</a>
         <a href="{{ route('forum-discussion-approval-accepted') }}" class="btn btn-sm btn-success">Daftar Forum Diterima</a>
     </div>
-
-    @if (session('success'))
-        <div class="mb-4 alert alert-success" role="alert">
-            <div class="d-flex align-items-center">
-                <div><i class="bi bi-check-circle me-2 text-success"></i>{{ session('success') }}</div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    @endif
 
     @if ($forum_discussions->isEmpty())
         <div class="col-12">

@@ -1,5 +1,13 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
+@section('back-button')
+
 @section('content')
     <div class="container py-5">
         <div class="row justify-content-center">

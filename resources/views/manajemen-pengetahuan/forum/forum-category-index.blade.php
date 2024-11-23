@@ -1,17 +1,14 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Kategori Forum')
 
 @section('content')
-
-    @if (session('success'))
-        <div class="mb-4 alert alert-success" role="alert">
-            <div class="d-flex align-items-center">
-                <div><i class="bi bi-check-circle me-2 text-success"></i>{{ session('success') }}</div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    @endif
     
     <!--begin::Table widget 14-->
     <div class="card card-flush h-md-100">

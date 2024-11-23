@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 class ForumDiscussion extends Model
 {
     public $timestamps = false;
-    
+
     protected $guarded = ['id'];
-    
+
     public function forum_category() {
         return $this->belongsTo(ForumCategory::class);
     }

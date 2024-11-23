@@ -1,18 +1,14 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Daftar Pengajuan Forum')
 
 @section('content')
-
-    @if (session('error'))
-        <div class="mb-4 alert alert-danger" role="alert">
-            <div class="d-flex align-items-center">
-                <div><i class="bi bi-exclamation-triangle me-2 text-danger"></i>{{ session('error') }}</div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    @endif
-
     <article class="gap-3 mt-6 d-flex flex-column">
         @foreach ($forum_discussions as $forum_discussion)
             <div class="row g-4">

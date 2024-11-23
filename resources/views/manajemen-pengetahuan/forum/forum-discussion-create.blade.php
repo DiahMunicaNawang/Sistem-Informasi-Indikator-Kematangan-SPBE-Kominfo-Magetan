@@ -1,5 +1,11 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Tambah Forum Kategori')
 
 @section('content')

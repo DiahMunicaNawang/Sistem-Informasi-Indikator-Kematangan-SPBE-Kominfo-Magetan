@@ -1,5 +1,11 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('content')
     <div class="card card-flush h-md-100">
         <div class="pt-8 border-0 px-9">

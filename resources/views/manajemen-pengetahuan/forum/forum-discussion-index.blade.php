@@ -33,16 +33,6 @@
             </div>
         </div>
 
-        {{-- Success Message --}}
-        @if (session('success'))
-            <div class="mb-4 alert alert-success" role="alert">
-                <div class="d-flex align-items-center">
-                    <div><i class="bi bi-check-circle me-2 text-success"></i>{{ session('success') }}</div>
-                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-        @endif
-
         {{-- Discussions List --}}
         <div class="row g-4">
             @if ($forum_discussions->isEmpty())

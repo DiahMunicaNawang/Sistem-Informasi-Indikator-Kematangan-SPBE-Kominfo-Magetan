@@ -1,21 +1,3 @@
-@if (session('success'))
-    <div class="mb-4 alert alert-success" role="alert">
-        <div class="d-flex align-items-center">
-            <div><i class="bi bi-check-circle me-2 text-success"></i>{{ session('success') }}</div>
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="mb-4 alert alert-danger" role="alert">
-        <div class="d-flex align-items-center">
-            <div><i class="bi bi-exclamation-triangle me-2 text-danger"></i>{{ session('error') }}</div>
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
-@endif
-
 <!-- New Response Form -->
 <div class="mb-4 border-0 card">
     <form action="{{ route('forum-response.store') }}" method="POST" class="position-relative">

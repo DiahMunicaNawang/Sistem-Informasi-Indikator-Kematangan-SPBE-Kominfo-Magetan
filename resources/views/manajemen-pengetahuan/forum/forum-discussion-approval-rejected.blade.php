@@ -1,12 +1,14 @@
 @extends('layouts.main.index')
 
+@section('back-button')
+    <a href="{{ url()->previous() }}">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+@endsection
+
 @section('page-name', 'Daftar Forum Ditolak')
 
 @section('content')
-    <div class="mb-3">
-        <a href="{{ route('forum-discussion-approval-process') }}" class="btn btn-sm btn-warning">Daftar Forum Menunggu Persetujuan</a>
-    </div>
-
     @if ($forum_discussions->isEmpty())
         <div class="col-12">
             <div class="py-5 text-center rounded bg-light">

@@ -31,7 +31,7 @@ class ForumResponseService
 
         return $forum_response;
     }
-    
+
     public function updateForumResponse(array $data, int $id)
     {
         $forum_response = ForumResponse::findOrFail($id);
