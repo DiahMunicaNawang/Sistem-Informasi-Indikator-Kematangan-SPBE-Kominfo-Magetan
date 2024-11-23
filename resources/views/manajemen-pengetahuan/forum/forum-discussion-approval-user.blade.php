@@ -7,7 +7,7 @@
     @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
-        </div>    
+        </div>
     @endif
 
     <article class="gap-3 mt-6 d-flex flex-column">

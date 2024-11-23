@@ -16,7 +16,7 @@ class ForumDiscussionController extends Controller
     {
         $this->forumDiscussionService = $forumDiscussionService;
     }
-    
+
     /**
      * Display a listing of the resource.
      */

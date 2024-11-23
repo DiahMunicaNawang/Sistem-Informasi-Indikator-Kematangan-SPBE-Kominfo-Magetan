@@ -17,7 +17,7 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -79,7 +79,7 @@ class UserController extends Controller
         $user = User::with('role')->find($id);
 
         if ($user->role->name === 'super-admin') {
-            return redirect()->back()->with('error', 'Super admin tidak dapat dihapus');    
+            return redirect()->back()->with('error', 'Super admin tidak dapat dihapus');
         }
 
         $this->userService->deleteUser($id);

@@ -23,7 +23,7 @@
                     <div>
                         <a href="{{ route('forum-discussion.show', $forum_discussion->id) }}"
                             class="btn btn-sm btn-primary">Baca Selengkapnya</a>
-                            
+
                         <form action="{{ route('forum-discussion.destroy', $forum_discussion->id) }}" method="POST"
                             class="d-inline">
                             @csrf

@@ -15,7 +15,7 @@ class RoleController extends Controller
     {
         $this->roleService = $roleService;
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -67,7 +67,7 @@ class RoleController extends Controller
     public function destroy($id)
     {
         if (Role::find($id)->name === 'super-admin') {
-            return redirect()->back()->with('error', 'Super admin tidak dapat dihapus');    
+            return redirect()->back()->with('error', 'Super admin tidak dapat dihapus');
         }
 
         $this->roleService->deleteRole($id);

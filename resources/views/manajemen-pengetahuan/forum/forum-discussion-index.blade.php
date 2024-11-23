@@ -12,14 +12,14 @@
             <button type="submit" class="btn btn-primary">Cari</button>
         </form>
     </div>
-    
+
 
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif    
-    
+    @endif
+
     <article class="gap-3 mt-6 d-flex flex-column">
         @if ($forum_discussions->isEmpty())
             <p class="text-center text-muted">Tidak ada diskusi yang ditemukan.</p>
@@ -31,7 +31,7 @@
                             <h2 class="text-primary">{{ $forum_discussion->title }}</h2>
                             <span class="px-6 py-2 rounded fw-bold"
                             style="{{ $forum_discussion->availability_status == 'open' ? 'color: #3ccd7d; background-color: #caffe1;' : 'color: #cd3c3c; background-color: #ffcaca;' }}">
-                                {{ $forum_discussion->availability_status == 'open' ? 'Diskusi Baru' : 'Diskusi Selesai' }} 
+                                {{ $forum_discussion->availability_status == 'open' ? 'Diskusi Baru' : 'Diskusi Selesai' }}
                             </span>
                         </div>
                         <span class="mb-3 badge bg-secondary text-muted">{{ $forum_discussion->forum_category->name }}</span>

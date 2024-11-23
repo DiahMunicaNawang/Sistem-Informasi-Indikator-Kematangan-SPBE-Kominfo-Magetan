@@ -21,7 +21,7 @@ class MenuService
     public function createMenu() {
         $roles = Role::all();
         $categories = Menu::where('is_category', true)->get();
-    
+
         $dropdownOptions = [];
         foreach ($categories as $category) {
             $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
@@ -30,14 +30,14 @@ class MenuService
                 ->where('is_category', false)
                 ->get(['id', 'name']);
         }
-    
+
         return [
             'roles' => $roles,
             'categories' => $categories,
             'dropdownOptions' => $dropdownOptions
         ];
     }
-    
+
     public function storeMenu(array $data)
     {
         $menuData = [
@@ -50,11 +50,11 @@ class MenuService
 
         $menu = Menu::create($menuData);
         $menu->roles()->attach($data['roles']);
-        
+
         return $menu;
     }
-    
-    public function editMenu(int $id) 
+
+    public function editMenu(int $id)
     {
         $menu = Menu::findOrFail($id);
 
@@ -97,10 +97,10 @@ class MenuService
     {
         $menu = Menu::findOrFail($id);
         $url = isset($data['url']) ? '/' . Str::slug($data['url']) : null;
-        
+
         // Determine category_id based on dropdown selection or direct input
-        $categoryId = $data['dropdown_id'] 
-            ? Menu::find($data['dropdown_id'])->category_id 
+        $categoryId = $data['dropdown_id']
+            ? Menu::find($data['dropdown_id'])->category_id
             : ($data['category_id'] ?? null);
 
         // Update menu

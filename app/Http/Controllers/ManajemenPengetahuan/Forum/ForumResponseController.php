@@ -53,7 +53,7 @@ class ForumResponseController extends Controller
         if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
             return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memperbarui tanggapan');
         }
-        
+
         $this->forumResponseService->updateForumResponse($request->all(), $id);
         return redirect()->back()->with('success', 'Tanggapan berhasil diupdate');
     }
@@ -73,7 +73,7 @@ class ForumResponseController extends Controller
         if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
             return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa menghapus tanggapan');
         }
-        
+
         $this->forumResponseService->deleteForumResponse($id);
         return redirect()->back()->with('success', 'Tanggapan berhasil dihapus');
     }

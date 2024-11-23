@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ManajemenPengetahuan\Article\ArtikelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -35,6 +36,48 @@ Route::middleware('auth', 'verified')->group(function () {
     // Manajemen Pengetahuan
     Route::view('manajemen-pengetahuan', 'manajemen-pengetahuan.index')->name('manajemen-pengetahuan');
 
+    // Articles
+    Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);
+
+    Route::prefix('article')->middleware('auth')->group(function () {
+        // **Route Statis (Letakkan di atas untuk mencegah bentrok)**
+        Route::get('/index_validate', [ArtikelController::class, 'validate_index'])
+            ->name('article.validateIndex')
+            ->middleware('article_role:super-admin');
+
+        Route::get('/create_category', [ArtikelController::class, 'createCategory'])
+            ->name('article.createCategory')
+            ->middleware('article_role:super-admin');
+
+        Route::post('/store_category', [ArtikelController::class, 'storeCategory'])
+            ->name('article.storeCategory')
+            ->middleware('article_role:super-admin');
+
+        // **Route Dinamis**
+        Route::get('/{id}', [ArtikelController::class, 'show'])
+            ->name('article.show')
+            ->where('id', '[0-9]+'); // Membatasi parameter {id} hanya berupa angka
+
+        // Route lainnya
+        Route::get('/create', [ArtikelController::class, 'create'])
+            ->name('article.create')
+            ->middleware('article_role:super-admin|admin|user');
+
+        Route::post('/', [ArtikelController::class, 'store'])
+            ->name('article.store')
+            ->middleware('article_role:super-admin|admin|user');
+
+        Route::post('/store_rating', [ArtikelController::class, 'storeRating'])
+            ->name('article.storeRating')
+            ->middleware('article_role:super-admin|user|pengguna-umum');
+
+        Route::get('/article/{id}/validate', [ArtikelController::class, 'validateArticle'])->name('article.validate')->middleware('article_role:super-admin');
+
+        Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation')->middleware('article_role:super-admin');
+
+        Route::get('/article/print-pdf', [ArtikelController::class, 'printPDF'])->name('article.printPDF');
+    });
+
     // Forum
     Route::resource('forum-category', ForumCategoryController::class);
     Route::resource('forum-discussion', ForumDiscussionController::class);
@@ -51,7 +94,27 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('forum-discussion-approval-accept/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept'])->name('forum-discussion-approval-accept');
 
     Route::post('forum-discussion-approval-accept-availability/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept_availability'])->name('forum-discussion-approval-accept-availability');
-    
+
+    Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
+
+
+    // Forum
+    Route::resource('forum-category', ForumCategoryController::class);
+    Route::resource('forum-discussion', ForumDiscussionController::class);
+    Route::resource('forum-response', ForumResponseController::class);
+
+    Route::get('forum-discussion-approval-user', [ForumDiscussionController::class, 'forum_discussion_approval_user'])->name('forum-discussion-approval-user');
+
+    Route::get('forum-discussion-approval-process', [ForumDiscussionController::class, 'forum_discussion_approval_process'])->name('forum-discussion-approval-process');
+
+    Route::get('forum-discussion-approval-reject/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_reject'])->name('forum-discussion-approval-reject');
+
+    Route::get('forum-discussion-approval-rejected', [ForumDiscussionController::class, 'forum_discussion_approval_rejected'])->name('forum-discussion-approval-rejected');
+
+    Route::get('forum-discussion-approval-accept/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept'])->name('forum-discussion-approval-accept');
+
+    Route::post('forum-discussion-approval-accept-availability/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_accept_availability'])->name('forum-discussion-approval-accept-availability');
+
     Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
 
 });
@@ -88,12 +151,24 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/login')->with('verify', 'Email Anda telah berhasil diverifikasi!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-
-
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'Email verifikasi baru telah dikirim.');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+// Route::post('/upload-image', function (Request $request) {
+//     if ($request->hasFile('upload')) {
+//         $image = $request->file('upload');
+//         $path = $image->store('images', 'public');
+
+//         // Menggunakan asset langsung ke storage
+//         return response()->json([
+//             'url' => asset('storage/' . $path)
+//         ]);
+//     }
+//     return response()->json(['error' => 'Image upload failed'], 400);
+// });
 
 
 // BATAS

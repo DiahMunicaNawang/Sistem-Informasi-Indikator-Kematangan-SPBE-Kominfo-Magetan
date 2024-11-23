@@ -13,7 +13,7 @@ class ForumDiscussionService
         $this->forumResponseService = $forumResponseService;
     }
 
-    
+
     public function getAllForumDiscussions($search = null)
     {
         return [
@@ -69,7 +69,7 @@ class ForumDiscussionService
 
         $forum_discussion = ForumDiscussion::findOrFail($id);
         $forum_categories = ForumCategory::get();
-        
+
         return [
             'forum_discussion' => $forum_discussion,
             'forum_categories' => $forum_categories,
@@ -123,7 +123,7 @@ class ForumDiscussionService
             'approval_status' => 'rejected',
             'availability_status' => 'closed',
         ]);
-        
+
         return $forum_discussion;
     }
 
@@ -134,10 +134,10 @@ class ForumDiscussionService
             'forum_discussions' => $forum_discussions,
         ];
     }
-    
+
     public function forumDiscussionApprovalAccept(int $id) {
         $forum_discussion = ForumDiscussion::findOrFail($id);
-        
+
         return [
             'forum_discussion' => $forum_discussion,
         ];
@@ -145,7 +145,7 @@ class ForumDiscussionService
 
     public function forumDiscussionApprovalAcceptAvailability(array $data, int $id) {
         $forum_discussion = ForumDiscussion::findOrFail($id);
-        
+
         $forum_discussion->update([
             'approval_status' => 'accepted',
             'availability_status' => $data['action'],
