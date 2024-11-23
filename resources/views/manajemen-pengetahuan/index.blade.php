@@ -3,6 +3,7 @@
 @section('page-name', 'Indikator 26: Manajemen Pengetahuan')
 
 @section('content')
+
     <div class="row g-4">
         <div class="col-md-4 col-sm-6">
             <div class="border-0 shadow-sm card h-100">
