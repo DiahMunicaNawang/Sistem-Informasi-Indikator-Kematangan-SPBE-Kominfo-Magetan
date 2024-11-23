@@ -72,11 +72,11 @@ class ForumDiscussionController extends Controller
         $diskusi_selesai = ForumDiscussion::where('id', $id)->where('availability_status', 'closed')->first();
 
         if ($diskusi_selesai) {
-            return redirect()->route('forum-discussion-approval-user')->with('error', 'Mohon maaf, diskusi sudah selesai');
+            return redirect()->route('forum-discussion-approval-user')->with('error', 'Maaf, diskusi sudah selesai.');
         }
 
         $this->forumDiscussionService->updateForumDiscussion($request->all(), $id);
-        return redirect()->route('forum-discussion.index')->with('success', 'Forum diskusi berhasil diupdate');
+        return redirect()->route('forum-discussion.index')->with('success', 'Forum diskusi berhasil diupdate.');
     }
 
     /**
@@ -85,7 +85,7 @@ class ForumDiscussionController extends Controller
     public function destroy($id)
     {
         $this->forumDiscussionService->deleteForumDiscussion($id);
-        return redirect()->route('forum-discussion.index')->with('success', 'Forum diskusi berhasil dihapus');
+        return redirect()->route('forum-discussion.index')->with('success', 'Forum diskusi berhasil dihapus.');
     }
 
 
@@ -101,7 +101,7 @@ class ForumDiscussionController extends Controller
 
     public function forum_discussion_approval_reject($id) {
         $this->forumDiscussionService->forumDiscussionApprovalReject($id);
-        return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil ditolak!');
+        return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil ditolak.');
     }
 
     public function forum_discussion_approval_rejected() {
@@ -118,15 +118,20 @@ class ForumDiscussionController extends Controller
         $data = $this->forumDiscussionService->forumDiscussionApprovalAcceptAvailability($request->all(), $id);
 
         if ($data->availability_status === 'open') {
-            return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil dibuka');
+            return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil dibuka.');
         } else {
-            return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil ditutup');
+            return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil ditutup.');
         }
     }
 
     public function forum_discussion_approval_accepted() {
         $data = $this->forumDiscussionService->forumDiscussionApprovalAccepted();
         return view('manajemen-pengetahuan.forum.forum-discussion-approval-accepted', $data);
+    }
+
+    public function forum_discussion_approval_destroy($id) {
+        $this->forumDiscussionService->forumDiscussionApprovalDelete($id);
+        return redirect()->route('forum-discussion-approval-process')->with('success', 'Forum diskusi berhasil dihapus.');
     }
 
 }

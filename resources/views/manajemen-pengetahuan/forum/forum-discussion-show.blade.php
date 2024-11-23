@@ -4,7 +4,7 @@
     <div class="card card-flush h-md-100">
         <div class="pt-8 border-0 px-9">
             <div class="m-0 card-title">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="flex-wrap gap-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-50px me-5">
                             <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="" />
@@ -19,10 +19,28 @@
                         </div>
                     </div>
 
-                    <span class="px-6 py-2 rounded fw-bold"
-                        style="{{ $forum_discussion->availability_status == 'open' ? 'color: #3ccd7d; background-color: #caffe1;' : 'color: #cd3c3c; background-color: #ffcaca;' }}">
-                        {{ $forum_discussion->availability_status == 'open' ? 'Diskusi Baru' : 'Diskusi Selesai' }}
-                    </span>
+                    <div class="gap-2 d-flex flex-column align-items-center">
+                        <span class="px-6 py-2 text-center rounded fw-semibold w-100"
+                            style="{{ $forum_discussion->availability_status == 'open' ? 'color: #3ccd7d; background-color: #caffe1;' : 'color: #cd3c3c; background-color: #ffcaca;' }}">
+                            {{ $forum_discussion->availability_status == 'open' ? 'Diskusi Aktif' : 'Diskusi Ditutup' }}
+                        </span>
+
+                        @if ($forum_discussion->user_id == session('user_informations.user_id'))
+                            <div class="gap-2 w-100 d-flex">
+                                <a href="{{ route('forum-discussion.edit', $forum_discussion->id) }}"
+                                    class="btn btn-sm btn-light"><i class="p-0 me-1 bi bi-pencil"></i> Edit</a>
+                                <form action="{{ route('forum-discussion.destroy', $forum_discussion->id) }}" method="POST"
+                                    class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-light-danger"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus forum diskusi ini?')">
+                                        <i class="p-0 me-1 bi bi-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,20 +48,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="text-dark fw-bolder">{{ $forum_discussion->title }}</h2>
 
-                @if ($forum_discussion->user_id == session('user_informations.user_id'))
-                    <div>
-                        <a href="{{ route('forum-discussion.edit', $forum_discussion->id) }}"
-                            class="btn btn-sm btn-light">Edit</a>
-                        <form action="{{ route('forum-discussion.destroy', $forum_discussion->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-light-danger"
-                                onclick="return confirm('Apakah Anda yakin ingin menghapus forum diskusi ini?')">
-                                Hapus
-                            </button>
-                        </form>
-                    </div>
-                @endif
+
 
             </div>
 
@@ -52,7 +57,7 @@
 
         <div class="pt-4 card-footer">
             <h3 class="mb-4 text-gray-800 card-label fw-bold">Tanggapan</h3>
-            
+
             @include('manajemen-pengetahuan.forum.forum-response-index')
         </div>
     </div>

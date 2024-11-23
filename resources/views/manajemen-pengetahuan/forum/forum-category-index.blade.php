@@ -1,12 +1,15 @@
 @extends('layouts.main.index')
 
-@section('page-name', 'Forum Category')
+@section('page-name', 'Kategori Forum')
 
 @section('content')
 
     @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+        <div class="mb-4 alert alert-success" role="alert">
+            <div class="d-flex align-items-center">
+                <div><i class="bi bi-check-circle me-2 text-success"></i>{{ session('success') }}</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
     @endif
     
@@ -14,15 +17,10 @@
     <div class="card card-flush h-md-100">
         <!--begin::Header-->
         <div class="card-header pt-7">
-            <!--begin::Title-->
-            {{-- <h3 class="card-title align-items-start flex-column">			
-                <span class="text-gray-800 card-label fw-bold">Forum Categories</span>
-            </h3> --}}
-            <!--end::Title-->
 
             <!--begin::Toolbar-->
             <div class="card-toolbar">   
-                <a href="{{ route('forum-category.create') }}" class="btn btn-sm btn-success">Tambah Forum Category</a>             
+                <a href="{{ route('forum-category.create') }}" class="btn btn-sm btn-success">Tambah Kategori Forum</a>             
             </div>
             <!--end::Toolbar-->
         </div>
@@ -49,7 +47,7 @@
                                     <form action="{{ route('forum-category.destroy', $forum_category->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
                                     </form>
                                 </td>
                             </tr>

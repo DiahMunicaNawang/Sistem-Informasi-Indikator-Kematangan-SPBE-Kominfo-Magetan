@@ -27,15 +27,15 @@ class ForumResponseController extends Controller
         $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
 
         if ($diskusi_selesai) {
-            return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
+            return redirect()->back()->with('error', 'Maaf, diskusi sudah selesai.');
         }
 
         if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
-            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memberi tanggapan');
+            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa memberi tanggapan.');
         }
 
         $this->forumResponseService->storeForumResponse($request->all());
-        return redirect()->back()->with('success', 'Tanggapan berhasil ditambahkan');
+        return redirect()->back()->with('success', 'Tanggapan berhasil ditambahkan.');
     }
 
     /**
@@ -47,7 +47,7 @@ class ForumResponseController extends Controller
         $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
 
         if ($diskusi_selesai) {
-            return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
+            return redirect()->back()->with('error', 'Maaf, diskusi sudah selesai.');
         }
 
         if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
@@ -55,7 +55,7 @@ class ForumResponseController extends Controller
         }
         
         $this->forumResponseService->updateForumResponse($request->all(), $id);
-        return redirect()->back()->with('success', 'Tanggapan berhasil diupdate');
+        return redirect()->back()->with('success', 'Tanggapan berhasil diupdate.');
     }
 
     /**
@@ -67,14 +67,14 @@ class ForumResponseController extends Controller
         $diskusi_selesai = ForumDiscussion::where('id', $request['forum_discussion_id'])->where('availability_status', 'closed')->first();
 
         if ($diskusi_selesai) {
-            return redirect()->back()->with('error', 'Mohon maaf, diskusi sudah selesai');
+            return redirect()->back()->with('error', 'Maaf, diskusi sudah selesai.');
         }
 
         if (session('user_informations.role') === 'pengguna-umum' || session('user_informations.role') === 'manajer-konten') {
-            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa menghapus tanggapan');
+            return redirect()->back()->with('error', 'Hanya pengguna terdaftar yang bisa menghapus tanggapan.');
         }
         
         $this->forumResponseService->deleteForumResponse($id);
-        return redirect()->back()->with('success', 'Tanggapan berhasil dihapus');
+        return redirect()->back()->with('success', 'Tanggapan berhasil dihapus.');
     }
 }

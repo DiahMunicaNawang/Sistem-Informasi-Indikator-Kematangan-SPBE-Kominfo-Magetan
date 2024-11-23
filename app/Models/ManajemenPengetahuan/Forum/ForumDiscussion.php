@@ -26,4 +26,8 @@ class ForumDiscussion extends Model
         // Potong teks deskripsi menjadi 100 karakter
         return Str::limit($this->description, 300, '...');
     }
+
+    public function responses() {
+        return $this->hasMany(ForumResponse::class);
+    }
 }

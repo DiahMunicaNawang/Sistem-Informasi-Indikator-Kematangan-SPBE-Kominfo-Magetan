@@ -54,6 +54,8 @@ Route::middleware('auth', 'verified')->group(function () {
     
     Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
 
+    Route::delete('forum-discussion-approval-destroy/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_destroy'])->name('forum-discussion-approval-destroy');
+
 });
 
 Route::get('/login', [AuthController::class, 'login'])
