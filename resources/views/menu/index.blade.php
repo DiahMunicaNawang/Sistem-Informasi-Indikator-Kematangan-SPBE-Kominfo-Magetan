@@ -3,20 +3,20 @@
 @section('page-name', 'Menu Management')
 
 @section('content')
-
+// test
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-    
+
     <!--begin::Table widget 14-->
     <div class="card card-flush h-md-100">
         <!--begin::Header-->
         <div class="card-header pt-7">
             <!--begin::Toolbar-->
-            <div class="card-toolbar">   
-                <a href="{{ route('menu.create') }}" class="btn btn-sm btn-success">Tambah Menu</a>             
+            <div class="card-toolbar">
+                <a href="{{ route('menu.create') }}" class="btn btn-sm btn-success">Tambah Menu</a>
             </div>
             <!--end::Toolbar-->
         </div>
