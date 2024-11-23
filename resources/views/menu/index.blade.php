@@ -14,7 +14,7 @@
         <!-- Info Alert -->
         <div class="mb-5 alert alert-info">
             <div class="d-flex">
-                <i class="fas fa-info-circle fs-3 me-3"></i>
+                <i class="fas fa-info-circle fs-3 me-3 text-info"></i>
                 <div>
                     <h4 class="alert-heading">Panduan Menampilkan Menu</h4>
                     <p class="mb-0">
