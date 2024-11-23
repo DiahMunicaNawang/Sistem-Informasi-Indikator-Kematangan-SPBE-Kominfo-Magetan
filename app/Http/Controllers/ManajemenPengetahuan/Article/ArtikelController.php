@@ -111,7 +111,7 @@ class ArtikelController extends Controller
 
         $this->articleService->storeCategory($request->all());
 
-        return redirect()->route('article.index')->with('success', 'Category baru berhasil di tambahkan');
+        return redirect()->route('article.create')->with('success', 'Category baru berhasil di tambahkan');
     }
 
 
