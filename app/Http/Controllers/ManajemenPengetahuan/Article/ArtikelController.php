@@ -122,8 +122,15 @@ class ArtikelController extends Controller
         $search = $request->get('search');
 
         // Query artikel berdasarkan pencarian
-        $articles = Article::where('title', 'like', "%$search%")
-            ->orWhere('article_summary', 'like', "%$search%")
+        $articles = Article::with('ratings', 'category')
+            ->where('article_status', 'published')
+            ->when($search, function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('category_name', 'LIKE', '%' . $search . '%');
+                    });
+            })
+            ->orderByDesc('updated_at')
             ->get();
 
         // Jika tidak ada artikel, return pesan

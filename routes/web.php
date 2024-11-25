@@ -62,15 +62,15 @@ Route::middleware('auth', 'verified')->group(function () {
         // Route lainnya
         Route::get('/create', [ArtikelController::class, 'create'])
             ->name('article.create')
-            ->middleware('article_role:super-admin|pengguna-terdaftar');
+            ->middleware('article_role:super-admin|pengguna-terdaftar|manajer-konten');
 
         Route::post('/', [ArtikelController::class, 'store'])
             ->name('article.store')
-            ->middleware('article_role:super-admin|pengguna-terdaftar');
+            ->middleware('article_role:super-admin|pengguna-terdaftar|manajer-konten');
 
         Route::post('/store_rating', [ArtikelController::class, 'storeRating'])
             ->name('article.storeRating')
-            ->middleware('article_role:super-admin|pengguna-terdaftar');
+            ->middleware('article_role:super-admin|pengguna-terdaftar|manajer-konten');
 
         Route::get('/article/{id}/validate', [ArtikelController::class, 'validateArticle'])->name('article.validate')->middleware('article_role:super-admin|manajer-konten');
 

@@ -64,7 +64,10 @@ class RoleMenuSeeder extends Seeder
 
         $pengguna_umum->menus()->attach([
             $home->id,
+            $kelola_pelayanan->id,
             $dashboard->id,
+            $manajemen_spbe->id,
+            $manajemen_pengetahuan->id,
         ]);
     }
 }
