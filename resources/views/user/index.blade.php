@@ -34,7 +34,7 @@
                             <tr>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->username }}</td>
-                                <td>{{ $user->role->name }}</td>
+                                <td><span class="badge badge-light-primary">{{ $user->role->name }}<span></td>
                                 <td class="gap-2 d-flex">
                                     <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
                                     <form action="{{ route('user.destroy', $user->id) }}" method="post">
