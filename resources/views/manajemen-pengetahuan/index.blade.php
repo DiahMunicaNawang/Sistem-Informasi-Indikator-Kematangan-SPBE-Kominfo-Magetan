@@ -18,7 +18,7 @@
                             <a href="{{ route('article.index') }}" class="btn btn-light-primary btn-sm">
                                 <i class="bi bi-eye me-2"></i>Lihat Artikel
                             </a>
-                            @if (auth()->user() && auth()->user()->role_id == 1)
+                            @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3))
                             <a href="{{ route('article.validateIndex') }}" class="btn btn-light-success btn-sm">
                                 <i class="bi bi-check-circle me-2"></i>Validasi Artikel
                             </a>
