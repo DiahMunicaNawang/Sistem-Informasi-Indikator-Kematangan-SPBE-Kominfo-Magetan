@@ -70,7 +70,7 @@ class MenuSeeder extends Seeder
                 'category_id' => $categoryIds['Kelola Pengguna'],
             ],
             [
-                'name' => 'Daftar Peran',
+                'name' => 'Daftar Role',
                 'url' => '/role',
                 'category_id' => $categoryIds['Kelola Pengguna'],
             ],

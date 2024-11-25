@@ -14,6 +14,7 @@ class RoleMenuSeeder extends Seeder
         // Get Roles
         $super_admin = Role::where('name', 'super-admin')->first();
         $manajer_konten = Role::where('name', 'manajer-konten')->first();
+        $pengguna_terdaftar = Role::where('name', 'pengguna-terdaftar')->first();
         $pengguna_umum = Role::where('name', 'pengguna-umum')->first();
 
         // Get Categories
@@ -26,7 +27,7 @@ class RoleMenuSeeder extends Seeder
         $manajemen_spbe = Menu::where('name', 'Manajemen SPBE Aspek 5')->first();
         $manajemen_pengetahuan = Menu::where('url', '/manajemen-pengetahuan')->first();
         $daftar_pengguna = Menu::where('url', '/user')->first();
-        $daftar_peran = Menu::where('url', '/role')->first();
+        $daftar_role = Menu::where('url', '/role')->first();
         $daftar_menu = Menu::where('url', '/menu')->first();
 
         // Assign Permissions
@@ -39,12 +40,21 @@ class RoleMenuSeeder extends Seeder
             $manajemen_spbe->id,
             $manajemen_pengetahuan->id,
             $daftar_pengguna->id,
-            $daftar_peran->id,
+            $daftar_role->id,
             $daftar_menu->id,
         ]);
 
-        // Admin gets access to dashboard and some management features
         $manajer_konten->menus()->attach([
+            $home->id,
+            $kelola_pelayanan->id,
+            $kelola_pengguna->id,
+            $dashboard->id,
+            $manajemen_spbe->id,
+            $manajemen_pengetahuan->id,
+            $daftar_menu->id,
+        ]);
+
+        $pengguna_terdaftar->menus()->attach([
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
@@ -52,7 +62,6 @@ class RoleMenuSeeder extends Seeder
             $manajemen_pengetahuan->id,
         ]);
 
-        // Regular user gets access to dashboard only
         $pengguna_umum->menus()->attach([
             $home->id,
             $dashboard->id,
