@@ -13,14 +13,16 @@
 
                         <img src="{{ asset('assets/media/my-assets/article.svg') }}" alt="Forum" class="mb-3"
                             style="height: 100px">
-                            
+
                         <div class="flex-wrap gap-2 d-flex justify-content-center w-100">
                             <a href="{{ route('article.index') }}" class="btn btn-light-primary btn-sm">
                                 <i class="bi bi-eye me-2"></i>Lihat Artikel
                             </a>
-                            <a href="" class="btn btn-light-success btn-sm">
+                            @if (auth()->user() && auth()->user()->role_id == 1)
+                            <a href="{{ route('article.validateIndex') }}" class="btn btn-light-success btn-sm">
                                 <i class="bi bi-check-circle me-2"></i>Validasi Artikel
                             </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -34,7 +36,7 @@
 
                     <img src="{{ asset('assets/media/my-assets/forum.svg') }}" alt="Forum" class="mb-3"
                         style="height: 100px">
-                        
+
                     <div class="mb-3 flex-grow-1 d-flex flex-column justify-content-center align-items-center">
                         <div class="flex-wrap gap-2 d-flex justify-content-center w-100">
                             <a href="{{ route('forum-discussion.index') }}" class="btn btn-light-primary btn-sm">

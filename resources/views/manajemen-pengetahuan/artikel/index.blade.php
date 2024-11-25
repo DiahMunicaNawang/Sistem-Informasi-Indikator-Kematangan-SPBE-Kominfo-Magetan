@@ -172,12 +172,12 @@
         @endif
 
 
-        <!-- Validation Button (Only visible for Superadmin) -->
+        {{-- <!-- Validation Button (Only visible for Superadmin) -->
         @if (auth()->user() && auth()->user()->role_id == 1)
             <a href="{{ route('article.validateIndex') }}" class="btn-theme d-block mb-2">
                 <i class="fas fa-check"></i> Validasi Artikel
             </a>
-        @endif
+        @endif --}}
 
         <!-- Print Article Button (Only visible for Superadmin, User, And Visitor)-->
         @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
