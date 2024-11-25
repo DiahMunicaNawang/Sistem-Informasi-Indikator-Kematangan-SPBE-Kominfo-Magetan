@@ -65,7 +65,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        if (Role::find($id)->name === 'super-admin') {
+        if (Role::findOrFail($id)->name === 'super-admin') {
             return redirect()->back()->with('error', 'Super admin tidak dapat dihapus');
         }
 
