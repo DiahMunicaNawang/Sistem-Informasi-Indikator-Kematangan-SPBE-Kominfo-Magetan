@@ -94,6 +94,7 @@
                                 });
                             },
                         ])
+                        ->orderByRaw('is_category = true, created_at ASC')
                         ->get();
 
                     $categories = $allMenus->where('is_category', true);

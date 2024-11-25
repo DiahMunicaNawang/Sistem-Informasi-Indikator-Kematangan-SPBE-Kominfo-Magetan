@@ -4,15 +4,13 @@ namespace App\Services;
 
 use App\Models\Menu;
 use App\Models\Role;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class MenuService
 {
     public function getAllMenus()
     {
-        $menus = Menu::with(['roles', 'categoryChildren', 'dropdownChildren'])->get();
+        $menus = Menu::with(['roles', 'categoryChildren', 'dropdownChildren'])->orderBy('created_at', 'ASC')->get();
         return [
             'menus' => $menus
         ];
@@ -30,6 +28,13 @@ class MenuService
                 ->where('is_category', false)
                 ->get(['id', 'name']);
         }
+
+        // Add independent dropdowns to options
+        $dropdownOptions[0] = Menu::whereNull('category_id')
+            ->where('url', null)
+            ->where('dropdown_id', null)
+            ->where('is_category', false)
+            ->get(['id', 'name']);
 
         return [
             'roles' => $roles,
@@ -67,7 +72,8 @@ class MenuService
         $menuType = 'menu';
         if ($menu->is_category) {
             $menuType = 'category';
-        } elseif (is_null($menu->url) && !is_null($menu->category_id)) {
+        } elseif (is_null($menu->url)) {
+            // Fix: If URL is null and it's not a category, it must be a dropdown
             $menuType = 'dropdown';
         }
 
@@ -78,15 +84,27 @@ class MenuService
                 ->where('url', null)
                 ->where('dropdown_id', null)
                 ->where('is_category', false)
-                ->where('id', '!=', $id); // Exclude current menu if it's a dropdown
+                ->where('id', '!=', $id);
 
-            // If current menu has a dropdown_id, include its parent dropdown
             if ($menu->dropdown_id) {
                 $dropdownQuery->orWhere('id', $menu->dropdown_id);
             }
 
             $dropdownOptions[$category->id] = $dropdownQuery->get(['id', 'name']);
         }
+
+        // Add independent dropdowns to options
+        $independentDropdownQuery = Menu::whereNull('category_id')
+            ->where('url', null)
+            ->where('dropdown_id', null)
+            ->where('is_category', false)
+            ->where('id', '!=', $id);
+
+        if ($menu->dropdown_id) {
+            $independentDropdownQuery->orWhere('id', $menu->dropdown_id);
+        }
+
+        $dropdownOptions[0] = $independentDropdownQuery->get(['id', 'name']);
 
         return [
             'menu' => $menu,
@@ -104,16 +122,16 @@ class MenuService
         $url = isset($data['url']) ? '/' . Str::slug($data['url']) : null;
 
         // Determine category_id based on dropdown selection or direct input
-        $categoryId = $data['dropdown_id']
-            ? Menu::find($data['dropdown_id'])->category_id
+        $categoryId = $data['type'] === 'menu' && isset($data['dropdown_id']) 
+            ? Menu::find($data['dropdown_id'])->category_id 
             : ($data['category_id'] ?? null);
 
         // Update menu
         $menu->update([
             'name' => $data['name'],
-            'url' => $url,
+            'url' => $data['type'] === 'menu' ? $url : null,
             'is_category' => $data['type'] === 'category',
-            'dropdown_id' => $data['dropdown_id'] ?? null,
+            'dropdown_id' => $data['type'] === 'menu' ? ($data['dropdown_id'] ?? null) : null,
             'category_id' => $categoryId,
         ]);
 
@@ -126,9 +144,7 @@ class MenuService
     public function deleteMenu(int $id)
     {
         $menu = Menu::findOrFail($id);
-        $menu->roles()->detach(); // Hapus hubungan dengan menus sebelum menghapus menu
-        // $this->updateCacheMenus(); // Perbarui session setelah menghapus menu
-
+        $menu->roles()->detach();
         return $menu->delete();
     }
 }
