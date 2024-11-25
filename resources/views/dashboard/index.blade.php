@@ -90,7 +90,7 @@
     </div>
 
     <!-- Grafik Statistik Artikel dan Rating, hanya bisa di lihat super-admin -->
-    @if (auth()->user() && auth()->user()->role_id == 1)
+    @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3))
         <div class="mb-5 card card-flush h-md-50 mb-xl-10"">
             <div class="pt-5 card-header">
                 <!--begin::Title-->

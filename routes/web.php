@@ -62,21 +62,21 @@ Route::middleware('auth', 'verified')->group(function () {
         // Route lainnya
         Route::get('/create', [ArtikelController::class, 'create'])
             ->name('article.create')
-            ->middleware('article_role:super-admin|admin-instansi|user');
+            ->middleware('article_role:super-admin|pengguna-terdaftar');
 
         Route::post('/', [ArtikelController::class, 'store'])
             ->name('article.store')
-            ->middleware('article_role:super-admin|admin-instansi|user');
+            ->middleware('article_role:super-admin|pengguna-terdaftar');
 
         Route::post('/store_rating', [ArtikelController::class, 'storeRating'])
             ->name('article.storeRating')
-            ->middleware('article_role:super-admin|user|pengguna-umum');
+            ->middleware('article_role:super-admin|pengguna-terdaftar');
 
-        Route::get('/article/{id}/validate', [ArtikelController::class, 'validateArticle'])->name('article.validate')->middleware('article_role:super-admin');
+        Route::get('/article/{id}/validate', [ArtikelController::class, 'validateArticle'])->name('article.validate')->middleware('article_role:super-admin|manajer-konten');
 
-        Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation')->middleware('article_role:super-admin');
+        Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation')->middleware('article_role:super-admin|manajer-konten');
 
-        Route::get('/article/print-pdf', [ArtikelController::class, 'printPDF'])->name('article.printPDF');
+        Route::get('/article/print-pdf', [ArtikelController::class, 'printPDF'])->name('article.printPDF')->middleware('article_role:super-admin|manajer-konten|pengguna-terdaftar|pengguna-umum');
     });
 
     // Forum
