@@ -87,8 +87,8 @@ class ArtikelController extends Controller
     public function storeValidation(Request $request, $id)
     {
         $request->validate([
-            'validation_status' => 'required|in:approved,rejected',
-            'comments' => 'nullable|string|max:1000',
+            'validation_status' => 'required|in:proses,rejected,published',
+            'comments' => 'nullable|string',
         ]);
 
         $this->articleService->storeValidation($id, $request->all());

@@ -94,6 +94,27 @@ class ArticleService
     // Menyimpan hasil validasi artikel
     public function storeValidation($id, $data)
     {
+        // Cek apakah status yang dipilih adalah 'proses'
+        if ($data['validation_status'] === 'proses') {
+            ArticleValidation::create([
+                'article_id' => $id,
+                'validator_user_id' => Auth::id(),
+                'validation_status' => 'proses',
+                'comments' => $data['comments'] ?? null, // Tambahkan komentar jika ada
+                'validation_date' => now(),
+            ]);
+
+            // Update artikel menjadi status 'in_review' atau status lain terkait proses
+            Article::where('id', $id)->update([
+                'article_status' => 'in_review', // Atur status artikel untuk status proses
+                'updated_at' => now(),
+            ]);
+
+            return; // Keluar setelah menyimpan status 'proses'
+        }
+
+        // Logika untuk status lain ('rejected' atau 'published')
+        $articleStatus = $data['validation_status'] === 'rejected' ? 'rejected' : 'published';
         ArticleValidation::create([
             'article_id' => $id,
             'validator_user_id' => Auth::id(),
@@ -102,7 +123,6 @@ class ArticleService
             'validation_date' => now(),
         ]);
 
-        $articleStatus = $data['validation_status'] == 'rejected' ? 'rejected' : 'published';
         Article::where('id', $id)->update([
             'article_status' => $articleStatus,
             'updated_at' => now(),
