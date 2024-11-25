@@ -44,15 +44,15 @@ Route::middleware('auth', 'verified')->group(function () {
         // **Route Statis (Letakkan di atas untuk mencegah bentrok)**
         Route::get('/index_validate', [ArtikelController::class, 'validate_index'])
             ->name('article.validateIndex')
-            ->middleware('article_role:super-admin');
+            ->middleware('article_role:super-admin|manajer-konten');
 
         Route::get('/create_category', [ArtikelController::class, 'createCategory'])
             ->name('article.createCategory')
-            ->middleware('article_role:super-admin');
+            ->middleware('article_role:super-admin|manajer-konten');
 
         Route::post('/store_category', [ArtikelController::class, 'storeCategory'])
             ->name('article.storeCategory')
-            ->middleware('article_role:super-admin');
+            ->middleware('article_role:super-admin|manajer-konten');
 
         // **Route Dinamis**
         Route::get('/{id}', [ArtikelController::class, 'show'])
