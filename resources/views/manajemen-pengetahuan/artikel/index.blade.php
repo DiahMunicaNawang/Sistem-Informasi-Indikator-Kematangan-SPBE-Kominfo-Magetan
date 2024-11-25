@@ -180,11 +180,11 @@
         @endif --}}
 
         <!-- Print Article Button (Only visible for Superadmin, User, And Visitor)-->
-        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
+
             <a href="{{ route('article.printPDF', ['search' => request()->get('search')]) }}" class="btn-theme d-block">
                 <i class="fas fa-print"></i> Cetak Artikel PDF
             </a>
-        @endif
+        
     </div>
 
     @if ($artikel->isEmpty())
