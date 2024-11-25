@@ -129,7 +129,7 @@
                         <label for="validation_status">Status Validasi:</label>
                         <select name="validation_status" id="validation_status" class="form-control" required>
                             <option value="proses">Proses</option>
-                            <option value="approved">Disetujui</option>
+                            <option value="published">Disetujui</option>
                             <option value="rejected">Ditolak</option>
                         </select>
                     </div>

@@ -13,8 +13,8 @@ class RoleMenuSeeder extends Seeder
     {
         // Get Roles
         $super_admin = Role::where('name', 'super-admin')->first();
-        $admin = Role::where('name', 'admin')->first();
-        $user = Role::where('name', 'user')->first();
+        $manajer_konten = Role::where('name', 'manajer-konten')->first();
+        $pengguna_umum = Role::where('name', 'pengguna-umum')->first();
 
         // Get Categories
         $home = Menu::where('name', 'Home')->first();
@@ -44,7 +44,7 @@ class RoleMenuSeeder extends Seeder
         ]);
 
         // Admin gets access to dashboard and some management features
-        $admin->menus()->attach([
+        $manajer_konten->menus()->attach([
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
@@ -53,7 +53,7 @@ class RoleMenuSeeder extends Seeder
         ]);
 
         // Regular user gets access to dashboard only
-        $user->menus()->attach([
+        $pengguna_umum->menus()->attach([
             $home->id,
             $dashboard->id,
         ]);

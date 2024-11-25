@@ -6,8 +6,11 @@ use App\Models\Article;
 use App\Models\ArticleRating;
 use App\Models\ArticleCategory;
 use App\Models\ArticleValidation;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Database\Eloquent\Builder;
+use App\Mail\ArticleValidationNotification;
 
 class ArticleService
 {
@@ -74,7 +77,7 @@ class ArticleService
     public function getDraftArticles($search = null)
     {
         return Article::with('ratings', 'category')
-            ->where('article_status', 'draft')->orWhere('article_status', 'proses')
+            ->where('article_status', 'draft')->orWhere('article_status', 'draft')
             ->when($search, function ($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
                     ->orWhereHas('category', function ($query) use ($search) {
@@ -91,26 +94,32 @@ class ArticleService
         return Article::findOrFail($id);
     }
 
-    // Menyimpan hasil validasi artikel
     public function storeValidation($id, $data)
     {
+        $article = Article::findOrFail($id);
+
         // Cek apakah status yang dipilih adalah 'proses'
         if ($data['validation_status'] === 'proses') {
             ArticleValidation::create([
                 'article_id' => $id,
                 'validator_user_id' => Auth::id(),
                 'validation_status' => 'proses',
-                'comments' => $data['comments'] ?? null, // Tambahkan komentar jika ada
+                'comments' => $data['comments'] ?? null,
                 'validation_date' => now(),
             ]);
 
-            // Update artikel menjadi status 'in_review' atau status lain terkait proses
             Article::where('id', $id)->update([
-                'article_status' => 'in_review', // Atur status artikel untuk status proses
+                'article_status' => 'in_review',
                 'updated_at' => now(),
             ]);
-
-            return; // Keluar setelah menyimpan status 'proses'
+            // Kirim email notifikasi ke pembuat artikel
+            $creatorEmail = $article->user->email; // Pastikan relasi 'user' ada di model Article
+            Mail::to($creatorEmail)->send(new ArticleValidationNotification(
+                $article->title,
+                $data['validation_status'],
+                $data['comments'] ?? null
+            ));
+            return;
         }
 
         // Logika untuk status lain ('rejected' atau 'published')
@@ -127,5 +136,13 @@ class ArticleService
             'article_status' => $articleStatus,
             'updated_at' => now(),
         ]);
+
+        // Kirim email notifikasi ke pembuat artikel
+        $creatorEmail = $article->user->email; // Pastikan relasi 'user' ada di model Article
+        Mail::to($creatorEmail)->send(new ArticleValidationNotification(
+            $article->title,
+            $data['validation_status'],
+            $data['comments'] ?? null
+        ));
     }
 }

@@ -26,7 +26,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $faker = faker::create();
-        $user_role = Role::where('name', 'user')->first();
+        $user_role = Role::where('name', 'pengguna-umum')->first();
         return [
             'email' => $faker->unique()->safeEmail(),
             'username' => $faker->userName(),

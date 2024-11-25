@@ -1,19 +1,20 @@
 <?php
 
-use App\Http\Controllers\ManajemenPengetahuan\Article\ArtikelController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\ManajemenPengetahuan\Article\ArtikelController;
 use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumCategoryController;
 use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumResponseController;
 use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumDiscussionController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 // Main routes
@@ -61,11 +62,11 @@ Route::middleware('auth', 'verified')->group(function () {
         // Route lainnya
         Route::get('/create', [ArtikelController::class, 'create'])
             ->name('article.create')
-            ->middleware('article_role:super-admin|admin|user');
+            ->middleware('article_role:super-admin|admin-instansi|user');
 
         Route::post('/', [ArtikelController::class, 'store'])
             ->name('article.store')
-            ->middleware('article_role:super-admin|admin|user');
+            ->middleware('article_role:super-admin|admin-instansi|user');
 
         Route::post('/store_rating', [ArtikelController::class, 'storeRating'])
             ->name('article.storeRating')
@@ -98,7 +99,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
 
     Route::get('forum-discussion-approval-destroy', [ForumDiscussionController::class, 'forum_discussion_approval_destroy'])->name('forum-discussion-approval-destroy');
-    
+
 });
 
 Route::get('/login', [AuthController::class, 'login'])
@@ -138,6 +139,19 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'Email verifikasi baru telah dikirim.');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+
+Route::get('/test-email', function () {
+    try {
+        Mail::to('gangbeats89@gmail.com')->send(new \App\Mail\ArticleValidationNotification(
+            'Judul Artikel',
+            'published',
+            'Komentar tambahan'
+        ));
+        return 'Email terkirim!';
+    } catch (\Exception $e) {
+        return 'Gagal mengirim email: ' . $e->getMessage();
+    }
+});
 
 // Route::post('/upload-image', function (Request $request) {
 //     if ($request->hasFile('upload')) {
