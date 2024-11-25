@@ -74,7 +74,7 @@ class ArticleService
     public function getDraftArticles($search = null)
     {
         return Article::with('ratings', 'category')
-            ->where('article_status', 'draft')
+            ->where('article_status', 'draft')->orWhere('article_status', 'proses')
             ->when($search, function ($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
                     ->orWhereHas('category', function ($query) use ($search) {
