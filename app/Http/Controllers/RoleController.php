@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
-use App\Models\Menu;
 use App\Models\Role;
 use App\Services\RoleService;
 

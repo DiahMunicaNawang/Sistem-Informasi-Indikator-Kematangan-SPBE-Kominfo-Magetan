@@ -25,16 +25,8 @@ class MenuRequest extends FormRequest
             'name' => 'required|string|max:255',
             'type' => 'required|in:category,menu,dropdown',
             'url' => 'required_if:type,menu|nullable|string',
-            'category_id' => [
-                'nullable',
-                'exists:menus,id',
-                // 'forbidden_if:type,category'
-            ],
-            'dropdown_id' => [
-                'nullable',
-                'exists:menus,id',
-                // 'forbidden_if:type,category,dropdown'
-            ],
+            'category_id' => 'nullable|exists:menus,id',
+            'dropdown_id' =>'nullable|exists:menus,id',
             'roles' => 'required|array',
             'roles.*' => 'exists:roles,id'
         ];

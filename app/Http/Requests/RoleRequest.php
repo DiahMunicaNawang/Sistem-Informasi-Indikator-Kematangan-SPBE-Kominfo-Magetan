@@ -23,7 +23,6 @@ class RoleRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'menus' => 'required|array',
         ];
     }
 
@@ -31,8 +30,6 @@ class RoleRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama role wajib diisi!',
-            'menus.required' => 'Menu wajib diisi!',
-            'menus.array' => 'Menu harus berupa array!',
         ];
     }
 }
