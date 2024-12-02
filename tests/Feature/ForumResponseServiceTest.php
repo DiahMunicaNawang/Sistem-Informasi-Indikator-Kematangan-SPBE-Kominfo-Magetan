@@ -16,116 +16,149 @@ class ForumResponseServiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected ForumResponseService $forumResponseService;
+    protected $user;
     protected $forumCategory;
     protected $forumDiscussion;
-    protected $user;
-    protected $forumResponseService;
+    protected $forumResponse;
 
     protected function setUp(): void
-{
-    parent::setUp();
+    {
+        parent::setUp();
 
-    // Setup data role untuk user
-    $role = DB::table('roles')->insertGetId([
-        'name' => 'admin',
-    ]);
+        // Initialize the ForumResponseService
+        $this->forumResponseService = app(ForumResponseService::class);
 
-    // Membuat user terlebih dahulu agar dapat digunakan di forum discussion
-    $this->user = User::create([
-        'username' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => bcrypt('password'),
-        'role_id' => $role,
-    ]);
+        // Seed database with initial data
+        $role = DB::table('roles')->insertGetId([
+            'name' => 'Pengguna Terdaftar',
+        ]);
 
-    // Menambahkan kategori forum terlebih dahulu agar valid saat membuat forum discussion
-    $this->forumCategory = ForumCategory::create([
-        'name' => 'Test Category', // Sesuaikan dengan kolom di tabel forum_categories
-        'description' => 'Test category for forum discussions.',
-    ]);
+        // Create user
+        $this->user = User::create([
+            'username' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'role_id' => $role,
+        ]);
 
-    // Membuat forum discussion setelah user dibuat
-    $this->forumDiscussion = ForumDiscussion::create([
-        'title' => 'Test Discussion',
-        'description' => 'This is a test discussion.',
-        'forum_category_id' => $this->forumCategory->id, // Menggunakan kategori yang sudah ada
-        'user_id' => $this->user->id, // Pastikan menggunakan user_id yang valid
-        'approval_status' => 'accepted',
-        'availability_status' => 'open',
-        'discussion_created_at' => now(),
-    ]);
+        // Create forum category
+        $this->forumCategory = ForumCategory::create([
+            'name' => 'General',
+        ]);
 
-    // Simulasi session untuk role user
-    session(['user_informations' => ['user_id' => $this->user->id, 'role' => 'admin']]);
+        // Create forum discussion
+        $this->forumDiscussion = ForumDiscussion::create([
+            'title' => 'Test Discussion',
+            'description' => 'This is a test discussion.',
+            'forum_category_id' => $this->forumCategory->id,
+            'user_id' => $this->user->id,
+            'approval_status' => 'accepted',
+            'availability_status' => 'open',
+            'discussion_created_at' => now(),
+        ]);
 
-    // Inisialisasi ForumResponseService
-    $this->forumResponseService = app(ForumResponseService::class);
-}
+        // Set user session
+        session(['user_informations' => ['user_id' => $this->user->id]]);
 
+        // Create initial forum response
+        $this->forumResponse = ForumResponse::create([
+            'content' => 'Initial test response',
+            'forum_discussion_id' => $this->forumDiscussion->id,
+            'user_id' => $this->user->id,
+        ]);
+    }
 
     /** @test */
-    public function it_can_store_forum_response()
+    public function it_can_get_discussion_responses()
     {
-        // Simulasi request data untuk menyimpan forum response
-        $data = [
+        // Create an additional response
+        $newResponse = ForumResponse::create([
+            'content' => 'Another test response',
             'forum_discussion_id' => $this->forumDiscussion->id,
             'user_id' => $this->user->id,
-            'content' => 'This is a test response.',
+        ]);
+
+        $responses = $this->forumResponseService->getDiscussionResponses($this->forumDiscussion->id);
+
+        $this->assertCount(2, $responses);
+        
+        // Instead of checking the first response, let's find the one with the new content
+        $foundResponse = $responses->firstWhere('content', 'Another test response');
+        $this->assertNotNull($foundResponse, 'New response not found in retrieved responses');
+        }
+
+    /** @test */
+    public function it_can_store_a_top_level_forum_response()
+    {
+        $responseData = [
+            'content' => "New test response\nwith multiple lines",
+            'forum_discussion_id' => $this->forumDiscussion->id,
         ];
 
-        // Panggil metode storeForumResponse
-        $response = $this->forumResponseService->storeForumResponse($data);
+        $response = $this->forumResponseService->storeForumResponse($responseData);
 
-        // Pastikan forum response disimpan
         $this->assertDatabaseHas('forum_responses', [
+            'content' => "New test response\nwith multiple lines",
             'forum_discussion_id' => $this->forumDiscussion->id,
             'user_id' => $this->user->id,
-            'content' => 'This is a test response.',
+            'parent_id' => null,
+        ]);
+    }
+
+    /** @test */
+    public function it_can_store_a_nested_forum_response()
+    {
+        $responseData = [
+            'content' => "Nested response\nwith multiple lines",
+            'forum_discussion_id' => $this->forumDiscussion->id,
+            'parent_id' => $this->forumResponse->id,
+        ];
+
+        $response = $this->forumResponseService->storeForumResponse($responseData);
+
+        $this->assertDatabaseHas('forum_responses', [
+            'content' => "Nested response\nwith multiple lines",
+            'forum_discussion_id' => $this->forumDiscussion->id,
+            'user_id' => $this->user->id,
+            'parent_id' => $this->forumResponse->id,
         ]);
     }
 
     /** @test */
     public function it_can_update_forum_response()
     {
-        // Simulasi membuat forum response
-        $forumResponse = ForumResponse::create([
-            'forum_discussion_id' => $this->forumDiscussion->id,
-            'user_id' => $this->user->id,
-            'content' => 'Original response content',
-        ]);
-
-        // Data baru untuk update
-        $data = [
-            'forum_discussion_id' => $this->forumDiscussion->id,
-            'content' => 'Updated response content',
+        $updateData = [
+            'content' => "Updated response\nwith multiple lines",
         ];
 
-        // Panggil metode updateForumResponse
-        $this->forumResponseService->updateForumResponse($data, $forumResponse->id);
+        $updatedResponse = $this->forumResponseService->updateForumResponse(
+            $updateData, 
+            $this->forumResponse->id
+        );
 
-        // Pastikan forum response diupdate
         $this->assertDatabaseHas('forum_responses', [
-            'id' => $forumResponse->id,
-            'content' => 'Updated response content',
+            'id' => $this->forumResponse->id,
+            'content' => "Updated response\nwith multiple lines",
+            'forum_discussion_id' => $this->forumDiscussion->id,
         ]);
     }
 
     /** @test */
     public function it_can_delete_forum_response()
     {
-        // Simulasi membuat forum response
-        $forumResponse = ForumResponse::create([
+        // Create a nested response to test cascading delete
+        $nestedResponse = ForumResponse::create([
+            'content' => 'Nested response',
             'forum_discussion_id' => $this->forumDiscussion->id,
             'user_id' => $this->user->id,
-            'content' => 'Response to be deleted',
+            'parent_id' => $this->forumResponse->id,
         ]);
 
-        // Panggil metode deleteForumResponse
-        $this->forumResponseService->deleteForumResponse($forumResponse->id);
+        $result = $this->forumResponseService->deleteForumResponse($this->forumResponse->id);
 
-        // Pastikan forum response dihapus
-        $this->assertDatabaseMissing('forum_responses', [
-            'id' => $forumResponse->id,
-        ]);
+        $this->assertTrue($result);
+        $this->assertDatabaseMissing('forum_responses', ['id' => $this->forumResponse->id]);
+        $this->assertDatabaseMissing('forum_responses', ['id' => $nestedResponse->id]);
     }
 }
