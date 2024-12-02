@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Pastikan tipe ENUM dihapus sebelum dibuat ulang
+        DB::statement("DROP TYPE IF EXISTS approval_status_enum");
+        DB::statement("DROP TYPE IF EXISTS availability_status_enum");
+        
         DB::statement("CREATE TYPE approval_status_enum AS ENUM ('process', 'accepted', 'rejected')");
         DB::statement("CREATE TYPE availability_status_enum AS ENUM ('open', 'closed')");
         
