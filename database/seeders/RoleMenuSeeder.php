@@ -24,7 +24,6 @@ class RoleMenuSeeder extends Seeder
 
         // Get Menus
         $dashboard = Menu::where('url', '/')->first();
-        $manajemen_spbe = Menu::where('name', 'Manajemen SPBE Aspek 5')->first();
         $manajemen_pengetahuan = Menu::where('url', '/manajemen-pengetahuan')->first();
         $daftar_pengguna = Menu::where('url', '/user')->first();
         $daftar_role = Menu::where('url', '/role')->first();
@@ -37,7 +36,6 @@ class RoleMenuSeeder extends Seeder
             $kelola_pelayanan->id,
             $kelola_pengguna->id,
             $dashboard->id,
-            $manajemen_spbe->id,
             $manajemen_pengetahuan->id,
             $daftar_pengguna->id,
             $daftar_role->id,
@@ -49,7 +47,6 @@ class RoleMenuSeeder extends Seeder
             $kelola_pelayanan->id,
             $kelola_pengguna->id,
             $dashboard->id,
-            $manajemen_spbe->id,
             $manajemen_pengetahuan->id,
             $daftar_menu->id,
         ]);
@@ -58,7 +55,6 @@ class RoleMenuSeeder extends Seeder
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
-            $manajemen_spbe->id,
             $manajemen_pengetahuan->id,
         ]);
 
@@ -66,7 +62,6 @@ class RoleMenuSeeder extends Seeder
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
-            $manajemen_spbe->id,
             $manajemen_pengetahuan->id,
         ]);
     }
