@@ -18,16 +18,19 @@ class MenuSeeder extends Seeder
                 'name' => 'Home',
                 'url' => null,
                 'is_category' => true,
+                'created_at' => now(),
             ],
             [
                 'name' => 'Kelola Pelayanan',
                 'url' => null,
                 'is_category' => true,
+                'created_at' => now()->addSeconds(1),
             ],
             [
                 'name' => 'Kelola Pengguna',
                 'url' => null,
                 'is_category' => true,
+                'created_at' => now()->addSeconds(2),
             ],
         ];
 
@@ -38,12 +41,12 @@ class MenuSeeder extends Seeder
         }
 
         // 2. Create Dropdown Parent
-        $dropdownParent = Menu::create([
-            'name' => 'Manajemen SPBE Aspek 5',
-            'url' => null,
-            'is_category' => false,
-            'category_id' => $categoryIds['Kelola Pelayanan'],
-        ]);
+        // $dropdownParent = Menu::create([
+        //     'name' => 'Manajemen SPBE Aspek 5',
+        //     'url' => null,
+        //     'is_category' => false,
+        //     'category_id' => $categoryIds['Kelola Pelayanan'],
+        // ]);
 
         // 3. Create Regular Menus
         $menus = [
@@ -57,10 +60,10 @@ class MenuSeeder extends Seeder
 
             // Kelola Pelayanan menu
             [
-                'name' => 'Indikator 26: Manajemen Pengetahuan',
+                'name' => 'Manajemen Pengetahuan',
                 'url' => '/manajemen-pengetahuan',
                 'category_id' => $categoryIds['Kelola Pelayanan'],
-                'dropdown_id' => $dropdownParent->id,
+                // 'dropdown_id' => $dropdownParent->id,
             ],
 
             // Kelola Pengguna menus
