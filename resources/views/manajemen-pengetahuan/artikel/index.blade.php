@@ -155,18 +155,18 @@
     <h1 class="header-title">Jelajahi Artikel</h1>
 
     <!-- Search Form -->
-    <form action="{{ route('article.index') }}" method="GET" class="search-form d-flex mb-2">
+    <form action="{{ route('article.index') }}" method="GET" class="mb-2 search-form d-flex">
         <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
                 value="{{ request()->get('search') }}">
             <button type="submit" class="btn-theme">Cari</button>
         </div>
     </form>
-    <div class="button-container mx-4 mb-3">
+    <div class="mx-4 mb-3 button-container">
 
         <!-- Create Article Button (Only visible for Superadmin and User )-->
-        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3))
-            <a href="{{ route('article.create') }}" class="btn-theme d-block mb-2">
+        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 4))
+            <a href="{{ route('article.create') }}" class="mb-2 btn-theme d-block">
                 <i class="fas fa-plus"></i> Buat Artikel
             </a>
         @endif
@@ -174,7 +174,7 @@
 
         {{-- <!-- Validation Button (Only visible for Superadmin) -->
         @if (auth()->user() && auth()->user()->role_id == 1)
-            <a href="{{ route('article.validateIndex') }}" class="btn-theme d-block mb-2">
+            <a href="{{ route('article.validateIndex') }}" class="mb-2 btn-theme d-block">
                 <i class="fas fa-check"></i> Validasi Artikel
             </a>
         @endif --}}
@@ -188,7 +188,7 @@
     </div>
 
     @if ($artikel->isEmpty())
-        <div class="alert alert-warning text-center">
+        <div class="text-center alert alert-warning">
             Tidak ada hasil yang ditemukan
             @if (request()->get('search'))
                 untuk kata kunci <strong>"{{ request()->get('search') }}"</strong>.
@@ -211,9 +211,9 @@
                     <!-- Detail Article (Only can access for Superadmin, User, And Visitor)-->
                     @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
                         <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}"
-                                class="img-fluid rounded" alt="Article Thumbnail"></a>
+                                class="rounded img-fluid" alt="Article Thumbnail"></a>
                     @else
-                        <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
+                        <img src="{{ $imageSrc }}" class="rounded img-fluid" alt="Article Thumbnail">
                     @endif
 
                     <h5 class="card-title">{{ $data->title }}</h5>
