@@ -42,7 +42,6 @@ class ForumDiscussionServiceTest extends TestCase
         // Buat data kategori forum
         $this->forumCategory = ForumCategory::create([
             'name' => 'General',
-            'description' => 'A general category for discussions.',
         ]);
 
         // Simpan data user ke session
@@ -55,7 +54,7 @@ class ForumDiscussionServiceTest extends TestCase
             'forum_category_id' => $this->forumCategory->id,
             'user_id' => $this->user->id,
             'approval_status' => 'accepted',
-            'availability_status' => 'open',
+            'availability_status' => 'closed',
             'discussion_created_at' => now(),
         ]);
     }
@@ -70,7 +69,7 @@ class ForumDiscussionServiceTest extends TestCase
             'forum_category_id' => $this->forumCategory->id,
             'user_id' => $this->user->id,
             'approval_status' => 'accepted',
-            'availability_status' => 'open',
+            'availability_status' => 'closed',
             'discussion_created_at' => now(),
         ]);
 
@@ -116,7 +115,7 @@ class ForumDiscussionServiceTest extends TestCase
             'forum_category_id' => $this->forumCategory->id,
             'user_id' => $this->user->id,
             'approval_status' => 'process',
-            'availability_status' => 'open'
+            'availability_status' => 'closed'
         ]);
     }
 
@@ -178,7 +177,7 @@ class ForumDiscussionServiceTest extends TestCase
             'forum_category_id' => $this->forumCategory->id,
             'user_id' => $this->user->id,
             'approval_status' => 'process',
-            'availability_status' => 'open',
+            'availability_status' => 'closed',
             'discussion_created_at' => now(),
         ]);
 
@@ -198,7 +197,7 @@ class ForumDiscussionServiceTest extends TestCase
             'forum_category_id' => $this->forumCategory->id,
             'user_id' => $this->user->id,
             'approval_status' => 'process',
-            'availability_status' => 'open',
+            'availability_status' => 'closed',
             'discussion_created_at' => now(),
         ]);
 

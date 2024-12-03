@@ -31,7 +31,7 @@ return new class extends Migration
         
         // Gunakan DB::raw untuk menggunakan tipe ENUM PostgreSQL
         DB::statement('ALTER TABLE forum_discussions ADD COLUMN approval_status approval_status_enum DEFAULT \'process\'');
-        DB::statement('ALTER TABLE forum_discussions ADD COLUMN availability_status availability_status_enum DEFAULT \'open\'');
+        DB::statement('ALTER TABLE forum_discussions ADD COLUMN availability_status availability_status_enum DEFAULT \'closed\'');
     }
 
     /**
