@@ -13,6 +13,7 @@ class ForumCategoryServiceTest extends TestCase
     use RefreshDatabase;
 
     protected $forumCategoryService;
+    protected $forumCategory;
 
     public function setUp(): void
     {
@@ -20,64 +21,70 @@ class ForumCategoryServiceTest extends TestCase
         $this->forumCategoryService = new ForumCategoryService();
 
         // Jalankan seeder
-        $this->seed(ForumCategorySeeder::class);
+        $this->forumCategory = ForumCategory::create([
+            'name' => 'Initial Category',
+        ]);
     }
     
     /** @test */
-    public function it_can_store_forum_category()
+    public function it_can_get_all_forum_categories()
     {
-        $data = [
-            'name' => 'New Category',
+        // Create additional categories
+        ForumCategory::create([
+            'name' => 'Another Category',
+        ]);
+
+        $result = $this->forumCategoryService->getAllForumCategories();
+
+        $this->assertArrayHasKey('forum_categories', $result);
+        $this->assertCount(2, $result['forum_categories']);
+    }
+
+    /** @test */
+    public function it_can_store_a_new_forum_category()
+    {
+        $categoryData = [
+            'name' => 'New Test Category',
         ];
 
-        // Panggil service untuk menyimpan data
-        $response = $this->forumCategoryService->storeForumCategory($data);
+        $result = $this->forumCategoryService->storeForumCategory($categoryData);
 
-        // Pastikan kategori tersimpan
-        $this->assertInstanceOf(ForumCategory::class, $response);
-        $this->assertEquals('New Category', $response->name);
-        $this->assertDatabaseHas('forum_categories', ['name' => 'New Category']);
+        $this->assertDatabaseHas('forum_categories', [
+            'name' => 'New Test Category',
+        ]);
     }
 
     /** @test */
     public function it_can_edit_forum_category()
     {
-        $forumCategory = ForumCategory::first();
+        $result = $this->forumCategoryService->editForumCategory($this->forumCategory->id);
 
-        // Panggil service untuk mendapatkan kategori
-        $response = $this->forumCategoryService->editForumCategory($forumCategory->id);
-
-        // Pastikan kategori yang diambil sesuai
-        $this->assertEquals($forumCategory->id, $response['forum_category']->id);
+        $this->assertArrayHasKey('forum_category', $result);
+        $this->assertEquals($this->forumCategory->id, $result['forum_category']->id);
+        $this->assertEquals('Initial Category', $result['forum_category']->name);
     }
 
     /** @test */
     public function it_can_update_forum_category()
     {
-        $forumCategory = ForumCategory::first();
-
-        $updatedData = [
-            'name' => 'Updated Category',
+        $updateData = [
+            'name' => 'Updated Category Name',
         ];
 
-        // Panggil service untuk memperbarui kategori
-        $response = $this->forumCategoryService->updateForumCategory($updatedData, $forumCategory->id);
+        $result = $this->forumCategoryService->updateForumCategory($updateData, $this->forumCategory->id);
 
-        // Pastikan kategori diperbarui
-        $this->assertEquals('Updated Category', $response->name);
-        $this->assertDatabaseHas('forum_categories', ['name' => 'Updated Category']);
+        $this->assertDatabaseHas('forum_categories', [
+            'id' => $this->forumCategory->id,
+            'name' => 'Updated Category Name',
+        ]);
     }
 
     /** @test */
     public function it_can_delete_forum_category()
     {
-        $forumCategory = ForumCategory::first();
+        $result = $this->forumCategoryService->deleteForumCategory($this->forumCategory->id);
 
-        // Panggil service untuk menghapus kategori
-        $response = $this->forumCategoryService->deleteForumCategory($forumCategory->id);
-
-        // Pastikan kategori dihapus
-        $this->assertTrue($response);
-        $this->assertDatabaseMissing('forum_categories', ['id' => $forumCategory->id]);
+        $this->assertTrue($result);
+        $this->assertDatabaseMissing('forum_categories', ['id' => $this->forumCategory->id]);
     }
 }

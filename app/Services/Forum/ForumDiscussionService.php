@@ -49,7 +49,7 @@ class ForumDiscussionService
             'forum_category_id' => $data['forum_category_id'],
             'user_id' => session('user_informations.user_id'),
             'approval_status' => 'process',
-            'availability_status' => 'open',
+            'availability_status' => 'closed',
             'discussion_created_at' => now(),
             'availability_status_updated_at' => null,
         ]);
@@ -88,7 +88,7 @@ class ForumDiscussionService
             'forum_category_id' => $data['forum_category_id'],
             'user_id' => $forum_discussion->user_id,
             'approval_status' => 'process',
-            'availability_status' => 'open',
+            'availability_status' => 'closed',
             'discussion_created_at' => now(),
             'availability_status_updated_at' => null,
         ]);
