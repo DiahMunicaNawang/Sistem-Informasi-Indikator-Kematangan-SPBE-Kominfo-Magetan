@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Article;
-use App\Models\ArticleCategory;
+use App\Models\Article\Article;
+use App\Models\Article\ArticleCategory;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,7 +28,7 @@ class ArticleSeeder extends Seeder
 
         foreach (range(1, 20) as $index) {
             // Generate random dates
-            $randomDate = $faker->dateTimeBetween('-6 months', 'now'); 
+            $randomDate = $faker->dateTimeBetween('-6 months', 'now');
             $createdAt = $randomDate;
             $updatedAt = $faker->dateTimeBetween($createdAt, 'now');
 
