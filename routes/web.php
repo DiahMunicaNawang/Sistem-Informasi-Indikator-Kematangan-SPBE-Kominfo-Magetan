@@ -35,7 +35,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('user', UserController::class);
 
     // Indikator SPBE
-    Route::get('/indikator-spbe', [IndikatorSPBEController::class, 'index'])->name('indikator-spbe');
+    Route::resource('/indikator-spbe', IndikatorSPBEController::class);
+    Route::patch('/indikator-spbe/{indikatorSpbe}/toggle-status', [IndikatorSpbeController::class, 'toggleStatus'])
+    ->name('indikator-spbe.toggle-status');
 
     // Articles
     Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);
