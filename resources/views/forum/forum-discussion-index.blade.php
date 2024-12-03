@@ -3,31 +3,40 @@
 @section('content')
     <div class="container py-4">
         {{-- Header Section --}}
-        <h1 class="mb-4 text-center h2 text-primary">Jelajahi Forum</h1>
+        <h1 class="mb-4 text-center fs-1 text-primary">Jelajahi Forum</h1>
 
         {{-- Action Buttons and Search --}}
         <div class="mb-4 row g-3 align-items-center">
             @if (session('user_informations.role') !== 'pengguna-umum')
                 <div class="col-12 col-md-auto">
-                    <a href="{{ route('forum-discussion.create') }}" class="btn btn-success w-100">
+                    <a href="{{ route('forum-discussion.create') }}" class="btn-sm btn btn-light-success w-100">
                         <i class="bi bi-plus-circle me-2"></i>Ajukan Pertanyaan
                     </a>
                 </div>
                 <div class="col-12 col-md-auto">
-                    <a href="{{ route('forum-discussion-approval-user') }}" class="btn btn-primary w-100">
+                    <a href="{{ route('forum-discussion-approval-user') }}" class="btn-sm btn btn-light-primary w-100">
                         <i class="bi bi-list-ul me-2"></i>Lihat Pertanyaan Saya
+                    </a>
+                </div>
+            @endif
+            @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+                <div class="col-12 col-md-auto">
+                    <a href="{{ route('forum-category.index') }}" class="btn-sm btn btn-light-danger w-100">
+                        <i class="bi bi-tags me-2"></i>Kategori Forum
+                    </a>
+                </div>
+                <div class="col-12 col-md-auto">
+                    <a href="{{ route('forum-discussion-approval-process') }}" class="btn-sm btn btn-light-success w-100">
+                        <i class="bi bi-check-circle me-2"></i>Verifikasi Forum
                     </a>
                 </div>
             @endif
             <div class="col-12 col-md">
                 <form method="GET" action="{{ route('forum-discussion.index') }}">
                     <div class="input-group">
-                        <input type="text" 
-                               name="search" 
-                               class="form-control" 
-                               placeholder="Cari Pertanyaan" 
-                               value="{{ request('search') }}">
-                        <button class="btn btn-primary" type="submit">
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari Pertanyaan"
+                            value="{{ request('search') }}">
+                        <button class="btn-sm btn btn-primary" type="submit">
                             <i class="bi bi-search me-1"></i>Cari
                         </button>
                     </div>
@@ -56,20 +65,21 @@
                                             <div class="gap-3 d-flex">
                                                 <div class="position-relative">
                                                     <div class="symbol symbol-45px me-2">
-                                                        <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" class="rounded-circle"
+                                                        <img src="{{ asset('assets/media/avatars/300-1.jpg') }}"
+                                                            class="rounded-circle"
                                                             alt="{{ $forum_discussion->user->username }}"
                                                             style="width: 45px; height: 45px; object-fit: cover;">
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0">{{ $forum_discussion->user->username }}</h6>
-            
+
                                                     <div class="gap-2 d-flex align-items-center">
                                                         <small class="text-muted">
                                                             <i class="bi bi-clock me-1"></i>
                                                             {{ $forum_discussion->discussion_created_at }}
                                                         </small>
-            
+
                                                         {{-- Status Diskusi --}}
                                                         <span
                                                             class="badge {{ $forum_discussion->availability_status == 'open' ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger' }}"
@@ -82,7 +92,7 @@
                                                 </div>
                                             </div>
                                         </div>
-            
+
                                         {{-- Discussion Content --}}
                                         <div class="mb-3">
                                             <h5 class="mb-2 card-title">{{ $forum_discussion->title }}</h5>
@@ -94,7 +104,7 @@
                                                 {{ $forum_discussion->forum_category->name }}
                                             </span>
                                         </div>
-            
+
                                         {{-- Discussion Footer --}}
                                         <div class="pt-3 d-flex justify-content-between align-items-center border-top">
                                             <div class="text-muted small">
