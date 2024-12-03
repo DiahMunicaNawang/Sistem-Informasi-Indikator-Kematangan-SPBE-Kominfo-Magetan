@@ -64,7 +64,7 @@
         <div class="pt-4 card-footer">
             <h3 class="mb-4 text-gray-800 card-label fw-bold">Tanggapan</h3>
 
-            @include('manajemen-pengetahuan.forum.forum-response-index')
+            @include('forum.forum-response-index')
         </div>
     </div>
 @endsection
