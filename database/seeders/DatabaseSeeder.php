@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ArticleRatingSeeder::class);
         $this->call(ForumCategorySeeder::class);
         $this->call(UserWithSpecifiedRoleSeeder::class);
+        $this->call(IndikatorSPBESeeder::class);
     }
 }
