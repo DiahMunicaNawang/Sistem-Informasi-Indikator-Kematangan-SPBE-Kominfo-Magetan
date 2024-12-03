@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Article;
+use App\Models\Article\Article;
 use Illuminate\Http\Request;
-use App\Models\ArticleRating;
+use App\Models\Article\ArticleRating;
 
 class DashboardController extends Controller
 {

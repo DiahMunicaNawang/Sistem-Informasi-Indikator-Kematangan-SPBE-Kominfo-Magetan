@@ -60,10 +60,23 @@ class MenuSeeder extends Seeder
 
             // Kelola Pelayanan menu
             [
-                'name' => 'Manajemen Pengetahuan',
-                'url' => '/manajemen-pengetahuan',
+                'name' => 'Indikator SPBE',
+                'url' => '/indikator-spbe',
                 'category_id' => $categoryIds['Kelola Pelayanan'],
                 // 'dropdown_id' => $dropdownParent->id,
+                'created_at' => now(),
+            ],
+            [
+                'name' => 'Artikel',
+                'url' => '/article',
+                'category_id' => $categoryIds['Kelola Pelayanan'],
+                'created_at' => now()->addSeconds(1),
+            ],
+            [
+                'name' => 'Forum Diskusi',
+                'url' => '/forum-discussion',
+                'category_id' => $categoryIds['Kelola Pelayanan'],
+                'created_at' => now()->addSeconds(2),
             ],
 
             // Kelola Pengguna menus

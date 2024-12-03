@@ -15,7 +15,7 @@ use App\Http\Controllers\Article\ArtikelController;
 use App\Http\Controllers\Forum\ForumCategoryController;
 use App\Http\Controllers\Forum\ForumResponseController;
 use App\Http\Controllers\Forum\ForumDiscussionController;
-
+use App\Http\Controllers\IndikatorSPBE\IndikatorSPBEController;
 
 // Main routes
 Route::middleware('auth', 'verified')->group(function () {
@@ -34,8 +34,8 @@ Route::middleware('auth', 'verified')->group(function () {
     // Route::get('users', [UserController::class, 'index'])->name('users');
     Route::resource('user', UserController::class);
 
-    // Manajemen Pengetahuan
-    Route::view('manajemen-pengetahuan', 'manajemen-pengetahuan.index')->name('manajemen-pengetahuan');
+    // Indikator SPBE
+    Route::get('/indikator-spbe', [IndikatorSPBEController::class, 'index'])->name('indikator-spbe');
 
     // Articles
     Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);

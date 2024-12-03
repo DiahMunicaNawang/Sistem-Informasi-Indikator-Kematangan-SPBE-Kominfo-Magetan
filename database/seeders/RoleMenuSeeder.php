@@ -24,7 +24,9 @@ class RoleMenuSeeder extends Seeder
 
         // Get Menus
         $dashboard = Menu::where('url', '/')->first();
-        $manajemen_pengetahuan = Menu::where('url', '/manajemen-pengetahuan')->first();
+        $indikator_spbe = Menu::where('url', '/indikator-spbe')->first();
+        $article = Menu::where('url', '/article')->first();
+        $forum = Menu::where('url', '/forum-discussion')->first();
         $daftar_pengguna = Menu::where('url', '/user')->first();
         $daftar_role = Menu::where('url', '/role')->first();
         $daftar_menu = Menu::where('url', '/menu')->first();
@@ -36,7 +38,9 @@ class RoleMenuSeeder extends Seeder
             $kelola_pelayanan->id,
             $kelola_pengguna->id,
             $dashboard->id,
-            $manajemen_pengetahuan->id,
+            $indikator_spbe->id,
+            $article->id,
+            $forum->id,
             $daftar_pengguna->id,
             $daftar_role->id,
             $daftar_menu->id,
@@ -47,7 +51,9 @@ class RoleMenuSeeder extends Seeder
             $kelola_pelayanan->id,
             $kelola_pengguna->id,
             $dashboard->id,
-            $manajemen_pengetahuan->id,
+            $indikator_spbe->id,
+            $article->id,
+            $forum->id,
             $daftar_menu->id,
         ]);
 
@@ -55,14 +61,18 @@ class RoleMenuSeeder extends Seeder
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
-            $manajemen_pengetahuan->id,
+            $indikator_spbe->id,
+            $article->id,
+            $forum->id,
         ]);
 
         $pengguna_umum->menus()->attach([
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
-            $manajemen_pengetahuan->id,
+            $indikator_spbe->id,
+            $article->id,
+            $forum->id,
         ]);
     }
 }
