@@ -69,7 +69,8 @@ class ArticleService
     }
 
     // delete artikel
-    public function deleteArticle($data){
+    public function deleteArticle($data)
+    {
         $article = Article::findOrFail($data);
         return $article->delete();
     }
@@ -81,10 +82,12 @@ class ArticleService
     }
 
     // Mendapatkan artikel untuk validasi
-    public function getDraftArticles($search = null)
+    public function getDraftArticles($search = null, $status = null)
     {
         return Article::with('ratings', 'category')
-            ->where('article_status', 'draft')->orWhere('article_status', 'draft')
+            ->when($status, function ($query) use ($status) {
+                $query->where('article_status', $status);
+            })
             ->when($search, function ($query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
                     ->orWhereHas('category', function ($query) use ($search) {
@@ -151,5 +154,11 @@ class ArticleService
             $data['validation_status'],
             $data['comments'] ?? null
         ));
+    }
+
+    // Lihat artikel saya
+    public function check()
+    {
+        return Article::where('user_id', Auth::user()->id)->get();
     }
 }

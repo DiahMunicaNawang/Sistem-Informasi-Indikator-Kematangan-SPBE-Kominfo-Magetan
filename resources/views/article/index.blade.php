@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('manajemen-pengetahuan') }}">
+    <a href="{{ route('indikator-spbe') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
@@ -141,7 +141,7 @@
             margin-right: 4px
         }
 
-        .fas.fa-check {
+        .fas.fa-eye {
             color: white;
             margin-right: 4px
         }
@@ -164,20 +164,21 @@
     </form>
     <div class="mx-4 mb-3 button-container">
 
-        <!-- Create Article Button (Only visible for Superadmin and User )-->
+
+        <!-- Validation Button (Only visible for Superadmin) -->
+        @if (auth()->user() && auth()->user()->role_id == 1)
+            <a href="{{ route('article.checkArticle') }}" class="mb-2 btn-theme d-block">
+                <i class="fas fa-eye"></i> Lihat Artikel Saya
+            </a>
+        @endif
+
+
+        <!-- Checking Article User-->
         @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 4))
             <a href="{{ route('article.create') }}" class="mb-2 btn-theme d-block">
                 <i class="fas fa-plus"></i> Buat Artikel
             </a>
         @endif
-
-
-        {{-- <!-- Validation Button (Only visible for Superadmin) -->
-        @if (auth()->user() && auth()->user()->role_id == 1)
-            <a href="{{ route('article.validateIndex') }}" class="mb-2 btn-theme d-block">
-                <i class="fas fa-check"></i> Validasi Artikel
-            </a>
-        @endif --}}
 
         <!-- Print Article Button (Only visible for Superadmin, User, And Visitor)-->
 

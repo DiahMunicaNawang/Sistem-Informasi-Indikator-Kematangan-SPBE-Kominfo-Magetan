@@ -147,7 +147,7 @@
                             <i class="far fa-star text-warning star-icon"></i>
                         @endfor
                     </div>
-                    @if (auth()->user() && auth()->user()->role_id != 4)
+                    @if (auth()->user() && auth()->user()->role_id != 4 && $artikel->article_status == "published")
                         @if (!$userRating)
                             <!-- Tombol untuk menambah penilaian jika user belum memberikan penilaian -->
                             <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah

@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('manajemen-pengetahuan') }}">
+    <a href="{{ route('indikator-spbe') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
@@ -138,149 +138,179 @@
 
     <h1 class="header-title">Validasi Artikel</h1>
 
-    <div class="button-container mx-4">
-        <div class="button-container mx-4">
-            <form action="{{ route('article.validateIndex') }}" method="GET" class="search-form">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
-                        value="{{ request()->get('search') }}">
-                    <button type="submit" class="btn btn-primary">Cari</button>
-                </div>
-            </form>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{{ route('article.validateIndex') }}" method="GET" class="search-form">
+                    <div class="input-group mb-3">
+                        <!-- Input untuk pencarian -->
+                        <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
+                            value="{{ request()->get('search') }}">
+
+                        <!-- Combobox untuk filter status -->
+                        <select name="status" class="form-select" aria-label="Filter Status">
+                            <option value="">Semua Status</option>
+                            <option value="published" {{ request()->get('status') === 'published' ? 'selected' : '' }}>
+                                Published</option>
+                            <option value="draft" {{ request()->get('status') === 'draft' ? 'selected' : '' }}>Draft
+                            </option>
+                            <option value="rejected" {{ request()->get('status') === 'rejected' ? 'selected' : '' }}>
+                                Rejected</option>
+                            <option value="proses" {{ request()->get('status') === 'proses' ? 'selected' : '' }}>Proses
+                            </option>
+                        </select>
+
+                        <!-- Tombol submit -->
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
 
-    <div class="grid-container">
-        @foreach ($artikel as $data)
-            <div class="card">
-                @php
-                    if (str_starts_with($data->image, 'http')) {
-                        $imageSrc = $data->image;
-                    } else {
-                        $imageSrc = asset('storage/' . $data->image);
-                    }
-                @endphp
 
-                <a href="{{ route('article.validate', $data->id) }}"><img src="{{ $imageSrc }}"
-                        class="img-fluid rounded" alt="Article Thumbnail"></a>
-
-                <h5 class="card-title">{{ $data->title }}</h5>
-                <p class="card-text">{{ $data->article_summary }}</p>
-
-                <!-- Tampilkan rating sebagai bintang -->
-                <div class="card-text">
-                    <span>Rating: </span>
+    @if ($artikel->isEmpty())
+        <div class="text-center alert alert-warning">
+            Tidak ada hasil yang ditemukan
+            @if (request()->get('search'))
+                untuk kata kunci <strong>"{{ request()->get('search') }}"</strong>.
+            @else
+                saat ini.
+            @endif
+        </div>
+    @else
+        <div class="grid-container">
+            @foreach ($artikel as $data)
+                <div class="card">
                     @php
-                        $averageRating = $data->average_rating;
-                        $fullStars = floor($averageRating); // Bintang penuh
-                        $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                        if (str_starts_with($data->image, 'http')) {
+                            $imageSrc = $data->image;
+                        } else {
+                            $imageSrc = asset('storage/' . $data->image);
+                        }
                     @endphp
 
-                    <!--  bintang penuh -->
-                    @for ($i = 0; $i < $fullStars; $i++)
-                        <i class="fas fa-star text-warning"></i>
-                    @endfor
+                    <a href="{{ route('article.validate', $data->id) }}"><img src="{{ $imageSrc }}"
+                            class="img-fluid rounded" alt="Article Thumbnail"></a>
 
-                    <!-- setengah bintang jika ada -->
-                    @if ($halfStar)
-                        <i class="fas fa-star-half-alt text-warning"></i>
-                    @endif
+                    <h5 class="card-title">{{ $data->title }}</h5>
+                    <p class="card-text">{{ $data->article_summary }}</p>
 
-                    <!-- bintang kosong jika kurang dari 5 -->
-                    @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
-                        <i class="far fa-star text-warning"></i>
-                    @endfor
+                    <!-- Tampilkan rating sebagai bintang -->
+                    <div class="card-text">
+                        <span>Rating: </span>
+                        @php
+                            $averageRating = $data->average_rating;
+                            $fullStars = floor($averageRating); // Bintang penuh
+                            $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                        @endphp
 
-                    <!--  nilai rata-rata -->
-                    <span>({{ number_format($averageRating, 1) }})</span>
-                    <br>
-                    <span> By : {{ $data->ratings->count('rating_value') }} User </span>
+                        <!--  bintang penuh -->
+                        @for ($i = 0; $i < $fullStars; $i++)
+                            <i class="fas fa-star text-warning"></i>
+                        @endfor
+
+                        <!-- setengah bintang jika ada -->
+                        @if ($halfStar)
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        @endif
+
+                        <!-- bintang kosong jika kurang dari 5 -->
+                        @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
+                            <i class="far fa-star text-warning"></i>
+                        @endfor
+
+                        <!--  nilai rata-rata -->
+                        <span>({{ number_format($averageRating, 1) }})</span>
+                        <br>
+                        <span> By : {{ $data->ratings->count('rating_value') }} User </span>
+                    </div>
+
+                    <div class="mt-auto">
+                        <form action="{{ route('article.destroy', $data->id) }}" method="POST"
+                            id="delete-form-{{ $data->id }}">
+                            @csrf
+                            @method('DELETE')
+                            <div class="row justify-content-end">
+                                <button type="button" class="align-self-end btn btn-lg btn-block btn-danger"
+                                    onclick="confirmDelete('{{ $data->id }}')">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+
+
                 </div>
-
-                <div class="mt-auto">
-                    <form action="{{ route('article.destroy', $data->id) }}" method="POST"
-                        id="delete-form-{{ $data->id }}">
-                        @csrf
-                        @method('DELETE')
-                        <div class="row justify-content-end">
-                            <button type="button" class="align-self-end btn btn-lg btn-block btn-danger"
-                                onclick="confirmDelete('{{ $data->id }}')">Delete</button>
-                        </div>
-                    </form>
-                </div>
+            @endforeach
+        </div>
 
 
-            </div>
-        @endforeach
-    </div>
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Apakah Anda Yakin?',
-                text: "Anda tidak bisa mengembalikan aksi ini",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the form programmatically
-                    document.getElementById(`delete-form-${id}`).submit();
-                }
-            });
-        }
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#search').on('input', function() {
-                var searchTerm = $(this).val();
-                if (searchTerm.length > 2) {
-                    $.ajax({
-                        url: "{{ route('article.index') }}",
-                        method: 'GET',
-                        data: {
-                            term: searchTerm
-                        },
-                        success: function(data) {
-                            $('#search-results').empty();
-                            if (data.length > 0) {
-                                $.each(data, function(index, item) {
-                                    $('#search-results').append(
-                                        '<div class="search-result-item">' + item +
-                                        '</div>');
-                                });
-                                $('#search-results').show();
-                            } else {
-                                $('#search-results').hide();
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+            function confirmDelete(id) {
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    text: "Anda tidak bisa mengembalikan aksi ini",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form programmatically
+                        document.getElementById(`delete-form-${id}`).submit();
+                    }
+                });
+            }
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#search').on('input', function() {
+                    var searchTerm = $(this).val();
+                    if (searchTerm.length > 2) {
+                        $.ajax({
+                            url: "{{ route('article.index') }}",
+                            method: 'GET',
+                            data: {
+                                term: searchTerm
+                            },
+                            success: function(data) {
+                                $('#search-results').empty();
+                                if (data.length > 0) {
+                                    $.each(data, function(index, item) {
+                                        $('#search-results').append(
+                                            '<div class="search-result-item">' + item +
+                                            '</div>');
+                                    });
+                                    $('#search-results').show();
+                                } else {
+                                    $('#search-results').hide();
+                                }
+                            },
+                            error: function() {
+                                console.error('Error fetching data');
                             }
-                        },
-                        error: function() {
-                            console.error('Error fetching data');
-                        }
-                    });
-                } else {
-                    $('#search-results').hide();
-                }
-            });
+                        });
+                    } else {
+                        $('#search-results').hide();
+                    }
+                });
 
-            // Hide results when clicking outside
-            $(document).on('click', function(event) {
-                if (!$(event.target).closest('.search-box').length) {
-                    $('#search-results').hide();
-                }
-            });
+                // Hide results when clicking outside
+                $(document).on('click', function(event) {
+                    if (!$(event.target).closest('.search-box').length) {
+                        $('#search-results').hide();
+                    }
+                });
 
-            // Handle click on search result
-            $(document).on('click', '.search-result-item', function() {
-                $('#search').val($(this).text());
-                $('#search-results').hide();
+                // Handle click on search result
+                $(document).on('click', '.search-result-item', function() {
+                    $('#search').val($(this).text());
+                    $('#search-results').hide();
+                });
             });
-        });
-    </script>
+        </script>
+    @endif
 @endsection
