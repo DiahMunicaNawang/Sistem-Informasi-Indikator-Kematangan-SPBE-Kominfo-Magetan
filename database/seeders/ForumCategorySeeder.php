@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ManajemenPengetahuan\Forum\ForumCategory;
+use App\Models\Forum\ForumCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
