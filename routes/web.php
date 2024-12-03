@@ -11,10 +11,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use App\Http\Controllers\ManajemenPengetahuan\Article\ArtikelController;
-use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumCategoryController;
-use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumResponseController;
-use App\Http\Controllers\ManajemenPengetahuan\Forum\ForumDiscussionController;
+use App\Http\Controllers\Article\ArtikelController;
+use App\Http\Controllers\Forum\ForumCategoryController;
+use App\Http\Controllers\Forum\ForumResponseController;
+use App\Http\Controllers\Forum\ForumDiscussionController;
 
 
 // Main routes
