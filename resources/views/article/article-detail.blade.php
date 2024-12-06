@@ -91,6 +91,20 @@
         .star-icon {
             font-size: 1.2rem;
         }
+
+        .list-group-item {
+            background-color: var(--card-background-color);
+            /* Gunakan warna kartu */
+            color: var(--text-color-muted);
+            /* Gunakan warna teks sesuai tema */
+            border-color: var(--border-color);
+            /* Sesuaikan border */
+        }
+
+        .list-group-item a {
+            color: var(--text-color-primary);
+            /* Warna tautan */
+        }
     </style>
 
     <div class="container mt-5">
@@ -98,25 +112,38 @@
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $artikel->title }}</h2>
             <p class="text-center text-muted">{{ $artikel->article_summary }}</p>
-            <p class="text-center text-muted">{{ $artikel->user->username }} | {{ $artikel->created_at->format('d M Y') }} |
-                {{ $artikel->category->category_name }}
+            <p class="text-center text-muted">{{ $artikel->user->username }} | {{ $artikel->category->category_name }} |
+                {{ $artikel->created_at->format('Y-m-d H:i:s') }}
             </p>
 
-            <!-- Image -->
+             <!-- Gambar Artikel -->
             <div class="text-center mb-4">
                 @php
-                    if (str_starts_with($artikel->image, 'http')) {
-                        $imageSrc = $artikel->image;
-                    } else {
-                        $imageSrc = asset('storage/' . $artikel->image);
-                    }
+                    $imageSrc = str_starts_with($artikel->image, 'http')
+                        ? $artikel->image
+                        : asset('storage/' . $artikel->image);
                 @endphp
-                <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
+                <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Thumbnail Artikel" style="max-height: 400px;">
             </div>
 
             <!-- Konten Artikel -->
             <div class="article-content">
                 {!! $artikel->article_content !!}
+            </div>
+
+            <div class="mt-5">
+                <h5 class="text-primary">Indikator Terkait</h5>
+                @if ($artikel->indikatorSpbes->isNotEmpty())
+                    <ul class="list-group">
+                        @foreach ($artikel->indikatorSpbes as $indikator)
+                            <li class="list-group-item">
+                                {{ $indikator->name }}
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="text-muted">Tidak ada indikator terkait untuk artikel ini.</p>
+                @endif
             </div>
 
 
@@ -147,14 +174,13 @@
                             <i class="far fa-star text-warning star-icon"></i>
                         @endfor
                     </div>
-                    @if (auth()->user() && auth()->user()->role_id != 4 && $artikel->article_status == "published")
+                    @if (auth()->user() && auth()->user()->role_id != 4 && $artikel->article_status == 'published')
                         @if (!$userRating)
                             <!-- Tombol untuk menambah penilaian jika user belum memberikan penilaian -->
                             <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
                                 Penilaian</button>
                         @endif
                     @endif
-
                 </div>
 
                 <!-- User reviews -->

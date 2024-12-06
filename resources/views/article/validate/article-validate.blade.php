@@ -102,48 +102,48 @@
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $article->title }}</h2>
             <p class="text-center text-muted">{{ $article->article_summary }}</p>
-            <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->created_at->format('d M Y') }} |
-                {{ $article->category->category_name }}
+            <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->category->category_name }} |
+                {{ $article->created_at->format('Y-m-d H:i:s') }}
             </p>
 
-            <!-- Image -->
+            <!-- Gambar Artikel -->
             <div class="text-center mb-4">
                 @php
-                    if (str_starts_with($article->image, 'http')) {
-                        $imageSrc = $article->image;
-                    } else {
-                        $imageSrc = asset('storage/' . $article->image);
-                    }
+                    $imageSrc = str_starts_with($article->image, 'http')
+                        ? $article->image
+                        : asset('storage/' . $article->image);
                 @endphp
-                <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
+                <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Thumbnail Artikel" style="max-height: 400px;">
             </div>
 
             <!-- Konten article -->
             <div class="article-content">
                 {!! $article->article_content !!}
             </div>
-            <div class="mt-2">
+            <div class="mt-4">
                 <form action="{{ route('article.storeValidation', $article->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="validation_status">Status Validasi:</label>
+                        <label for="validation_status" class="fw-bold">Status Validasi:</label>
                         <select name="validation_status" id="validation_status" class="form-control" required>
-                            <option value="proses">Proses</option>
-                            <option value="published">Disetujui</option>
-                            <option value="rejected">Ditolak</option>
+                            <option value="proses" {{ $article->article_status == 'proses' ? 'selected' : '' }}>Proses</option>
+                            <option value="published" {{ $article->article_status == 'published' ? 'selected' : '' }}>Disetujui</option>
+                            <option value="rejected" {{ $article->article_status == 'rejected' ? 'selected' : '' }}>Ditolak</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="comments">Komentar (Opsional):</label>
-                        <textarea name="comments" id="comments" class="form-control" rows="4"></textarea>
+                    <div class="form-group mt-3">
+                        <label for="comments" class="fw-bold">Komentar (Opsional):</label>
+                        <textarea name="comments" id="comments" class="form-control" rows="4" placeholder="Tambahkan komentar jika perlu"></textarea>
                     </div>
 
                     <input type="hidden" id="article_id" name="article_id" value="{{ $article->id }}">
 
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="mt-4 text-center">
+                        <button type="submit" class="btn btn-primary px-4">Submit</button>
                     </div>
                 </form>
             </div>
-        @endsection
+        </div>
+    </div>
+@endsection

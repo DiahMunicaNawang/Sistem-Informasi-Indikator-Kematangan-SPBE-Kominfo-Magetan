@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('indikator-spbe') }}">
+    <a href="{{ route('indikator-spbe.index') }}">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection

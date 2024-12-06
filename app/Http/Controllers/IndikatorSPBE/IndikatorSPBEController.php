@@ -10,7 +10,7 @@ class IndikatorSPBEController extends Controller
 {
     public function index()
     {
-        $indikatorSpbes = IndikatorSpbe::paginate(10);
+        $indikatorSpbes = IndikatorSpbe::with('articles')->paginate(10);
         return view('indikator-spbe.index', compact('indikatorSpbes'));
     }
 
@@ -81,7 +81,7 @@ class IndikatorSPBEController extends Controller
     {
         $newStatus = $indikatorSpbe->status === 'active' ? 'inactive' : 'active';
         $indikatorSpbe->update(['status' => $newStatus]);
-        
+
         return back()->with('success', 'Status berhasil diubah');
     }
 }

@@ -137,6 +137,7 @@ class ArtikelController extends Controller
                     });
             })
             ->orderByDesc('updated_at')
+            ->take(20)
             ->get();
 
         // Jika tidak ada artikel, return pesan

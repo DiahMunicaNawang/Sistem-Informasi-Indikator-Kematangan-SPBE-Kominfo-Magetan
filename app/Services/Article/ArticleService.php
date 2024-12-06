@@ -53,7 +53,7 @@ class ArticleService
     // Mendapatkan detail artikel
     public function getArticleDetail($id)
     {
-        return Article::with('ratings.user')->findOrFail($id);
+        return Article::with(['ratings.user', 'indikatorSpbes'])->findOrFail($id);
     }
 
     // Menyimpan rating artikel
