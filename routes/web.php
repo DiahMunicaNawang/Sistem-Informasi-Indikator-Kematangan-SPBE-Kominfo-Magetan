@@ -79,6 +79,8 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::post('/article/{id}/validate', [ArtikelController::class, 'storeValidation'])->name('article.storeValidation')->middleware('article_role:super-admin|manajer-konten');
 
         Route::get('/article/print-pdf', [ArtikelController::class, 'printPDF'])->name('article.printPDF')->middleware('article_role:super-admin|manajer-konten|pengguna-terdaftar|pengguna-umum');
+
+        Route::get('/article/check', [ArtikelController::class, 'checkArticle'])->name('article.checkArticle')->middleware('article_role:super-admin|manajer-konten|pengguna-terdaftar|pengguna-umum');
     });
 
     // Forum

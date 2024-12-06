@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Article;
 
 use Carbon\Carbon;
@@ -55,7 +56,8 @@ class ArtikelController extends Controller
         return view('article.article-detail', compact('artikel', 'userRating'));
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $this->articleService->deleteArticle($id);
         return redirect()->route('article.validateIndex')->with('success', 'Artikel berhasil di hapus');
     }
@@ -78,7 +80,7 @@ class ArtikelController extends Controller
     // Validate
     public function validate_index(Request $request)
     {
-        $artikel = $this->articleService->getDraftArticles($request->search);
+        $artikel = $this->articleService->getDraftArticles($request->search, $request->status);
         return view('article.validate.artice-validate_list', compact('artikel'));
     }
 
@@ -135,6 +137,7 @@ class ArtikelController extends Controller
                     });
             })
             ->orderByDesc('updated_at')
+            ->take(20)
             ->get();
 
         // Jika tidak ada artikel, return pesan
@@ -154,5 +157,12 @@ class ArtikelController extends Controller
             ->setOptions($pdfOptions);
 
         return $pdf->download('artikel.pdf');
+    }
+
+    // Lihat Artikel Saya
+    public function checkArticle()
+    {
+        $artikel = $this->articleService->check();
+        return view('article.article-cek', compact('artikel'));
     }
 }

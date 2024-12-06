@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Article\ArticleCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Article\ArticleValidation;
+use App\Models\IndikatorSPBE;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
@@ -55,4 +56,9 @@ class Article extends Model
     {
         return $this->ratings()->avg('rating_value');
     }
+
+    public function indikatorSpbes()
+{
+    return $this->belongsToMany(IndikatorSpbe::class, 'article_indikator_spbe', 'article_id', 'indikator_id');
+}
 }

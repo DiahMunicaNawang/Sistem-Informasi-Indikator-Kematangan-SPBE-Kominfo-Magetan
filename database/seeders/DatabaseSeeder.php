@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ForumCategorySeeder::class);
         $this->call(UserWithSpecifiedRoleSeeder::class);
         $this->call(IndikatorSPBESeeder::class);
+        $this->call(ArticleIndikatorSpbeSeeder::class);
     }
 }
