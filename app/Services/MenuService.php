@@ -16,17 +16,30 @@ class MenuService
         ];
     }
 
-    public function createMenu() {
+    public function createMenu()
+    {
         $roles = Role::all();
         $categories = Menu::where('is_category', true)->get();
 
         $dropdownOptions = [];
         foreach ($categories as $category) {
-            $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
+            $dropdownOptions[$category->id] = Menu::where(function ($query) use ($category) {
+                $query->where('category_id', $category->id)
+                    ->orWhere('dropdown_id', $category->id);
+            })
+                ->where('url', null)
+                ->where('is_category', false)
+                ->get(['id', 'name']);
+
+            /*
+                cadangan Rama :
+
+                $dropdownOptions[$category->id] = Menu::where('category_id', $category->id)
                 ->where('url', null)
                 ->where('dropdown_id', null)
                 ->where('is_category', false)
                 ->get(['id', 'name']);
+            */
         }
 
         // Add independent dropdowns to options
@@ -64,7 +77,7 @@ class MenuService
         $menu = Menu::findOrFail($id);
         $roles = Role::all();
         $roleOld = $menu->roles->pluck('id')->toArray();
-        
+
         // Get all categories
         $categories = Menu::where('is_category', true)->get();
 
@@ -122,8 +135,8 @@ class MenuService
         $url = isset($data['url']) ? '/' . Str::slug($data['url']) : null;
 
         // Determine category_id based on dropdown selection or direct input
-        $categoryId = $data['type'] === 'menu' && isset($data['dropdown_id']) 
-            ? Menu::find($data['dropdown_id'])->category_id 
+        $categoryId = $data['type'] === 'menu' && isset($data['dropdown_id'])
+            ? Menu::find($data['dropdown_id'])->category_id
             : ($data['category_id'] ?? null);
 
         // Update menu
