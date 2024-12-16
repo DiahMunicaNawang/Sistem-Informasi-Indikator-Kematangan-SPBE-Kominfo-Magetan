@@ -27,8 +27,13 @@ class IndikatorSPBEService
 
     public function storeIndikatorSPBE(array $data)
     {
-        $fileName = Str::uuid() . '.' . $data['related_documentation']->getClientOriginalExtension();
-        $filePath = $data['related_documentation'] ? $data['related_documentation']->storeAs('related_documentations', $fileName, 'public') : null;
+        $fileName = null;
+        $filePath = null;
+
+        if (isset($data['related_documentation']) && $data['related_documentation']) {
+            $fileName = Str::uuid() . '.' . $data['related_documentation']->getClientOriginalExtension();
+            $filePath = $data['related_documentation']->storeAs('related_documentations', $fileName, 'public');
+        }
 
         $indikator = IndikatorSPBE::create([
             'name' => $data['name'],
@@ -97,12 +102,16 @@ class IndikatorSPBEService
         ]);
 
         // Pivot table
-        if (isset($data['articles']) && is_array($data['articles'])) {
+        if (isset($data['articles'])) {
             $indikator->articles()->sync($data['articles']);
+        } else {
+            $indikator->articles()->sync($data['articles'] ?? []);
         }
 
-        if (isset($data['forums']) && is_array($data['forums'])) {
+        if (isset($data['forums'])) {
             $indikator->forums()->sync($data['forums']);
+        } else {
+            $indikator->forums()->sync($data['forums'] ?? []);
         }
 
         return $indikator;
@@ -111,6 +120,12 @@ class IndikatorSPBEService
     public function deleteIndikatorSPBE($id)
     {
         $indikator = IndikatorSPBE::findOrFail($id);
+
+        // Hapus file dari storage
+        if ($indikator->related_documentation && Storage::disk('public')->exists($indikator->related_documentation)) {
+            Storage::disk('public')->delete($indikator->related_documentation);
+        }
+
         return $indikator->delete();
     }
 }
