@@ -81,8 +81,8 @@
         <div class="content-container">
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $artikel->title }}</h2>
-            <p class="text-center text-custom">{{ $artikel->article_summary }}</p>
-            <p class="text-center text-custom">
+            <p class="text-center">{{ $artikel->article_summary }}</p>
+            <p class="text-center text-muted">
                 {{ $artikel->user->username }} | {{ $artikel->category->category_name }} |
                 {{ $artikel->created_at->format('Y-m-d H:i:s') }}
             </p>
@@ -158,10 +158,10 @@
                                         style="color: {{ $i <= $rating->rating_value ? '#FFD700' : '#ccc' }};"></i>
                                 @endfor</strong>
                                 <br>
-                                {{ $rating->rating_date}}
                                 @if ($rating->rater_user_id == auth()->id())
                                     <strong>(Anda)</strong>
                                 @endif
+                                {{ $rating->rating_date}}
                                 <br>
 
                             </p>

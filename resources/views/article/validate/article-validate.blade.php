@@ -7,7 +7,7 @@
 @endsection
 
 @section('page-name')
-    <h1 class="text-center text-primary">Validasi Artikel: {{ $article->title }}</h1>
+    <h1 class="text-center ">Validasi Artikel: {{ $article->title }}</h1>
 @endsection
 
 @section('content')
@@ -79,6 +79,7 @@
         <div class="content-container">
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $article->title }}</h2>
+            <p class="text-center">{{ $article->article_summary }}</p>
             <p class="text-center text-muted">{{ $article->user->username }} | {{ $article->category->category_name }} |
                 {{ $article->created_at->format('Y-m-d H:i:s') }}
             </p>
@@ -149,7 +150,7 @@
                         <label for="comments" class="fw-bold">Komentar (Opsional):</label>
                         <textarea name="comments" id="comments" class="form-control" rows="4"
                             placeholder="Tambahkan komentar jika perlu">
-                        
+
                         </textarea>
                     </div>
 
