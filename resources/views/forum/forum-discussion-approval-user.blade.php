@@ -31,7 +31,7 @@
                                         <div class="gap-2 d-flex align-items-center">
                                             <small class="text-muted">
                                                 <i class="bi bi-clock me-1"></i>
-                                                {{ $forum_discussion->discussion_created_at }}
+                                                {{ \Carbon\Carbon::parse($forum_discussion->discussion_created_at)->format('H:i - d M Y') }}
                                             </small>
 
                                             {{-- Status Diskusi --}}
@@ -77,15 +77,26 @@
 
                             {{-- Discussion Content --}}
                             <div class="mb-3">
-                                <h5 class="mb-2 card-title">{{ $forum_discussion->title }}</h5>
+                                <div class="gap-3 d-flex align-items-center">
+                                    <h5 class="m-0 card-title">{{ $forum_discussion->title }}</h5>
+                                    <span class="gap-1 badge bg-light text-primary d-flex align-items-center">
+                                        {{-- <i class="bi bi-tag text-primary"></i> --}}
+                                        {{ $forum_discussion->forum_category->name }}
+                                    </span>
+                                </div>
+                                
                                 <p class="mt-2 card-text text-muted">
                                     {{ $forum_discussion->short_description }}
                                 </p>
-                                <span class="gap-1 badge bg-light text-dark align-items-center">
-                                    <i class="bi bi-tag text-primary"></i>
-                                    {{ $forum_discussion->forum_category->name }}
-                                </span>
+
+                                @foreach ($forum_discussion->indikators as $indikator)
+                                    <span class="gap-1 badge bg-light text-muted align-items-center">
+                                        <i class="bi bi-link-45deg text-muted"></i>
+                                        {{ $indikator->name }}
+                                    </span>
+                                @endforeach
                             </div>
+
 
                             {{-- Discussion Footer --}}
                             <div class="pt-3 d-flex justify-content-between align-items-center border-top">

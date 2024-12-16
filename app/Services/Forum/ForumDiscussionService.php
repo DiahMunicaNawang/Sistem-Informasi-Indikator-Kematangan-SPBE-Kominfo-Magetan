@@ -17,7 +17,7 @@ class ForumDiscussionService
 
     public function getAllForumDiscussions($search = null)
     {
-        $forum_discussions =  ForumDiscussion::with('forum_category:id,name')
+        $forum_discussions =  ForumDiscussion::with(['forum_category:id,name', 'indikators'])
                 ->where('approval_status', 'accepted')
                 ->when($search, function ($query, $search) {
                     $search = strtolower($search); // Pastikan pencarian lowercase
