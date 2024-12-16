@@ -159,15 +159,17 @@
                             : asset('storage/' . $data->image);
                     @endphp
 
-                    @if (session('user_informations.role') === 'super-admin' ||
-                            session('user_informations.role') === 'manajer-konten' ||
-                            session('user_informations.role') === 'pengguna-terdaftar')
+                    {{-- @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten' || session('user_informations.role') === 'pengguna-terdaftar' || session('user_informations.role') === 'pengguna-umum')
                         <a href="{{ route('article.show', $data->id) }}">
                             <img src="{{ $imageSrc }}" class="rounded img-fluid" alt="Article Thumbnail">
                         </a>
                     @else
                         <img src="{{ $imageSrc }}" class="rounded img-fluid" alt="Article Thumbnail">
-                    @endif
+                    @endif --}}
+
+                    <a href="{{ route('article.show', $data->id) }}">
+                        <img src="{{ $imageSrc }}" class="rounded img-fluid" alt="Article Thumbnail">
+                    </a>
 
                     <h5 class="card-title m-2">{{ $data->title }}</h5>
                     <p class="card-text">{{ $data->article_summary }}</p>
