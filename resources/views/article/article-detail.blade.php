@@ -158,7 +158,7 @@
                                         style="color: {{ $i <= $rating->rating_value ? '#FFD700' : '#ccc' }};"></i>
                                 @endfor</strong>
                                 <br>
-                                {{ $rating->rating_date->format('d m Y | h:i:s A') }}
+                                {{ $rating->rating_date}}
                                 @if ($rating->rater_user_id == auth()->id())
                                     <strong>(Anda)</strong>
                                 @endif
