@@ -125,11 +125,16 @@ class ArtikelController extends Controller
     }
 
 
-    // PrintPDF
+    // PrintPDF (tanpa services)
     public function printPDF(Request $request)
     {
         // Ambil keyword pencarian
         $search = $request->get('search');
+
+        // Jika search empty, return pesan error
+        if(empty($search)){
+            return back()->with('error', 'Tolong cari artikel nya dulu');
+        }
 
         // Query artikel berdasarkan pencarian
         $articles = Article::with('ratings', 'category')
@@ -143,6 +148,7 @@ class ArtikelController extends Controller
             ->orderByDesc('updated_at')
             ->take(20)
             ->get();
+
 
         // Jika tidak ada artikel, return pesan
         if ($articles->isEmpty()) {
