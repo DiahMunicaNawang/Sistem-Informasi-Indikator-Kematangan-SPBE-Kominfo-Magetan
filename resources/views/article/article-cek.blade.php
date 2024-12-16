@@ -3,7 +3,7 @@
 @section('title', 'Cek Status Artikel')
 
 @section('back-button')
-    <a href="{{ route('article.index') }}">
+    <a href="{{ route('article.index') }}" class="btn btn-light">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection

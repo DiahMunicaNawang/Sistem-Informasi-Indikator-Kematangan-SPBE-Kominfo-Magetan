@@ -1,12 +1,11 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('indikator-spbe.index') }}">
+    <a href="{{ route('indikator-spbe.index') }}" class="btn btn-light">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
 
-@section('page-name', 'Article')
 
 @section('content')
     @if (session('success'))
@@ -14,17 +13,16 @@
             {{ session('success') }}
         </div>
     @endif
+
     <style>
-        /* CSS styling for both dark and light themes */
         body {
             background-color: var(--background-color);
         }
 
-
-
         .header-title {
             margin: 20px 0;
-            font-size: 2.5rem;
+            font-size: 2rem;
+            /* Adjusted for better responsiveness */
             font-weight: bold;
             color: var(--text-color);
             text-align: center;
@@ -32,160 +30,114 @@
 
         .button-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            /* Stack buttons on small screens */
             align-items: center;
             margin: 20px 0;
         }
 
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+            /* Center buttons */
+        }
+
         .btn-theme {
-            background-color: var(--button-bg-color);
-            color: var(--button-text-color);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-theme:hover {
-            background-color: var(--button-bg-hover-color);
-        }
-
-        .search-b ox {
-            display: flex;
-            align-items: center;
-            margin: 0 auto;
-            width: 50%;
-        }
-
-        .search-input {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            width: 100%;
-            background-color: var(--input-bg-color);
-            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            /* Adjusted min width */
             gap: 20px;
             padding: 20px;
         }
 
         .card {
-            background-color: var(--card-bg-color);
-            border: 1px solid var(--border-color);
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
             text-align: center;
-            padding: 20px;
         }
 
-        .card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px 8px 0 0;
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.5rem;
+                /* Smaller font size for mobile */
+            }
+
+            .btn-theme {
+                width: 100%;
+                /* Full width buttons on small screens */
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                /* Smaller cards */
+            }
         }
 
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--text-color);
-            margin: 10px 0;
-        }
-
-        .card-text {
-            font-size: 0.9rem;
-            color: var(--subtext-color);
-            margin-bottom: 10px;
-        }
-
-        .star-rating {
-            color: #ffc107;
-        }
-
-        /* Dark and Light Theme Variables */
-        :root {
-            --background-color: #f8f9fa;
-            --text-color: #343a40;
-            --subtext-color: #6c757d;
-            --button-bg-color: #007bff;
-            --button-text-color: #ffffff;
-            --button-bg-hover-color: #0056b3;
-            --border-color: #ced4da;
-            --input-bg-color: #ffffff;
-            --card-bg-color: #ffffff;
-        }
-
-        /* Dark Mode */
-        [data-theme="dark"] {
-            --background-color: #121212;
-            --text-color: #e0e0e0;
-            --subtext-color: #b0b0b0;
-            --button-bg-color: #1f73b7;
-            --button-text-color: #ffffff;
-            --button-bg-hover-color: #145a86;
-            --border-color: #444444;
-            --input-bg-color: #333333;
-            --card-bg-color: #1e1e1e;
-        }
-
-        .fas.fa-plus {
-            color: white;
-            margin-right: 4px
-        }
-
-        .fas.fa-eye {
-            color: white;
-            margin-right: 4px
-        }
-
-        .fas.fa-print {
-            color: white;
-            margin-right: 4px
+        @media (max-width: 576px) {
+            .button-container {
+                flex-direction: column;
+                /* Stack buttons vertically */
+            }
         }
     </style>
 
     <h1 class="header-title">Jelajahi Artikel</h1>
 
-    <!-- Search Form -->
-    <form action="{{ route('article.index') }}" method="GET" class="mb-2 search-form d-flex">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
-                value="{{ request()->get('search') }}">
-            <button type="submit" class="btn-theme">Cari</button>
-        </div>
-    </form>
     <div class="mx-4 mb-3 button-container">
+        <form action="{{ route('article.index') }}" method="GET" class="mb-2 search-form d-flex">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
+                    value="{{ request()->get('search') }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Cari
+                </button>
+            </div>
+        </form>
 
+        <div class="button-group">
+            @if (session('user_informations.role') === 'super-admin' ||
+                    session('user_informations.role') === 'pengguna-terdaftar' ||
+                    session('user_informations.role') === 'manajer-konten')
+                <a href="{{ route('article.checkArticle') }}" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> Lihat Artikel Saya
+                </a>
+            @endif
 
-        <!-- Validation Button (Only visible for Superadmin) -->
-        @if (auth()->user() && auth()->user()->role_id == 1)
-            <a href="{{ route('article.checkArticle') }}" class="mb-2 btn-theme d-block">
-                <i class="fas fa-eye"></i> Lihat Artikel Saya
-            </a>
-        @endif
+            @if (session('user_informations.role') === 'super-admin' ||
+                    session('user_informations.role') === 'pengguna-terdaftar' ||
+                    session('user_informations.role') === 'manajer-konten')
+                <a href="{{ route('article.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Buat Artikel
+                </a>
+            @endif
 
+            @if (session('user_informations.role') === 'super-admin' ||
+                    session('user_informations.role') === 'pengguna-terdaftar' ||
+                    session('user_informations.role') === 'manajer-konten' ||
+                    session('user_informations.role') === 'pengguna-umum')
+                <a href="{{ route('article.printPDF', ['search' => request()->get('search')]) }}" class="btn btn-primary">
+                    <i class="fas fa-print"></i> Cetak Artikel PDF
+                </a>
+            @endif
 
-        <!-- Checking Article User-->
-        @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 4))
-            <a href="{{ route('article.create') }}" class="mb-2 btn-theme d-block">
-                <i class="fas fa-plus"></i> Buat Artikel
-            </a>
-        @endif
-
-        <!-- Print Article Button (Only visible for Superadmin, User, And Visitor)-->
-
-        <a href="{{ route('article.printPDF', ['search' => request()->get('search')]) }}" class="btn-theme d-block">
-            <i class="fas fa-print"></i> Cetak Artikel PDF
-        </a>
-
+            @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+                <a href="{{ route('article.validateIndex') }}" class="btn btn-primary">
+                    <i class="fas fa-check -circle"></i> Validasi Index
+                </a>
+            @endif
+        </div>
     </div>
 
     @if ($artikel->isEmpty())
@@ -202,49 +154,44 @@
             @foreach ($artikel as $data)
                 <div class="card">
                     @php
-                        if (str_starts_with($data->image, 'http')) {
-                            $imageSrc = $data->image;
-                        } else {
-                            $imageSrc = asset('storage/' . $data->image);
-                        }
+                        $imageSrc = str_starts_with($data->image, 'http')
+                            ? $data->image
+                            : asset('storage/' . $data->image);
                     @endphp
 
-                    <!-- Detail Article (Only can access for Superadmin, User, And Visitor)-->
-                    @if (auth()->user() && (auth()->user()->role_id == 1 || auth()->user()->role_id == 3 || auth()->user()->role_id == 4))
-                        <a href="{{ route('article.show', $data->id) }}"><img src="{{ $imageSrc }}"
-                                class="rounded img-fluid" alt="Article Thumbnail"></a>
+                    @if (session('user_informations.role') === 'super-admin' ||
+                            session('user_informations.role') === 'manajer-konten' ||
+                            session('user_informations.role') === 'pengguna-terdaftar')
+                        <a href="{{ route('article.show', $data->id) }}">
+                            <img src="{{ $imageSrc }}" class="rounded img-fluid" alt="Article Thumbnail">
+                        </a>
                     @else
                         <img src="{{ $imageSrc }}" class="rounded img-fluid" alt="Article Thumbnail">
                     @endif
 
-                    <h5 class="card-title">{{ $data->title }}</h5>
+                    <h5 class="card-title m-2">{{ $data->title }}</h5>
                     <p class="card-text">{{ $data->article_summary }}</p>
 
-                    <!-- Tampilkan rating sebagai bintang -->
                     <div class="card-text">
                         <span>Rating: </span>
                         @php
                             $averageRating = $data->average_rating;
-                            $fullStars = floor($averageRating); // Bintang penuh
-                            $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                            $fullStars = floor($averageRating);
+                            $halfStar = $averageRating - $fullStars >= 0.5;
                         @endphp
 
-                        <!--  bintang penuh -->
                         @for ($i = 0; $i < $fullStars; $i++)
                             <i class="fas fa-star text-warning"></i>
                         @endfor
 
-                        <!-- setengah bintang jika ada -->
                         @if ($halfStar)
                             <i class="fas fa-star-half-alt text-warning"></i>
                         @endif
 
-                        <!-- bintang kosong jika kurang dari 5 -->
                         @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
                             <i class="far fa-star text-warning"></i>
                         @endfor
 
-                        <!--  nilai rata-rata -->
                         <span>({{ number_format($averageRating, 1) }})</span>
                         <br>
                         <span> By : {{ $data->ratings->count('rating_value') }} User </span>
@@ -252,7 +199,6 @@
                 </div>
             @endforeach
         </div>
-
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script type="text/javascript">
@@ -288,14 +234,12 @@
                     }
                 });
 
-                // Hide results when clicking outside
                 $(document).on('click', function(event) {
                     if (!$(event.target).closest('.search-box').length) {
                         $('#search-results').hide();
                     }
                 });
 
-                // Handle click on search result
                 $(document).on('click', '.search-result-item', function() {
                     $('#search').val($(this).text());
                     $('#search-results').hide();

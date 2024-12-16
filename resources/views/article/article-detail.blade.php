@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('article.index') }}">
+    <a href="{{ route('article.index') }}" class="btn btn-light">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
@@ -14,37 +14,25 @@
             {{ session('success') }}
         </div>
     @endif
+
     <style>
         /* Variabel CSS untuk tema terang */
         :root {
-            --background-color: #e0f1ff;
+            --background-color: #f8f9fa;
             --text-color-primary: #0d6efd;
-            --text-color-muted: #6c757d;
+            --text-color-custom: #6c757d;
             --card-background-color: #ffffff;
-            --modal-background-color: #ffffff;
             --border-color: #ced4da;
         }
 
-        .article-content {
-            word-wrap: break-word;
-            /* Bungkus kata panjang */
-            overflow-wrap: anywhere;
-            /* Alternatif jika tidak terbungkus */
-            white-space: normal;
-            /* Pastikan teks tidak memaksa dalam satu baris */
-        }
-
-        /* Variabel CSS untuk tema gelap */
         [data-theme="dark"] {
             --background-color: #1c1f24;
             --text-color-primary: #5aa9e6;
-            --text-color-muted: #b0b3b8;
+            --text-color-custom: #b0b3b8;
             --card-background-color: #2a2d31;
-            --modal-background-color: #2a2d31;
             --border-color: #444851;
         }
 
-        /* Styling elemen dengan variabel CSS */
         .content-container {
             background-color: var(--background-color);
             color: var(--text-color-muted);
@@ -55,10 +43,6 @@
 
         h2.text-primary {
             color: var(--text-color-primary) !important;
-        }
-
-        .text-muted {
-            color: var(--text-color-muted) !important;
         }
 
         .btn-outline-secondary {
@@ -82,28 +66,14 @@
             background-color: #0048a1;
         }
 
-        /* Modal background */
-        .modal-content {
-            background-color: var(--modal-background-color);
-            color: var(--text-color-muted);
-        }
-
         .star-icon {
             font-size: 1.2rem;
         }
 
         .list-group-item {
             background-color: var(--card-background-color);
-            /* Gunakan warna kartu */
             color: var(--text-color-muted);
-            /* Gunakan warna teks sesuai tema */
             border-color: var(--border-color);
-            /* Sesuaikan border */
-        }
-
-        .list-group-item a {
-            color: var(--text-color-primary);
-            /* Warna tautan */
         }
     </style>
 
@@ -111,12 +81,13 @@
         <div class="content-container">
             <!-- Title -->
             <h2 class="text-center text-primary">{{ $artikel->title }}</h2>
-            <p class="text-center text-muted">{{ $artikel->article_summary }}</p>
-            <p class="text-center text-muted">{{ $artikel->user->username }} | {{ $artikel->category->category_name }} |
+            <p class="text-center text-custom">{{ $artikel->article_summary }}</p>
+            <p class="text-center text-custom">
+                {{ $artikel->user->username }} | {{ $artikel->category->category_name }} |
                 {{ $artikel->created_at->format('Y-m-d H:i:s') }}
             </p>
 
-             <!-- Gambar Artikel -->
+            <!-- Gambar Artikel -->
             <div class="text-center mb-4">
                 @php
                     $imageSrc = str_starts_with($artikel->image, 'http')
@@ -131,6 +102,7 @@
                 {!! $artikel->article_content !!}
             </div>
 
+            <!-- Indikator Terkait -->
             <div class="mt-5">
                 <h5 class="text-primary">Indikator Terkait</h5>
                 @if ($artikel->indikatorSpbes->isNotEmpty())
@@ -146,62 +118,51 @@
                 @endif
             </div>
 
-
-
-            <!-- Rating Section , pengguna umum tidak bisa menilai-->
+            <!-- Rating Section -->
             <div class="mt-5">
                 <h5 class="text-primary">Penilaian Artikel</h5>
-                <div class="d-flex align-items-center mb-2">
-                    <h3 class="mb-0">{{ number_format($artikel->ratings->avg('rating_value'), 1) }} dari 5</h3>
+                <div class="d-flex align-items-center flex-wrap">
+                    <h3 class="mb-0 me-3">{{ number_format($artikel->ratings->avg('rating_value'), 1) }} dari 5</h3>
 
                     @php
                         $averageRating = $artikel->average_rating;
-                        $fullStars = floor($averageRating); // Bintang penuh
-                        $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                        $fullStars = floor($averageRating);
+                        $halfStar = $averageRating - $fullStars >= 0.5;
                     @endphp
 
-                    <!-- Display stars -->
-                    <div class="ms-3">
+                    <div>
                         @for ($i = 0; $i < $fullStars; $i++)
                             <i class="fas fa-star text-warning star-icon"></i>
                         @endfor
-
                         @if ($halfStar)
                             <i class="fas fa-star-half-alt text-warning star-icon"></i>
                         @endif
-
                         @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
                             <i class="far fa-star text-warning star-icon"></i>
                         @endfor
                     </div>
-                    @if (auth()->user() && auth()->user()->role_id != 4 && $artikel->article_status == 'published')
-                        @if (!$userRating)
-                            <!-- Tombol untuk menambah penilaian jika user belum memberikan penilaian -->
-                            <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
-                                Penilaian</button>
-                        @endif
+
+                    @if (session('user_informations.role') === 'pengguna-umum' && $artikel->article_status == 'published' && !$userRating)
+                        <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
+                            Penilaian</button>
                     @endif
                 </div>
 
                 <!-- User reviews -->
                 @foreach ($artikel->ratings as $rating)
-                    <div class="card mb-3">
+                    <div class="card m-4">
                         <div class="card-body">
                             <p>
-                                <strong>{{ $rating->user->username }}</strong>
+                                <strong>{{ $rating->user->username }} @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star"
+                                        style="color: {{ $i <= $rating->rating_value ? '#FFD700' : '#ccc' }};"></i>
+                                @endfor</strong>
+                                <br>
+                                {{ $rating->rating_date->format('d m Y | h:i:s A') }}
                                 @if ($rating->rater_user_id == auth()->id())
-                                    <strong>(anda)</strong>
+                                    <strong>(Anda)</strong>
                                 @endif
                                 <br>
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $rating->rating_value)
-                                        <i class="fas fa-star" style="color: #FFD700;"></i>
-                                        <!-- Bintang berwarna emas -->
-                                    @else
-                                        <i class="fas fa-star" style="color: #ccc;"></i>
-                                        <!-- Bintang berwarna abu-abu -->
-                                    @endif
-                                @endfor
 
                             </p>
                             <p>{{ $rating->review ?? 'Tidak ada ulasan.' }}</p>
