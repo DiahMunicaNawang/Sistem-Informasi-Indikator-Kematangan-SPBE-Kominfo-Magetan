@@ -36,8 +36,15 @@ Route::middleware('auth', 'verified')->group(function () {
 
     // Indikator SPBE
     Route::resource('/indikator-spbe', IndikatorSPBEController::class);
-    Route::patch('/indikator-spbe/{indikatorSpbe}/toggle-status', [IndikatorSpbeController::class, 'toggleStatus'])
-    ->name('indikator-spbe.toggle-status');
+
+    Route::put('/indikator-spbe/{indikatorSpbe}/toggle-status', [IndikatorSpbeController::class, 'toggleStatus'])
+        ->name('indikator-spbe.toggle-status');
+
+    Route::post('/indikator-spbe/add-article', [IndikatorSpbeController::class, 'addArticleFromDetail'])
+        ->name('indikator-spbe.add-article-from-detail');
+
+    Route::post('/indikator-spbe/add-forum', [IndikatorSpbeController::class, 'addForumFromDetail'])
+        ->name('indikator-spbe.add-forum-from-detail');
 
     // Articles
     Route::resource('article', ArtikelController::class)->where(['article' => '[0-9]+']);
@@ -102,8 +109,7 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::get('forum-discussion-approval-accepted', [ForumDiscussionController::class, 'forum_discussion_approval_accepted'])->name('forum-discussion-approval-accepted');
 
-    Route::get('forum-discussion-approval-destroy', [ForumDiscussionController::class, 'forum_discussion_approval_destroy'])->name('forum-discussion-approval-destroy');
-
+    Route::delete('forum-discussion-approval-destroy/{id}', [ForumDiscussionController::class, 'forum_discussion_approval_destroy'])->name('forum-discussion-approval-destroy');
 });
 
 Route::get('/login', [AuthController::class, 'login'])

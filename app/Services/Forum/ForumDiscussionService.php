@@ -3,6 +3,7 @@ namespace App\Services\Forum;
 
 use App\Models\Forum\ForumCategory;
 use App\Models\Forum\ForumDiscussion;
+use App\Models\IndikatorSPBE;
 
 class ForumDiscussionService
 {
@@ -59,12 +60,14 @@ class ForumDiscussionService
 
     public function showForumDiscussion($id) {
 
-        $forum_discussion = ForumDiscussion::with('forum_category', 'user')->findOrFail($id);
+        $forum_discussion = ForumDiscussion::with('forum_category', 'user', 'indikators')->findOrFail($id);
+
+        // Mengambil responses diskusi
         $forum_responses = $this->forumResponseService->getDiscussionResponses($id);
 
         return [
             'forum_discussion' => $forum_discussion,
-            'forum_responses' => $forum_responses
+            'forum_responses' => $forum_responses,
         ];
     }
 
@@ -72,10 +75,12 @@ class ForumDiscussionService
 
         $forum_discussion = ForumDiscussion::findOrFail($id);
         $forum_categories = ForumCategory::get();
+        $indikators = IndikatorSPBE::all();
 
         return [
             'forum_discussion' => $forum_discussion,
             'forum_categories' => $forum_categories,
+            'indikators' => $indikators
         ];
     }
 
@@ -92,6 +97,8 @@ class ForumDiscussionService
             'discussion_created_at' => now(),
             'availability_status_updated_at' => null,
         ]);
+
+        $forum_discussion->indikators()->sync($data['indikators'] ?? []);
 
         return $forum_discussion;
     }
@@ -141,10 +148,12 @@ class ForumDiscussionService
     }
 
     public function forumDiscussionApprovalAccept(int $id) {
-        $forum_discussion = ForumDiscussion::findOrFail($id);
+        $forum_discussion = ForumDiscussion::with('indikators')->findOrFail($id);
+        $indikators = IndikatorSPBE::all();
 
         return [
             'forum_discussion' => $forum_discussion,
+            'indikators' => $indikators
         ];
     }
 
@@ -156,6 +165,8 @@ class ForumDiscussionService
             'availability_status' => $data['action'],
             'availability_status_updated_at' => now()
         ]);
+
+        $forum_discussion->indikators()->sync($data['indikators'] ?? []);
 
         return $forum_discussion;
     }

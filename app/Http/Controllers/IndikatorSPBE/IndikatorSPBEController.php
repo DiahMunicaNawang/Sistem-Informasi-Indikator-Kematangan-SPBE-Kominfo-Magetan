@@ -3,75 +3,57 @@
 namespace App\Http\Controllers\IndikatorSPBE;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\IndikatorSPBE\IndikatorSPBERequest;
+use App\Models\Article\Article;
+use App\Models\Forum\ForumDiscussion;
 use App\Models\IndikatorSPBE;
+use App\Services\IndikatorSPBE\IndikatorSPBEService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class IndikatorSPBEController extends Controller
 {
+    protected $indikatorSPBEService;
+
+    public function __construct(IndikatorSPBEService $indikatorSPBEService)
+    {
+        $this->indikatorSPBEService = $indikatorSPBEService;
+    }
+
     public function index()
     {
-        $indikatorSpbes = IndikatorSpbe::with('articles')->paginate(10);
-        return view('indikator-spbe.index', compact('indikatorSpbes'));
+        $data = $this->indikatorSPBEService->getAllIndikators();
+        return view('indikator-spbe.index', $data);
     }
 
-    public function create()
+    public function store(IndikatorSPBERequest $request)
     {
-        return view('indikator-spbe.create');
+        $this->indikatorSPBEService->storeIndikatorSPBE($request->all());
+        return redirect()->route('indikator-spbe.index')->with('success', 'Indikator SPBE berhasil ditambahkan');
     }
 
-    public function store(Request $request)
+    public function show($id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'explanation' => 'required|string',
-            'rule_information' => 'required|string',
-            'criteria' => 'required|string',
-            'current_level' => 'required|string',
-            'target_level' => 'required|string',
-            'related_documentation' => 'nullable|string',
-            'person_in_charge' => 'required|string',
-            'status' => 'required|in:active,inactive'
-        ]);
-
-        $validated['date_added'] = now();
-        $validated['last_updated_date'] = now();
-
-        IndikatorSpbe::create($validated);
-
-        return redirect()->route('indikator-spbe.index')
-            ->with('success', 'Indikator SPBE berhasil ditambahkan');
+        $data = $this->indikatorSPBEService->showIndikatorSPBE($id);
+        return response()->json($data);
     }
 
-    public function edit(IndikatorSpbe $indikatorSpbe)
+    public function update(IndikatorSPBERequest $request, $id)
     {
-        return view('indikator-spbe.edit', compact('indikatorSpbe'));
+        $this->indikatorSPBEService->updateIndikatorSPBE($request->all(), $id);
+        return redirect()->route('indikator-spbe.index')->with('success', 'Indikator SPBE berhasil diperbarui');
     }
 
-    public function update(Request $request, IndikatorSpbe $indikatorSpbe)
+    public function destroy($id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'explanation' => 'required|string',
-            'rule_information' => 'required|string',
-            'criteria' => 'required|string',
-            'current_level' => 'required|string',
-            'target_level' => 'required|string',
-            'related_documentation' => 'nullable|string',
-            'person_in_charge' => 'required|string',
-            'status' => 'required|in:active,inactive'
-        ]);
+        $this->indikatorSPBEService->deleteIndikatorSPBE($id);
 
-        $validated['last_updated_date'] = now();
-
-        $indikatorSpbe->update($validated);
-
-        return redirect()->route('indikator-spbe.index')
-            ->with('success', 'Indikator SPBE berhasil diperbarui');
-    }
-
-    public function destroy(IndikatorSpbe $indikatorSpbe)
-    {
-        $indikatorSpbe->delete();
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Indikator SPBE berhasil dihapus'
+            ]);
+        }
 
         return redirect()->route('indikator-spbe.index')
             ->with('success', 'Indikator SPBE berhasil dihapus');
@@ -82,6 +64,70 @@ class IndikatorSPBEController extends Controller
         $newStatus = $indikatorSpbe->status === 'active' ? 'inactive' : 'active';
         $indikatorSpbe->update(['status' => $newStatus]);
 
-        return back()->with('success', 'Status berhasil diubah');
+        return back();
+    }
+
+    public function addArticleFromDetail(Request $request)
+    {
+        $request->validate([
+            'indikator_id' => 'required|exists:indikator_spbes,id',
+            'article_ids' => 'required|array',
+            'article_ids.*' => 'exists:articles,id'
+        ]);
+
+        try {
+            $indikator = IndikatorSpbe::findOrFail($request->indikator_id);
+
+            // Attach only the articles that are not already attached
+            $articlesToAttach = collect($request->article_ids)
+                ->diff($indikator->articles()->pluck('articles.id'))
+                ->toArray();
+
+            if (!empty($articlesToAttach)) {
+                $indikator->articles()->attach($articlesToAttach);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Artikel berhasil ditambahkan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan artikel: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function addForumFromDetail(Request $request)
+    {
+        $request->validate([
+            'indikator_id' => 'required|exists:indikator_spbes,id', // Updated table name
+            'forum_ids' => 'required|array', // Change from article_ids to forum_ids
+            'forum_ids.*' => 'exists:forum_discussions,id' // Updated validation
+        ]);
+
+        try {
+            $indikator = IndikatorSpbe::findOrFail($request->indikator_id);
+
+            // Attach forums instead of articles
+            $forumsToAttach = collect($request->forum_ids)
+                ->diff($indikator->forums()->pluck('forum_discussions.id'))
+                ->toArray();
+
+            if (!empty($forumsToAttach)) {
+                $indikator->forums()->attach($forumsToAttach);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Forum berhasil ditambahkan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menambahkan forum: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -1,12 +1,11 @@
 @extends('layouts.main.index')
 
-@section('page-name', 'Indikator 26: Manajemen Pengetahuan')
+@section('page-name', 'Indikator SPBE')
 
 @section('content')
     <div class="card card-flush h-md-100">
         <div class="card-header pt-7">
             <div class="card-toolbar d-flex justify-content-between align-items-center w-100">
-                <h3 class="card-title">Indikator SPBE</h3>
                 <button onclick="createIndikator()" class="btn btn-sm btn-success">
                     Tambah Indikator SPBE
                 </button>
@@ -17,290 +16,384 @@
             <div class="table-responsive">
                 <table class="table align-middle table-row-bordered table-row-gray-100 gs-0 gy-3">
                     <thead>
-                        <tr class="text-center text-gray-400 fw-bold fs-7 text-uppercase">
+                        <tr class="text-gray-400 fw-bold fs-7 text-uppercase">
                             <th class="w-25px">#</th>
                             <th class="min-w-150px">Nama</th>
                             <th class="min-w-150px">Penanggung Jawab</th>
                             <th class="min-w-100px">Level Saat Ini</th>
                             <th class="min-w-100px">Level Target</th>
                             <th class="min-w-100px">Status</th>
-                            <th class="min-w-200px">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($indikatorSpbes as $indikator)
+                        @foreach ($indikators as $indikator)
                             <tr>
                                 <td class="text-center">
-                                    <i class="cursor-pointer bi bi-eye fs-3 text-info"
-                                        onclick="showDetailModal({{ json_encode($indikator) }})">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
+                                    @if ($indikator->status === 'active')
+                                        <i class="cursor-pointer bi bi-eye fs-3 text-info"
+                                            onclick="showIndikatorDetail({{ $indikator->id }})">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
                                 </td>
                                 <td>{{ $indikator->name }}</td>
                                 <td>{{ $indikator->person_in_charge }}</td>
                                 <td>{{ $indikator->current_level }}</td>
                                 <td>{{ $indikator->target_level }}</td>
-                                <td class="text-center">
+                                <td>
                                     <form action="{{ route('indikator-spbe.toggle-status', $indikator->id) }}"
                                         method="POST" class="d-inline">
                                         @csrf
-                                        @method('PATCH')
-                                        <input type="checkbox" class="btn-check status-toggle"
-                                            id="status_{{ $indikator->id }}" autocomplete="off"
-                                            {{ $indikator->status === 'active' ? 'checked' : '' }}
-                                            onchange="this.form.submit()">
-                                        <label
-                                            class="btn btn-sm {{ $indikator->status === 'active' ? 'btn-success' : 'btn-danger' }}"
-                                            for="status_{{ $indikator->id }}">
-                                            {{ $indikator->status === 'active' ? 'Aktif' : 'Tidak Aktif' }}
-                                        </label>
+                                        @method('PUT')
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input status-toggle" type="checkbox"
+                                                id="status_{{ $indikator->id }}" autocomplete="off"
+                                                {{ $indikator->status === 'active' ? 'checked' : '' }}
+                                                onchange="this.form.submit()">
+                                        </div>
                                     </form>
-                                </td>
-                                <td>
-                                    <div class="gap-2 d-flex justify-content-center">
-                                        @if ($indikator->status === 'active')
-                                            <button onclick="editIndikator({{ json_encode($indikator) }})"
-                                                class="btn btn-primary btn-sm">
-                                                Edit
-                                            </button>
-                                            <form action="{{ route('indikator-spbe.destroy', $indikator->id) }}"
-                                                method="post" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus indikator ini?')">Hapus</button>
-                                            </form>
-                                        @else
-                                            <span class="text-muted">Tidak dapat diedit</span>
-                                        @endif
-                                    </div>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
 
-                @if ($indikatorSpbes->hasPages())
+                @if ($indikators->hasPages())
                     <div class="mt-4 d-flex justify-content-end">
-                        {{ $indikatorSpbes->links() }}
+                        {{ $indikators->links() }}
                     </div>
                 @endif
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="indikatorModal" tabindex="-1" aria-labelledby="indikatorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="indikatorModalLabel">Form Indikator SPBE</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="indikatorForm" action="" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label">Nama</label>
-                                <input type="text" class="form-control" name="name" id="modalName" required>
-                            </div>
-                            <div class="mb-3 col-md-6">
-                                <label class="form-label">Penanggung Jawab</label>
-                                <input type="text" class="form-control" name="person_in_charge" id="modalPersonInCharge"
-                                    required>
-                            </div>
-                            <!-- Tambahkan input lainnya sesuai kebutuhan -->
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- New Create Indikator Modal -->
+    @include('indikator-spbe.create-modal')
 
-    <!-- Modal Detail Indikator SPBE -->
-    <div class="modal fade" id="detailIndikatorModal" tabindex="-1" aria-labelledby="detailIndikatorModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailIndikatorModalLabel">Detail Indikator SPBE</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- Informasi Utama -->
-                        <div class="mb-5 col-md-6">
-                            <h4 class="text-primary">Informasi Dasar</h4>
-                            <div class="mb-3 row">
-                                <div class="col-md-6">
-                                    <strong>Nama Indikator:</strong>
-                                    <p id="detailName"></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Penanggung Jawab:</strong>
-                                    <p id="detailPersonInCharge"></p>
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <div class="col-md-6">
-                                    <strong>Level Saat Ini:</strong>
-                                    <p id="detailCurrentLevel"></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Level Target:</strong>
-                                    <p id="detailTargetLevel"></p>
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <div class="col-md-6">
-                                    <strong>Status:</strong>
-                                    <p id="detailStatus"></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Dokumentasi Terkait:</strong>
-                                    <p id="detailRelatedDocumentation"></p>
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <div class="col-md-6">
-                                    <strong>Artikel Terkait:</strong>
-                                    <p id="detailArticle"></p>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Detail Indikator Modal -->
+    @include('indikator-spbe.detail-modal')
 
-                        <!-- Informasi Tambahan -->
-                        <div class="mb-5 col-md-6">
-                            <h4 class="text-primary">Informasi Tambahan</h4>
-                            <div class="mb-3">
-                                <strong>Penjelasan:</strong>
-                                <p id="detailExplanation" class="text-wrap"></p>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Informasi Aturan:</strong>
-                                <p id="detailRuleInformation" class="text-wrap"></p>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Kriteria:</strong>
-                                <p id="detailCriteria" class="text-wrap"></p>
-                            </div>
-                        </div>
+    <!-- Edit Indikator Modal -->
+    @include('indikator-spbe.edit-modal')
 
-                        <!-- Tanggal -->
-                        <div class="mb-5 col-12">
-                            <h4 class="text-primary">Informasi Waktu</h4>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <strong>Tanggal Ditambahkan:</strong>
-                                    <p id="detailDateAdded"></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>Terakhir Diperbarui:</strong>
-                                    <p id="detailLastUpdatedDate"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button id="editButton" class="btn btn-primary" onclick="editIndikator()">
-                        <i class="ki-duotone ki-pencil me-2"></i>Edit
-                    </button>
-                    <button id="deleteButton" class="btn btn-danger" onclick="deleteIndikator()">
-                        <i class="ki-duotone ki-trash me-2"></i>Hapus
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
-        let currentIndikator = null;
+        $(document).ready(function() {
+            $('#articlesSelectCreate').select2({
+                placeholder: "Pilih atau Cari Artikel",
+            }).on('select2:unselect', function(e) {
+                setTimeout(() => {
+                    $(this).select2('close'); // Tutup dropdown secara manual
+                }, 0);
+            });
 
-        function showDetailModal(indikator) {
-            // Simpan indikator untuk digunakan di tombol edit/hapus
-            currentIndikator = indikator;
+            $('#forumsSelectCreate').select2({
+                placeholder: "Pilih atau Cari Forum",
+            }).on('select2:unselect', function(e) {
+                setTimeout(() => {
+                    $(this).select2('close'); // Tutup dropdown secara manual
+                }, 0);
+            });
 
-            // Isi detail modal
-            $('#detailName').text(indikator.name);
-            $('#detailPersonInCharge').text(indikator.person_in_charge);
-            $('#detailCurrentLevel').text(indikator.current_level);
-            $('#detailTargetLevel').text(indikator.target_level);
-            $('#detailStatus').text(indikator.status === 'active' ? 'Aktif' : 'Tidak Aktif');
-            $('#detailRelatedDocumentation').text(indikator.related_documentation || 'Tidak ada');
-            $('#detailExplanation').text(indikator.explanation);
-            $('#detailRuleInformation').text(indikator.rule_information);
-            $('#detailCriteria').text(indikator.criteria);
-            $('#detailDateAdded').text(new Date(indikator.date_added).toLocaleString());
-            $('#detailLastUpdatedDate').text(new Date(indikator.last_updated_date).toLocaleString());
+            $('#articlesSelectEdit').select2({
+                placeholder: "Pilih atau Cari Artikel",
+                dropdownCssClass: 'select2-dropdown-custom', // Mengatasi bug dropdown di modal
+            }).on('select2:unselect', function(e) {
+                e.stopImmediatePropagation();
+                setTimeout(() => {
+                    $(this).select2('close'); // Tutup dropdown secara manual
+                }, 0);
+            });
 
-            // Atur visibilitas tombol berdasarkan status
-            if (indikator.status !== 'active') {
-                $('#editButton, #deleteButton').prop('disabled', true);
-            } else {
-                $('#editButton, #deleteButton').prop('disabled', false);
+            $('#forumsSelectEdit').select2({
+                placeholder: "Pilih atau Cari Forum",
+                dropdownCssClass: 'select2-dropdown-custom', // Mengatasi bug dropdown di modal
+            }).on('select2:unselect', function(e) {
+                e.stopImmediatePropagation();
+                setTimeout(() => {
+                    $(this).select2('close'); // Tutup dropdown secara manual
+                }, 0);
+            });
+
+            $('#articlesSelectAdd').select2({
+                placeholder: "Pilih atau Cari Artikel",
+                multiple: true,
+                width: '100%'
+            });
+
+            $('#forumsSelectAdd').select2({
+                placeholder: "Pilih atau Cari Forum",
+                multiple: true,
+                width: '100%'
+            });
+
+            @if ($errors->store->any())
+                $('#createIndikatorModal').modal('show');
+            @endif
+
+            @if ($errors->update->any())
+                $('#editIndikatorModal').modal('show');
+            @endif
+        });
+
+        function addArticlesToIndikator() {
+            const articleIds = $('#articlesSelectAdd').val();
+
+            if (!articleIds || articleIds.length === 0) {
+                Swal.fire('Peringatan', 'Pilih artikel terlebih dahulu', 'warning');
+                return;
             }
 
-            // Tampilkan modal
+            $.ajax({
+                url: '{{ route('indikator-spbe.add-article-from-detail') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    indikator_id: indikatorData.indikator.id,
+                    article_ids: articleIds
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Refresh the articles list
+                        showIndikatorDetail(indikatorData.indikator.id);
+
+                        // Reset the select2
+                        $('#articlesSelectAdd').val(null).trigger('change');
+
+                        Swal.fire('Berhasil', 'Artikel berhasil ditambahkan', 'success');
+                    } else {
+                        Swal.fire('Gagal', response.message || 'Gagal menambahkan artikel', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('Gagal', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+                }
+            });
+        }
+
+        function addForumsToIndikator() {
+            const forumIds = $('#forumsSelectAdd').val();
+
+            if (!forumIds || forumIds.length === 0) {
+                Swal.fire('Peringatan', 'Pilih forum terlebih dahulu', 'warning');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route('indikator-spbe.add-forum-from-detail') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    indikator_id: indikatorData.indikator.id,
+                    forum_ids: forumIds
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Refresh the forums list
+                        showIndikatorDetail(indikatorData.indikator.id);
+
+                        // Reset the select2
+                        $('#forumsSelectAdd').val(null).trigger('change');
+
+                        Swal.fire('Berhasil', 'Forum berhasil ditambahkan', 'success');
+                    } else {
+                        Swal.fire('Gagal', response.message || 'Gagal menambahkan forum', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('Gagal', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+                }
+            });
+        }
+
+        let indikatorData = null;
+
+        function createIndikator() {
+            $('#createIndikatorModal').modal('show');
+        }
+
+        function showIndikatorDetail(id) {
+            $.ajax({
+                url: '{{ route('indikator-spbe.show', ':id') }}'.replace(':id', id),
+                method: 'GET',
+                success: function(data) {
+                    indikatorData = data;
+                    console.log('Indikator Data:', data); // Tambahkan logging ini
+
+                    $('#detailName').text(data.indikator.name);
+                    $('#detailPersonInCharge').text(data.indikator.person_in_charge);
+                    $('#detailCurrentLevel').text(data.indikator.current_level);
+                    $('#detailTargetLevel').text(data.indikator.target_level);
+                    $('#detailExplanation').text(data.indikator.explanation);
+                    $('#detailRuleInformation').text(data.indikator.rule_information);
+                    $('#detailCriteria').text(data.indikator.criteria);
+
+                    // Atur dokumentasi jika ada
+                    if (data.indikator.related_documentation) {
+                        let docUrl = '{{ asset('storage/related_documentations/') }}/' + data.indikator
+                            .related_documentation;
+                        $('#detailDocumentation').attr('href', docUrl).show();
+                    } else {
+                        $('#detailDocumentation').hide();
+                    }
+
+                    let articlesHtml = '';
+                    data.indikator.articles.forEach(function(article) {
+                        let url = '{{ route('article.show', ':id') }}'.replace(':id', article.id);
+
+                        articlesHtml += `
+                        <a href="${url}" class="text-decoration-none text-dark">
+                            <li class="mb-2 list-group-item article-item">
+                                    <h5 class="mb-1">${article.title}</h5>
+                                    <small class="text-muted">${article.article_summary.length > 50 ? article.article_summary.substring(0, 50) + '...' : article.article_summary}</small>
+                            </li>
+                        </a>
+                    `;
+                    });
+                    $('#articleContainer').html(articlesHtml);
+
+                    // Menampilkan forum diskusi
+                    let forumsHtml = '';
+                    data.indikator.forums.forEach(function(forum) {
+                        let url = '{{ route('forum-discussion.show', ':id') }}'.replace(':id', forum
+                            .id);
+
+                        forumsHtml += `
+                        <a href="${url}" class="text-decoration-none text-dark">
+                            <li class="mb-2 list-group-item forum-item">
+                                    <h5 class="mb-1">${forum.title}</h5>
+                                    <small class="text-muted">${forum.description.length > 50 ? forum.description.substring(0, 50) + '...' : forum.description}</small>
+                            </li>
+                        </a>
+                    `;
+                    });
+                    $('#forumContainer').html(forumsHtml);
+
+                    // Tampilkan modal
+                    $('#detailIndikatorModal').modal('show');
+                },
+                error: function() {
+                    alert('Terjadi kesalahan, coba lagi!');
+                }
+            });
+
             $('#detailIndikatorModal').modal('show');
-
-            // Article
-            $('#detailArticle').html('');
-            if (indikator.articles && indikator.articles.length > 0) {
-                let articleList = '<ul>';
-                indikator.articles.forEach(article => {
-                    articleList += `<li>
-        <a href="/article/${article.id}" class="text-decoration-none">
-            ${article.title}
-        </a>
-    </li>`;
-                });
-                articleList += '</ul>';
-                $('#detailArticle').html(articleList);
-            } else {
-                $('#detailArticle').text('Tidak ada artikel terkait');
-            }
         }
 
         function editIndikator() {
-            if (currentIndikator) {
-                // Tutup modal detail
-                $('#detailIndikatorModal').modal('hide');
+            $('#editIndikatorForm').attr('action', `/indikator-spbe/${indikatorData.indikator.id}`);
+            // Isi inputan nama
+            $('#editName').val(indikatorData.indikator.name);
 
-                // Buka modal edit dengan data indikator
-                openModal('edit', currentIndikator);
+            // Isi inputan penanggung jawab
+            $('#editPersonInCharge').val(indikatorData.indikator.person_in_charge);
+
+            // Current Level
+            if (indikatorData.indikator.current_level) {
+                const currentRadio = indikatorData.indikator.current_level.split(' - ')[0].trim(); // Ambil "Level x"
+                $(`input[name="current_level_radio"][value="${currentRadio}"]`).prop('checked', true); // Pilih radio
+                $('#editCurrentLevelDescription').val(indikatorData.indikator.current_level.split(' - ')[1]?.trim() ||
+                    ''); // Ambil deskripsi
             }
+
+            // Target Level
+            if (indikatorData.indikator.target_level) {
+                const targetRadio = indikatorData.indikator.target_level.split(' - ')[0].trim(); // Ambil "Level x"
+                $(`input[name="target_level_radio"][value="${targetRadio}"]`).prop('checked', true); // Pilih radio
+                $('#editTargetLevelDescription').val(indikatorData.indikator.target_level.split(' - ')[1]?.trim() ||
+                    ''); // Ambil deskripsi
+            }
+
+
+            // Isi inputan penjelasan
+            $('#editExplanation').val(indikatorData.indikator.explanation);
+
+            // Isi inputan informasi aturan
+            $('#editRuleInformation').val(indikatorData.indikator.rule_information);
+
+            // Isi inputan kriteria
+            $('#editCriteria').val(indikatorData.indikator.criteria);
+
+            // Isi inputan dokumentasi terkait
+            if (indikatorData.indikator.related_documentation) {
+                let docUrl = '{{ asset('storage/related_documentations/') }}/' + indikatorData.indikator
+                    .related_documentation;
+                $('#detailDocumentationEdit').attr('href', docUrl).show();
+            } else {
+                $('#detailDocumentationEdit').hide();
+            }
+
+            // Gunakan data tambahan jika ada
+            const allArticles = indikatorData.indikator.articles || [];
+            const allForums = indikatorData.indikator.forums || [];
+            console.log(allArticles, allForums);
+
+            // Set artikel yang sudah terpilih
+            if (allArticles && allArticles.length > 0) {
+                const articleIds = allArticles.map(article => article.id);
+                $('#articlesSelectEdit').val(articleIds).trigger('change');
+                console.log('Selected Articles:', $('#articlesSelectEdit').val());
+            }
+
+            // Set forum yang sudah terpilih
+            if (allForums && allForums.length > 0) {
+                const forumIds = allForums.map(forum => forum.id);
+                $('#forumsSelectEdit').val(forumIds).trigger('change');
+                console.log('Selected Forums:', $('#forumsSelectEdit').val());
+            }
+
+            $('#detailIndikatorModal').modal('hide');
+            $('#editIndikatorModal').modal('show');
         }
 
-        function deleteIndikator() {
-            if (currentIndikator) {
-                if (confirm('Apakah Anda yakin ingin menghapus indikator ini?')) {
-                    // Kirim form hapus
-                    $.ajax({
-                        url: `/indikator-spbe/${currentIndikator.id}`,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            // Tutup modal
-                            $('#detailIndikatorModal').modal('hide');
+        function deleteIndikator(indikatorData) {
+            console.log(indikatorData)
+            if (indikatorData) {
+                Swal.fire({
+                    title: 'Konfirmasi Hapus',
+                    text: 'Apakah Anda yakin ingin menghapus indikator ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#009ef7',
+                    cancelButtonColor: '#f1416c',
+                    confirmButtonText: 'Ya, hapus indikator ini!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Kirim form hapus
+                        $.ajax({
+                            url: '{{ route('indikator-spbe.destroy', ':id') }}'.replace(':id', indikatorData.indikator.id),
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    // Tutup modal
+                                    $('#detailIndikatorModal').modal('hide');
 
-                            // Refresh halaman atau hapus baris dari tabel
-                            location.reload();
-                        },
-                        error: function(xhr) {
-                            alert('Gagal menghapus indikator');
-                        }
-                    });
-                }
+                                    // Refresh halaman atau hapus baris dari tabel
+                                    location.reload();
+
+                                    // Atau tampilkan pesan sukses
+                                    Swal.fire('Berhasil', response.message, 'success');
+                                } else {
+                                    // Tangani kasus tidak berhasil
+                                    Swal.fire('Gagal', response.message, 'error');
+                                }
+                            },
+                            error: function(xhr) {
+                                // Tangani error ajax
+                                ;
+                                console.error(xhr);
+                                Swal.fire('Gagal menghapus indikator', xhr.responseJSON?.message ||
+                                    'Terjadi kesalahan', 'error');
+                            }
+                        });
+                    }
+                });
             }
         }
     </script>
