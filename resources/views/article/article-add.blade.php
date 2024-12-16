@@ -1,7 +1,7 @@
-@extends('layouts.main.index')
+`@extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('article.index') }}">
+    <a href="{{ route('article.index') }}" class="btn btn-light">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
@@ -112,7 +112,7 @@
             <!-- Kategori -->
             <div class="mb-3">
                 <label for="kategori" class="form-label">Kategori
-                    @if (auth()->user() && auth()->user()->role_id == 1)
+                    @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
                         | <a href="{{ route('article.createCategory') }}"">Add Category</a>
                     @endif
                 </label>
@@ -123,7 +123,21 @@
                 </select>
             </div>
 
-
+            <!-- Indikator Terkait -->
+            <div class="mb-3">
+                <label for="indikator" class="required form-label">Indikator Terkait</label>
+                <select name="indikator[]" id="indikator" class="form-control" multiple="multiple">
+                    @foreach ($indikatorSpbe as $indikator)
+                        <option value="{{ $indikator->id }}"
+                            {{ in_array($indikator->id, old('indikator', $indikatorOld)) ? 'selected' : '' }}>
+                            {{ $indikator->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('indikator')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
             <!-- Image Thumbnail -->
             <div class="mb-3">
@@ -135,4 +149,15 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2
+            $('#indikator').select2({
+                placeholder: 'Pilih indikator terkait',
+                allowClear: true
+            });
+        });
+    </script>
 @endsection

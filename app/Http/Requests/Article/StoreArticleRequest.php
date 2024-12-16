@@ -28,6 +28,7 @@ class StoreArticleRequest extends FormRequest
             'konten' => 'required',
             'kategori' => 'required|exists:article_categories,id',
             'image' => 'required|image|max:2048',
+            'indikator' => 'required',
         ];
     }
 

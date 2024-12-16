@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Article\ArticleService;
 use App\Http\Requests\Article\StoreArticleRequest;
+use App\Models\IndikatorSPBE;
 
 class ArtikelController extends Controller
 {
@@ -32,7 +33,9 @@ class ArtikelController extends Controller
     public function create()
     {
         $artikel_category = $this->articleService->getCategories();
-        return view('article.article-add', compact('artikel_category'));
+        $indikatorSpbe = IndikatorSPBE::get();
+        $indikatorOld = old('indikator', []); // Ambil data lama jika ada, atau default array kosong
+        return view('article.article-add', compact('artikel_category', 'indikatorSpbe', 'indikatorOld'));
     }
 
     public function store(StoreArticleRequest $request)
@@ -46,6 +49,7 @@ class ArtikelController extends Controller
         $this->articleService->createArticle(array_merge($validatedData, ['image' => $imageName]));
 
         return redirect()->route('article.index')->with('success', 'Artikel berhasil dibuat');
+        //     dd(array_merge($validatedData, ['image' => $imageName]));
     }
 
     public function show($id)

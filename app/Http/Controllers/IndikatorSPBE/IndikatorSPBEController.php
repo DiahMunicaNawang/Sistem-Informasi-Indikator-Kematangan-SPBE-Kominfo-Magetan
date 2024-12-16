@@ -10,7 +10,9 @@ class IndikatorSPBEController extends Controller
 {
     public function index()
     {
-        $indikatorSpbes = IndikatorSpbe::with('articles')->paginate(10);
+        $indikatorSpbes = IndikatorSpbe::with(['articles' => function ($query){
+            $query->where('article_status','published');
+        }])->paginate(10);
         return view('indikator-spbe.index', compact('indikatorSpbes'));
     }
 

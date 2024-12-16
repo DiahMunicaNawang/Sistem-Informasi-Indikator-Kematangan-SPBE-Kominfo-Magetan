@@ -1,12 +1,11 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('indikator-spbe.index') }}">
+    <a href="{{ route('article.index') }}" class="btn btn-light">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
 
-@section('page-name', 'Article Validate')
 
 @section('content')
     @if (session('success'))
@@ -16,14 +15,14 @@
     @endif
 
     <style>
-        /* CSS styling for both dark and light themes */
         body {
             background-color: var(--background-color);
         }
 
         .header-title {
             margin: 20px 0;
-            font-size: 2.5rem;
+            font-size: 2rem;
+            /* Adjusted for better responsiveness */
             font-weight: bold;
             color: var(--text-color);
             text-align: center;
@@ -57,7 +56,8 @@
             display: flex;
             align-items: center;
             margin: 0 auto;
-            width: 50%;
+            width: 100%;
+            /* Full width on small screens */
         }
 
         .search-input {
@@ -71,83 +71,63 @@
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            /* Adjusted min width */
             gap: 20px;
             padding: 20px;
         }
 
         .card {
-            background-color: var(--card-bg-color);
-            border: 1px solid var(--border-color);
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
             text-align: center;
-            padding: 20px;
         }
 
-        .card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px 8px 0 0;
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.5rem;
+                /* Smaller font size for mobile */
+            }
+
+            .search-box {
+                flex-direction: column;
+                /* Stack search input and button */
+                width: 100%;
+            }
+
+            .search-input {
+                margin-bottom: 10px;
+                /* Space between input and button */
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                /* Smaller cards */
+            }
         }
 
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--text-color);
-            margin: 10px 0;
-        }
-
-        .card-text {
-            font-size: 0.9rem;
-            color: var(--subtext-color);
-            margin-bottom: 10px;
-        }
-
-        .star-rating {
-            color: #ffc107;
-        }
-
-        /* Dark and Light Theme Variables */
-        :root {
-            --background-color: #f8f9fa;
-            --text-color: #343a40;
-            --subtext-color: #6c757d;
-            --button-bg-color: #007bff;
-            --button-text-color: #ffffff;
-            --button-bg-hover-color: #0056b3;
-            --border-color: #ced4da;
-            --input-bg-color: #ffffff;
-            --card-bg-color: #ffffff;
-        }
-
-        /* Dark Mode */
-        [data-theme="dark"] {
-            --background-color: #121212;
-            --text-color: #e0e0e0;
-            --subtext-color: #b0b0b0;
-            --button-bg-color: #1f73b7;
-            --button-text-color: #ffffff;
-            --button-bg-hover-color: #145a86;
-            --border-color: #444444;
-            --input-bg-color: #333333;
-            --card-bg-color: #1e1e1e;
+        @media (max-width: 576px) {
+            .button-container {
+                flex-direction: column;
+                /* Stack buttons vertically */
+                align-items: center;
+                /* Center buttons */
+            }
         }
     </style>
 
-    <h1 class="header-title">Validasi Artikel</h1>
+    <h5 class="header-title">Validasi Artikel</h5>
 
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <form action="{{ route('article.validateIndex') }}" method="GET" class="search-form">
                     <div class="input-group mb-3">
-                        <!-- Input untuk pencarian -->
                         <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
                             value="{{ request()->get('search') }}">
 
-                        <!-- Combobox untuk filter status -->
                         <select name="status" class="form-select" aria-label="Filter Status">
                             <option value="">Semua Status</option>
                             <option value="published" {{ request()->get('status') === 'published' ? 'selected' : '' }}>
@@ -160,15 +140,12 @@
                             </option>
                         </select>
 
-                        <!-- Tombol submit -->
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-
 
     @if ($artikel->isEmpty())
         <div class="text-center alert alert-warning">
@@ -184,44 +161,38 @@
             @foreach ($artikel as $data)
                 <div class="card">
                     @php
-                        if (str_starts_with($data->image, 'http')) {
-                            $imageSrc = $data->image;
-                        } else {
-                            $imageSrc = asset('storage/' . $data->image);
-                        }
+                        $imageSrc = str_starts_with($data->image, 'http')
+                            ? $data->image
+                            : asset('storage/' . $data->image);
                     @endphp
 
-                    <a href="{{ route('article.validate', $data->id) }}"><img src="{{ $imageSrc }}"
-                            class="img-fluid rounded" alt="Article Thumbnail"></a>
+                    <a href="{{ route('article.validate', $data->id) }}">
+                        <img src="{{ $imageSrc }}" class="img-fluid rounded" alt="Article Thumbnail">
+                    </a>
 
-                    <h5 class="card-title">{{ $data->title }}</h5>
+                    <h5 class="card-title m-2">{{ $data->title }}</h5>
                     <p class="card-text">{{ $data->article_summary }}</p>
 
-                    <!-- Tampilkan rating sebagai bintang -->
                     <div class="card-text">
                         <span>Rating: </span>
                         @php
                             $averageRating = $data->average_rating;
-                            $fullStars = floor($averageRating); // Bintang penuh
-                            $halfStar = $averageRating - $fullStars >= 0.5; // Setengah bintang
+                            $fullStars = floor($averageRating);
+                            $halfStar = $averageRating - $fullStars >= 0.5;
                         @endphp
 
-                        <!--  bintang penuh -->
                         @for ($i = 0; $i < $fullStars; $i++)
                             <i class="fas fa-star text-warning"></i>
                         @endfor
 
-                        <!-- setengah bintang jika ada -->
                         @if ($halfStar)
                             <i class="fas fa-star-half-alt text-warning"></i>
                         @endif
 
-                        <!-- bintang kosong jika kurang dari 5 -->
                         @for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++)
                             <i class="far fa-star text-warning"></i>
                         @endfor
 
-                        <!--  nilai rata-rata -->
                         <span>({{ number_format($averageRating, 1) }})</span>
                         <br>
                         <span> By : {{ $data->ratings->count('rating_value') }} User </span>
@@ -238,12 +209,9 @@
                             </div>
                         </form>
                     </div>
-
-
                 </div>
             @endforeach
         </div>
-
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script>
@@ -259,7 +227,6 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Submit the form programmatically
                         document.getElementById(`delete-form-${id}`).submit();
                     }
                 });
@@ -298,14 +265,12 @@
                     }
                 });
 
-                // Hide results when clicking outside
                 $(document).on('click', function(event) {
                     if (!$(event.target).closest('.search-box').length) {
                         $('#search-results').hide();
                     }
                 });
 
-                // Handle click on search result
                 $(document).on('click', '.search-result-item', function() {
                     $('#search').val($(this).text());
                     $('#search-results').hide();

@@ -39,7 +39,7 @@ class ArticleService
     {
         $imageName = $data['image'] ?? null;
 
-        return Article::create([
+        $article = Article::create([
             'title' => $data['judul'],
             'article_summary' => $data['ringkasan'],
             'article_content' => $data['konten'],
@@ -48,6 +48,21 @@ class ArticleService
             'article_status' => 'draft',
             'user_id' => Auth::id(),
         ]);
+
+        if (isset($data['indikator']) && is_array($data['indikator'])) {
+            $now = now();
+            $pivotData = [];
+            foreach ($data['indikator'] as $indikatorId){
+                $pivotData[$indikatorId] = [
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+
+                $article->indikatorSpbes()->sync($pivotData);
+            }
+        }
+
+        return $article;
     }
 
     // Mendapatkan detail artikel
