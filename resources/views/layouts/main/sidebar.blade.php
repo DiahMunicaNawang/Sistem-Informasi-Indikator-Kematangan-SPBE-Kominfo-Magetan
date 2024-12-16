@@ -4,7 +4,7 @@
     <!--begin::Logo-->
     <div class="px-6 app-sidebar-logo" id="kt_app_sidebar_logo">
         <!--begin::Logo image-->
-        <a href="../../demo1/dist/index.html">
+        <a href="{{ route('dashboard') }}">
             <img alt="Logo" src="{{ asset('assets/media/logos/logo-magetan.png') }}"
                 class="h-30px app-sidebar-logo-default" />
             <img alt="Logo" src="{{ asset('assets/media/logos/logo-magetan.png') }}"
