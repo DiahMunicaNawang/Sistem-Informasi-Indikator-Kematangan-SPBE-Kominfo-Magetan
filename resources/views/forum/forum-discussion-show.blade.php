@@ -19,7 +19,7 @@
                             <div class="flex-grow-1">
                                 <a href="#"
                                     class="text-gray-800 text-hover-primary fs-6 fw-bolder">{{ $forum_discussion->user->username }}</a>
-                                <div class="text-muted fs-7">{{ $forum_discussion->discussion_created_at }} |
+                                <div class="text-muted fs-7">{{ \Carbon\Carbon::parse($forum_discussion->discussion_created_at)->format('H:i - d M Y') }} |
                                     {{ $forum_discussion->forum_category->name }}</div>
                             </div>
                         </div>
@@ -53,12 +53,16 @@
         <div class="pt-5 card-body">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="text-dark fw-bolder">{{ $forum_discussion->title }}</h2>
-
-
-
             </div>
 
             <p class="text-gray-600 fs-5 fw-semibold">{{ $forum_discussion->description }}</p>
+            
+            @foreach ($forum_discussion->indikators as $indikator)
+                <span class="gap-1 badge bg-light text-muted align-items-center">
+                    <i class="bi bi-link-45deg text-muted"></i>
+                    {{ $indikator->name }}
+                </span>
+            @endforeach
         </div>
 
         <div class="pt-4 card-footer">
