@@ -1,7 +1,7 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ url()->previous() }}">
+    <a href="{{ url()->previous() }}" class="btn btn-light">
         <i class="fas fa-arrow-left"></i>
     </a>
 @endsection
