@@ -22,6 +22,20 @@
                             
                             <div class="mb-4 text-center">
                                 <h4 class="mb-2 text-dark fw-semibold">{{ $forum_discussion->title }}</h4>
+                                <p class="text-muted">Pilih indikator terkait untuk diskusi ini</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <select class="form-select" id="indikatorSelect" name="indikators[]" multiple="multiple" style="width: 100%;">
+                                    @foreach ($indikators as $indikator)
+                                        <option value="{{ $indikator->id }}"
+                                            {{ in_array($indikator->id, $forum_discussion->indikators->pluck('id')->toArray()) ? 'selected' : '' }}
+                                            >{{ $indikator->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4 text-center">
                                 <p class="text-muted">Pilih status untuk diskusi ini</p>
                             </div>
                             
@@ -49,4 +63,13 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#indikatorSelect').select2({
+                placeholder: "Pilih indikator",
+                allowClear: true
+            });
+        });
+    </script>
 @endsection

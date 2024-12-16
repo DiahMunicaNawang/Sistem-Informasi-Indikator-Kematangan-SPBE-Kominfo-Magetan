@@ -2,6 +2,7 @@
 
 namespace App\Models\Forum;
 
+use App\Models\IndikatorSPBE;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -11,6 +12,10 @@ class ForumDiscussion extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+    public function indikators() {
+        return $this->belongsToMany(IndikatorSPBE::class, 'forum_indikator_spbe', 'forum_id', 'indikator_id');
+    }
 
     public function forum_category() {
         return $this->belongsTo(ForumCategory::class);

@@ -41,10 +41,32 @@
                         <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
+                <div class="mb-8">
+                    <label for="forum_category_id" class="required form-label">Indikator Terkait</label>
+                    <select class="form-select" id="indikatorSelect" name="indikators[]" multiple="multiple" style="width: 100%;">
+                        @foreach ($indikators as $indikator)
+                            <option value="{{ $indikator->id }}"
+                                {{ in_array($indikator->id, $forum_discussion->indikators->pluck('id')->toArray()) ? 'selected' : '' }}
+                                >{{ $indikator->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('forum_category_id')
+                        <p class="text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
             <div class="pt-0 card-footer">
                 <button type="submit" class="btn btn-sm btn-primary">Submit</button>
             </div>
         </div>
     </form>
+
+    <script>
+        $(document).ready(function() {
+            $('#indikatorSelect').select2({
+                placeholder: "Pilih indikator",
+                allowClear: true
+            });
+        });
+    </script>
 @endsection
