@@ -105,10 +105,10 @@
                             @enderror
                         </div>
                         <div class="mb-3 col-md-12">
-                            <label for="related_documentation">Dokumentasi Terkait (PDF)</label>
+                            <label for="related_documentation">Dokumentasi Terkait (opsional)</label>
                             <input type="file" class="form-control" id="related_documentation"
                                 name="related_documentation">
-                            <small class="form-text text-muted">Upload a PDF file (optional).</small>
+                            <small class="form-text text-muted">Upload a PDF file.</small>
                             @error('related_documentation', 'store')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -120,7 +120,7 @@
                             <select name="articles[]" id="articlesSelectCreate" class="form-control"
                                 multiple="multiple">
                                 @foreach ($articles as $article)
-                                    <option value="{{ $article->id }}">{{ $article->title }}</option>
+                                    <option value="{{ $article->id }}" {{ in_array($article->id, old('articles', [])) ? 'selected' : '' }}>{{ $article->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -131,7 +131,7 @@
                             <select name="forums[]" id="forumsSelectCreate" class="form-control"
                                 multiple="multiple">
                                 @foreach ($forums as $forum)
-                                    <option value="{{ $forum->id }}">{{ $forum->title }}</option>
+                                    <option value="{{ $forum->id }}" {{ in_array($forum->id, old('forums', [])) ? 'selected' : '' }}>{{ $forum->title }}</option>
                                 @endforeach
                             </select>
                         </div>

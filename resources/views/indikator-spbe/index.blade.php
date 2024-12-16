@@ -4,13 +4,15 @@
 
 @section('content')
     <div class="card card-flush h-md-100">
-        <div class="card-header pt-7">
-            <div class="card-toolbar d-flex justify-content-between align-items-center w-100">
-                <button onclick="createIndikator()" class="btn btn-sm btn-success">
-                    Tambah Indikator SPBE
-                </button>
+        @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+            <div class="card-header pt-7">
+                <div class="card-toolbar d-flex justify-content-between align-items-center w-100">
+                    <button onclick="createIndikator()" class="btn btn-sm btn-success">
+                        Tambah Indikator SPBE
+                    </button>
+                </div>
             </div>
-        </div>
+        @endif
 
         <div class="pt-6 card-body">
             <div class="table-responsive">
@@ -18,11 +20,17 @@
                     <thead>
                         <tr class="text-gray-400 fw-bold fs-7 text-uppercase">
                             <th class="w-25px">#</th>
-                            <th class="min-w-150px">Nama</th>
-                            <th class="min-w-150px">Penanggung Jawab</th>
-                            <th class="min-w-100px">Level Saat Ini</th>
-                            <th class="min-w-100px">Level Target</th>
-                            <th class="min-w-100px">Status</th>
+                            <th class="w-25px">No</th>
+                            <th class="min-w-200px">Nama</th>
+                            <th class="min-w-200px">Penjelasan</th>
+                            <th class="min-w-200px">Kriteria</th>
+                            <th class="min-w-200px">Level Saat Ini</th>
+                            <th class="min-w-200px">Level Target</th>
+                            <th class="min-w-200px">Penanggung Jawab</th>
+                            <th class="min-w-250px">Tanggal Pembaruan Terakhir</th>
+                            @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+                                <th class="min-w-100px">Status</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -39,23 +47,29 @@
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $indikator->name }}</td>
-                                <td>{{ $indikator->person_in_charge }}</td>
+                                <td>{{ $indikator->explanation }}</td>
+                                <td>{{ $indikator->criteria }}</td>
                                 <td>{{ $indikator->current_level }}</td>
                                 <td>{{ $indikator->target_level }}</td>
-                                <td>
-                                    <form action="{{ route('indikator-spbe.toggle-status', $indikator->id) }}"
-                                        method="POST" class="d-inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input status-toggle" type="checkbox"
-                                                id="status_{{ $indikator->id }}" autocomplete="off"
-                                                {{ $indikator->status === 'active' ? 'checked' : '' }}
-                                                onchange="this.form.submit()">
-                                        </div>
-                                    </form>
-                                </td>
+                                <td>{{ $indikator->person_in_charge }}</td>
+                                <td>{{ \Carbon\Carbon::parse($indikator->last_updated_date)->format('d-m-Y') }}</td>
+                                @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+                                    <td>
+                                        <form action="{{ route('indikator-spbe.toggle-status', $indikator->id) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input status-toggle" type="checkbox"
+                                                    id="status_{{ $indikator->id }}" autocomplete="off"
+                                                    {{ $indikator->status === 'active' ? 'checked' : '' }}
+                                                    onchange="this.form.submit()">
+                                            </div>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -364,7 +378,8 @@
                     if (result.isConfirmed) {
                         // Kirim form hapus
                         $.ajax({
-                            url: '{{ route('indikator-spbe.destroy', ':id') }}'.replace(':id', indikatorData.indikator.id),
+                            url: '{{ route('indikator-spbe.destroy', ':id') }}'.replace(':id',
+                                indikatorData.indikator.id),
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'

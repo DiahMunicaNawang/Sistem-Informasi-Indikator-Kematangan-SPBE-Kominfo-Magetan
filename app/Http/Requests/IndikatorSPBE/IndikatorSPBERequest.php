@@ -51,6 +51,8 @@ class IndikatorSPBERequest extends FormRequest
             'current_level.required' => 'Level saat ini wajib diisi!',
             'target_level_radio.required' => 'Target level wajib diisi!',
             'target_level.required' => 'Target level wajib diisi!',
+            'related_documentation.mimes' => 'Dokumen terkait harus berupa PDF!',
+            'related_documentation.max' => 'Ukuran dokumen terkait tidak boleh lebih dari 5MB!',
             'person_in_charge.required' => 'Penanggung Jawab Indikator SPBE wajib diisi!',
         ];
     }
