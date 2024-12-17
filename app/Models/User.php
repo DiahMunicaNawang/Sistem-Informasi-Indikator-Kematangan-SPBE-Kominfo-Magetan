@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'role_id',
         'email_verified_at',
+        'avatar',
     ];
 
     /**
@@ -51,10 +52,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function role()
     {
         return $this->belongsTo(Role::class);
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin' || $this->role === 'super-admin';
     }
 }

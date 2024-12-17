@@ -79,8 +79,8 @@ class IndikatorSPBEService
         // Handle file upload
         if (isset($data['related_documentation'])) {
             // Delete old file
-            if ($fileName && Storage::disk('public')->exists($fileName)) {
-                Storage::disk('public')->delete($fileName);
+            if ($fileName && Storage::disk('public')->exists("related_documentations/$fileName")) {
+                Storage::disk('public')->delete("related_documentations/$fileName");
             }
 
             $fileName = Str::uuid() . '.' . $data['related_documentation']->getClientOriginalExtension();
@@ -122,8 +122,8 @@ class IndikatorSPBEService
         $indikator = IndikatorSPBE::findOrFail($id);
 
         // Hapus file dari storage
-        if ($indikator->related_documentation && Storage::disk('public')->exists($indikator->related_documentation)) {
-            Storage::disk('public')->delete($indikator->related_documentation);
+        if ($indikator->related_documentation && Storage::disk('public')->exists("related_documentations/$indikator->related_documentation")) {
+            Storage::disk('public')->delete("related_documentations/$indikator->related_documentation");
         }
 
         return $indikator->delete();

@@ -13,7 +13,7 @@
                 <div class="flex-wrap gap-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-50px me-5">
-                            <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="" />
+                            <img src="{{ $forum_discussion->user->avatar ? asset('storage/avatars/' . $forum_discussion->user->avatar) : asset('assets/media/avatars/blank.png') }}" alt="{{ $forum_discussion->user->username }}" />
                         </div>
                         <div class="flex-wrap d-flex justify-content-between flex-sm-nowrap">
                             <div class="flex-grow-1">

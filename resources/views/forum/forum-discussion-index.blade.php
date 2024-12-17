@@ -3,35 +3,11 @@
 @section('content')
     <div class="container py-4">
         {{-- Header Section --}}
-        <h1 class="mb-4 text-center fs-1 text-primary">Jelajahi Forum</h1>
+        <h1 class="mb-4 text-center">Jelajahi Forum</h1>
 
         {{-- Action Buttons and Search --}}
-        <div class="mb-4 row g-3 align-items-center">
-            @if (session('user_informations.role') !== 'pengguna-umum')
-                <div class="col-12 col-md-auto">
-                    <a href="{{ route('forum-discussion.create') }}" class="btn-sm btn btn-light-success w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Ajukan Pertanyaan
-                    </a>
-                </div>
-                <div class="col-12 col-md-auto">
-                    <a href="{{ route('forum-discussion-approval-user') }}" class="btn-sm btn btn-light-primary w-100">
-                        <i class="bi bi-list-ul me-2"></i>Lihat Pertanyaan Saya
-                    </a>
-                </div>
-            @endif
-            @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
-                <div class="col-12 col-md-auto">
-                    <a href="{{ route('forum-category.index') }}" class="btn-sm btn btn-light-danger w-100">
-                        <i class="bi bi-tags me-2"></i>Kategori Forum
-                    </a>
-                </div>
-                <div class="col-12 col-md-auto">
-                    <a href="{{ route('forum-discussion-approval-process') }}" class="btn-sm btn btn-light-success w-100">
-                        <i class="bi bi-check-circle me-2"></i>Verifikasi Forum
-                    </a>
-                </div>
-            @endif
-            <div class="col-12 col-md">
+        <div class="d-flex flex-column align-items-center">
+            <div class="mb-4 col-6">
                 <form method="GET" action="{{ route('forum-discussion.index') }}">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari Pertanyaan"
@@ -41,6 +17,33 @@
                         </button>
                     </div>
                 </form>
+            </div>
+
+            <div class="mb-4 row g-3 d-flex justify-content-center">
+                @if (session('user_informations.role') !== 'pengguna-umum')
+                    <div class="col-12 col-md-auto">
+                        <a href="{{ route('forum-discussion.create') }}" class="btn-sm btn btn-light-success w-100">
+                            <i class="bi bi-plus-circle me-2"></i>Ajukan Pertanyaan
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <a href="{{ route('forum-discussion-approval-user') }}" class="btn-sm btn btn-light-primary w-100">
+                            <i class="bi bi-list-ul me-2"></i>Lihat Pertanyaan Saya
+                        </a>
+                    </div>
+                @endif
+                @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+                    <div class="col-12 col-md-auto">
+                        <a href="{{ route('forum-category.index') }}" class="btn-sm btn btn-light-danger w-100">
+                            <i class="bi bi-tags me-2"></i>Kategori Forum
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <a href="{{ route('forum-discussion-approval-process') }}" class="btn-sm btn btn-light-success w-100">
+                            <i class="bi bi-check-circle me-2"></i>Verifikasi Forum
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -62,13 +65,11 @@
                                     <div class="card-body">
                                         {{-- Discussion Header --}}
                                         <div class="mb-3 d-flex justify-content-between align-items-start">
-                                            <div class="gap-3 d-flex">
+                                            <div class="gap-5 d-flex">
                                                 <div class="position-relative">
-                                                    <div class="symbol symbol-45px me-2">
-                                                        <img src="{{ asset('assets/media/avatars/300-1.jpg') }}"
-                                                            class="rounded-circle"
-                                                            alt="{{ $forum_discussion->user->username }}"
-                                                            style="width: 45px; height: 45px; object-fit: cover;">
+                                                    <div class="symbol symbol-50px">
+                                                        <img src="{{ $forum_discussion->user->avatar ? asset('storage/avatars/' . $forum_discussion->user->avatar) : asset('assets/media/avatars/blank.png') }}"
+                                                            alt="{{ $forum_discussion->user->username }}">
                                                     </div>
                                                 </div>
                                                 <div>
