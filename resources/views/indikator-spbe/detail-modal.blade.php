@@ -117,8 +117,9 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
                     <button type="button" onclick="editIndikator()" class="btn btn-primary">Edit</button>
+                    <button type="button" onclick="deleteIndikator(indikatorData)"
+                        class="btn btn-danger">Hapus</button>
                 @endif
-                <button type="button" onclick="deleteIndikator(indikatorData)" class="btn btn-danger">Hapus</button>
             </div>
         </div>
     </div>
