@@ -132,6 +132,7 @@
                 }, 0);
             });
 
+            // detail-modal
             $('#articlesSelectAdd').select2({
                 placeholder: "Pilih atau Cari Artikel",
                 multiple: true,
@@ -152,76 +153,6 @@
                 $('#editIndikatorModal').modal('show');
             @endif
         });
-
-        function addArticlesToIndikator() {
-            const articleIds = $('#articlesSelectAdd').val();
-
-            if (!articleIds || articleIds.length === 0) {
-                Swal.fire('Peringatan', 'Pilih artikel terlebih dahulu', 'warning');
-                return;
-            }
-
-            $.ajax({
-                url: '{{ route('indikator-spbe.add-article-from-detail') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    indikator_id: indikatorData.indikator.id,
-                    article_ids: articleIds
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Refresh the articles list
-                        showIndikatorDetail(indikatorData.indikator.id);
-
-                        // Reset the select2
-                        $('#articlesSelectAdd').val(null).trigger('change');
-
-                        Swal.fire('Berhasil', 'Artikel berhasil ditambahkan', 'success');
-                    } else {
-                        Swal.fire('Gagal', response.message || 'Gagal menambahkan artikel', 'error');
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire('Gagal', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
-                }
-            });
-        }
-
-        function addForumsToIndikator() {
-            const forumIds = $('#forumsSelectAdd').val();
-
-            if (!forumIds || forumIds.length === 0) {
-                Swal.fire('Peringatan', 'Pilih forum terlebih dahulu', 'warning');
-                return;
-            }
-
-            $.ajax({
-                url: '{{ route('indikator-spbe.add-forum-from-detail') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    indikator_id: indikatorData.indikator.id,
-                    forum_ids: forumIds
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Refresh the forums list
-                        showIndikatorDetail(indikatorData.indikator.id);
-
-                        // Reset the select2
-                        $('#forumsSelectAdd').val(null).trigger('change');
-
-                        Swal.fire('Berhasil', 'Forum berhasil ditambahkan', 'success');
-                    } else {
-                        Swal.fire('Gagal', response.message || 'Gagal menambahkan forum', 'error');
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire('Gagal', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
-                }
-            });
-        }
 
         let indikatorData = null;
 
@@ -410,6 +341,76 @@
                     }
                 });
             }
+        }
+
+        function addArticlesToIndikator() {
+            const articleIds = $('#articlesSelectAdd').val();
+
+            if (!articleIds || articleIds.length === 0) {
+                Swal.fire('Peringatan', 'Pilih artikel terlebih dahulu', 'warning');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route('indikator-spbe.add-article-from-detail') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    indikator_id: indikatorData.indikator.id,
+                    article_ids: articleIds
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Refresh the articles list
+                        showIndikatorDetail(indikatorData.indikator.id);
+
+                        // Reset the select2
+                        $('#articlesSelectAdd').val(null).trigger('change');
+
+                        Swal.fire('Berhasil', 'Artikel berhasil ditambahkan', 'success');
+                    } else {
+                        Swal.fire('Gagal', response.message || 'Gagal menambahkan artikel', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('Gagal', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+                }
+            });
+        }
+
+        function addForumsToIndikator() {
+            const forumIds = $('#forumsSelectAdd').val();
+
+            if (!forumIds || forumIds.length === 0) {
+                Swal.fire('Peringatan', 'Pilih forum terlebih dahulu', 'warning');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route('indikator-spbe.add-forum-from-detail') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    indikator_id: indikatorData.indikator.id,
+                    forum_ids: forumIds
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Refresh the forums list
+                        showIndikatorDetail(indikatorData.indikator.id);
+
+                        // Reset the select2
+                        $('#forumsSelectAdd').val(null).trigger('change');
+
+                        Swal.fire('Berhasil', 'Forum berhasil ditambahkan', 'success');
+                    } else {
+                        Swal.fire('Gagal', response.message || 'Gagal menambahkan forum', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('Gagal', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+                }
+            });
         }
     </script>
 @endsection
