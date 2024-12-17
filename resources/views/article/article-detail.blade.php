@@ -142,10 +142,11 @@
                         @endfor
                     </div>
 
-                    @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'pengguna-terdaftar' || session('user_informations.role') === 'manajer-konten' && $artikel->article_status == 'published' && !$userRating)
-                        <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
-                            Penilaian</button>
+
+                    @if (auth()->id() != $artikel->user_id && session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'pengguna-terdaftar' || session('user_informations.role') === 'manajer-konten' && $artikel->article_status == 'published' && !$userRating)
+                        <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah Penilaian</button>
                     @endif
+
                 </div>
 
                 <!-- User reviews -->

@@ -29,9 +29,10 @@
             Anda belum membuat artikel.
         </div>
     @else
-        <table class="table table-striped">
+    <div class="table-responsive">
+        <table class="table table-row-bordered table-hover">
             <thead>
-                <tr>
+                <tr class="text-gray-800 fw-bold fs-6">
                     <th>#</th>
                     <th>Judul Artikel</th>
                     <th>Kategori</th>
@@ -48,16 +49,16 @@
                         <td>{{ $article->category->category_name ?? 'Tidak Ada Kategori' }}</td>
                         <td>
                             @if($article->article_status === 'draft')
-                                <span class="badge bg-secondary">Draft</span>
+                            <span class="badge bg-secondary">Draft</span>
                             @elseif($article->article_status === 'in_review')
-                                <span class="badge bg-warning">Dalam Proses Validasi</span>
+                            <span class="badge bg-warning">Dalam Proses Validasi</span>
                             @elseif($article->article_status === 'published')
                                 <span class="badge bg-success">Dipublikasikan</span>
-                            @elseif($article->article_status === 'rejected')
+                                @elseif($article->article_status === 'rejected')
                                 <span class="badge bg-danger">Ditolak</span>
-                            @endif
-                        </td>
-                        <td>{{ $article->created_at->format('d M Y H:i') }}</td>
+                                @endif
+                            </td>
+                            <td>{{ $article->created_at->format('d M Y H:i') }}</td>
                         <td>
                             <a href="{{ route('article.show', $article->id) }}" class="btn btn-info btn-sm">Lihat Detail</a>
                         </td>
@@ -65,6 +66,7 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
     @endif
 </div>
 @endsection
