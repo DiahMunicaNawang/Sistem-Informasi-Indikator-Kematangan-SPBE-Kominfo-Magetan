@@ -25,10 +25,10 @@
             <div class="card-body">
                 <!-- Response Header -->
                 <div class="gap-3 mb-3 d-flex justify-content-between align-items-center">
-                    <div class="gap-3 d-flex">
-                        <img src="{{ $response->user->avatar ?? asset('assets/media/avatars/blank.png') }}"
-                            class="rounded-circle" width="48" height="48"
-                            alt="{{ $response->user->username }}" />
+                    <div class="d-flex">
+                        <div class="symbol symbol-50px me-5">
+                            <img src="{{ $response->user->avatar ? asset('storage/avatars/' . $response->user->avatar) : asset('assets/media/avatars/blank.png') }}" alt="{{ $response->user->username }}" />
+                        </div>
                         <div>
                             <h6 class="mb-1 fw-bold">{{ $response->user->username }}</h6>
                             <div class="text-muted small">
@@ -121,10 +121,10 @@
                                 <div class="card-body pe-0">
                                     <!-- Reply Header -->
                                     <div class="gap-3 mb-3 d-flex justify-content-between align-items-center">
-                                        <div class="gap-3 d-flex">
-                                            <img src="{{ $reply->user->avatar ?? asset('assets/media/avatars/blank.png') }}"
-                                                class="rounded-circle" width="40" height="40"
-                                                alt="{{ $reply->user->username }}" />
+                                        <div class="d-flex">
+                                            <div class="symbol symbol-50px me-5">
+                                                <img src="{{ $reply->user->avatar ? asset('storage/avatars/' . $reply->user->avatar) : asset('assets/media/avatars/blank.png') }}" alt="{{ $reply->user->username }}" />
+                                            </div>
                                             <div>
                                                 <h6 class="mb-1 fw-bold">{{ $reply->user->username }}</h6>
                                                 <div class="text-muted small">
@@ -165,7 +165,8 @@
                                         <form action="{{ route('forum-response.update', $reply) }}" method="POST">
                                             @csrf
                                             @method('PUT')
-                                            <input type="hidden" name="forum_discussion_id" value="{{ $forum_discussion->id }}">
+                                            <input type="hidden" name="forum_discussion_id"
+                                                value="{{ $forum_discussion->id }}">
                                             <div class="mb-3">
                                                 <textarea name="content" class="form-control bg-light" rows="2" placeholder="Tulis balasan Anda..." required
                                                     maxlength="1000">{{ $reply->content }}</textarea>

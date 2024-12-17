@@ -143,7 +143,7 @@
                 <div class="app-navbar-item ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                     <!--begin::Menu wrapper-->
                     <div class="cursor-pointer symbol symbol-35px symbol-md-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                        <img src="{{ asset("assets/media/avatars/300-1.jpg") }}" alt="user" />
+                        <img src="{{ session('user_informations.avatar') != null ? asset('storage/avatars/' . session('user_informations.avatar')) : asset('assets/media/avatars/blank.png') }}" alt="{{ session('user_informations.username') }}" />
                     </div>
                     <!--begin::User account menu-->
                     <div class="py-4 menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6 w-275px" data-kt-menu="true">
@@ -152,7 +152,7 @@
                             <div class="px-3 menu-content d-flex align-items-center">
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
-                                    <img alt="Logo" src="{{ asset("assets/media/avatars/300-1.jpg") }}" />
+                                    <img src="{{ session('user_informations.avatar') != null ? asset('storage/avatars/' . session('user_informations.avatar')) : asset('assets/media/avatars/blank.png') }}" alt="{{ session('user_informations.username') }}" />
                                 </div>
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
@@ -170,129 +170,7 @@
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="px-5 menu-item">
-                            <a href="../../demo1/dist/account/overview.html" class="px-5 menu-link">My Profile</a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="px-5 menu-item">
-                            <a href="../../demo1/dist/apps/projects/list.html" class="px-5 menu-link">
-                                <span class="menu-text">My Projects</span>
-                                <span class="menu-badge">
-                                    <span class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
-                                </span>
-                            </a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="px-5 menu-item" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
-                            <a href="#" class="px-5 menu-link">
-                                <span class="menu-title">My Subscription</span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <!--begin::Menu sub-->
-                            <div class="py-4 menu-sub menu-sub-dropdown w-175px">
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/referrals.html" class="px-5 menu-link">Referrals</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/billing.html" class="px-5 menu-link">Billing</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/statements.html" class="px-5 menu-link">Payments</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/statements.html" class="px-5 menu-link d-flex flex-stack">Statements
-                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="View your statements"></i></a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu separator-->
-                                <div class="my-2 separator"></div>
-                                <!--end::Menu separator-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <div class="px-3 menu-content">
-                                        <label class="form-check form-switch form-check-custom form-check-solid">
-                                            <input class="form-check-input w-30px h-20px" type="checkbox" value="1" checked="checked" name="notifications" />
-                                            <span class="form-check-label text-muted fs-7">Notifications</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <!--end::Menu item-->
-                            </div>
-                            <!--end::Menu sub-->
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="px-5 menu-item">
-                            <a href="../../demo1/dist/account/statements.html" class="px-5 menu-link">My Statements</a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu separator-->
-                        <div class="my-2 separator"></div>
-                        <!--end::Menu separator-->
-                        <!--begin::Menu item-->
-                        <div class="px-5 menu-item" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
-                            <a href="#" class="px-5 menu-link">
-                                <span class="menu-title position-relative">Language
-                                <span class="px-3 py-2 rounded fs-8 bg-light position-absolute translate-middle-y top-50 end-0">English
-                                <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset("assets/media/flags/united-states.svg") }}" alt="" /></span></span>
-                            </a>
-                            <!--begin::Menu sub-->
-                            <div class="py-4 menu-sub menu-sub-dropdown w-175px">
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/settings.html" class="px-5 menu-link d-flex active">
-                                    <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="{{ asset("assets/media/flags/united-states.svg") }}" alt="" />
-                                    </span>English</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/settings.html" class="px-5 menu-link d-flex">
-                                    <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="{{ asset("assets/media/flags/spain.svg") }}" alt="" />
-                                    </span>Spanish</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/settings.html" class="px-5 menu-link d-flex">
-                                    <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="{{ asset("assets/media/flags/germany.svg") }}" alt="" />
-                                    </span>German</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/settings.html" class="px-5 menu-link d-flex">
-                                    <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="{{ asset("assets/media/flags/japan.svg") }}" alt="" />
-                                    </span>Japanese</a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="px-3 menu-item">
-                                    <a href="../../demo1/dist/account/settings.html" class="px-5 menu-link d-flex">
-                                    <span class="symbol symbol-20px me-4">
-                                        <img class="rounded-1" src="{{ asset("assets/media/flags/france.svg") }}" alt="" />
-                                    </span>French</a>
-                                </div>
-                                <!--end::Menu item-->
-                            </div>
-                            <!--end::Menu sub-->
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="px-5 my-1 menu-item">
-                            <a href="../../demo1/dist/account/settings.html" class="px-5 menu-link">Account Settings</a>
+                            <a href="{{ route('profile.show', session('user_informations.user_id')) }}" class="px-5 menu-link">My Profile</a>
                         </div>
                         <!--end::Menu item-->
                         <!--begin::Menu item-->

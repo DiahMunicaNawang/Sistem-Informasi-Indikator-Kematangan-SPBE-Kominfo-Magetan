@@ -16,6 +16,7 @@ use App\Http\Controllers\Forum\ForumCategoryController;
 use App\Http\Controllers\Forum\ForumResponseController;
 use App\Http\Controllers\Forum\ForumDiscussionController;
 use App\Http\Controllers\IndikatorSPBE\IndikatorSPBEController;
+use App\Http\Controllers\ProfileController;
 
 // Main routes
 Route::middleware('auth', 'verified')->group(function () {
@@ -33,6 +34,10 @@ Route::middleware('auth', 'verified')->group(function () {
     // User
     // Route::get('users', [UserController::class, 'index'])->name('users');
     Route::resource('user', UserController::class);
+
+    // Profile
+    Route::resource('profile', ProfileController::class);
+    Route::put('profile/remove-avatar/{id}', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
 
     // Indikator SPBE
     Route::resource('/indikator-spbe', IndikatorSPBEController::class);

@@ -17,12 +17,11 @@
                         <div class="card-body">
                             {{-- Discussion Header --}}
                             <div class="mb-3 d-flex justify-content-between align-items-start">
-                                <div class="gap-3 d-flex">
+                                <div class="gap-5 d-flex">
                                     <div class="position-relative">
-                                        <div class="symbol symbol-45px me-2">
-                                            <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" class="rounded-circle"
-                                                alt="{{ $forum_discussion->user->username }}"
-                                                style="width: 45px; height: 45px; object-fit: cover;">
+                                        <div class="symbol symbol-50px">
+                                            <img src="{{ $forum_discussion->user->avatar ? asset('storage/avatars/' . $forum_discussion->user->avatar) : asset('assets/media/avatars/blank.png') }}"
+                                                alt="{{ $forum_discussion->user->username }}">
                                         </div>
                                     </div>
                                     <div>
