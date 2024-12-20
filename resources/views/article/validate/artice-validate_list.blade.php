@@ -1,8 +1,8 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('article.index') }}">
-        <i class="bi bi-arrow-left-square-fill text-muted" style="font-size: 34px"></i>
+    <a href="{{ route('article.index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left-square-fill" style="font-size: 34px"></i>
     </a>
 @endsection
 

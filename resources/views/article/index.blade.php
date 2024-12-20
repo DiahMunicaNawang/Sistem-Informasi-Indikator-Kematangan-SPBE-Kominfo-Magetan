@@ -87,29 +87,25 @@
         }
     </style>
 
-    <h1 class="header-title text-primary">Jelajahi Artikel</h1>
+    <div class="container mt-5">
+        <h1 class="header-title text-primary text-center mb-4">Jelajahi Artikel</h1>
 
-    <div class="d-flex flex-column align-items-center">
-        <div class="mb-4 col-auto">
-            <form action="{{ route('article.index') }}" method="GET">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari artikel....."
-                        value="{{ request()->get('search') }}">
-                    <button class="btn-sm btn btn-primary" type="submit">
+        <div class="d-flex flex-column align-items-center">
+            <div class="mb-4 col-md-6 col-sm-8">
+                <form action="{{ route('article.index') }}" method="GET" class="d-flex">
+                    <input type="text" name="search" class="form-control form-control-sm me-2"
+                        placeholder="Cari artikel....." value="{{ request()->get('search') }}">
+                    <button class="btn btn-sm btn-primary me-2" type="submit">
                         <i class="bi bi-search me-1"></i>Search
                     </button>
-                </div>
-            </form>
-            <script>
-                document.querySelector('form').addEventListener('submit', function() {
-                    // Tambahkan efek loading atau disable tombol saat proses pencarian
-                    const button = this.querySelector('button[type="submit"]');
-                    button.disabled = true;
-                    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mencari...';
-                });
-            </script>
+                    <a href="{{ route('article.index') }}" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i>Clear
+                    </a>
+                </form>
+            </div>
         </div>
     </div>
+
 
     <div class="mb-4 row g-3 d-flex justify-content-center">
         @if (session('user_informations.role') === 'super-admin' ||
@@ -215,6 +211,17 @@
                 </div>
             @endforeach
         </div>
+
+
+        {{-- JavaScript --}}
+        <script>
+            document.querySelector('form').addEventListener('submit', function() {
+                // Tambahkan efek loading atau disable tombol saat proses pencarian
+                const button = this.querySelector('button[type="submit"]');
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mencari...';
+            });
+        </script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script type="text/javascript">
