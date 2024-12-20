@@ -1,8 +1,8 @@
 @extends('layouts.main.index')
 
 @section('back-button')
-    <a href="{{ route('article.index') }}" class="btn btn-light">
-        <i class="fas fa-arrow-left"></i>
+    <a href="{{ url()->previous() }}">
+        <i class="bi bi-arrow-left-square-fill text-muted" style="font-size: 34px"></i>
     </a>
 @endsection
 
@@ -142,10 +142,17 @@
                         @endfor
                     </div>
 
-                    @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'pengguna-terdaftar' || session('user_informations.role') === 'manajer-konten' && $artikel->article_status == 'published' && !$userRating)
+
+                    @if (
+                        (auth()->id() != $artikel->user_id && session('user_informations.role') === 'super-admin') ||
+                            session('user_informations.role') === 'pengguna-terdaftar' ||
+                            (session('user_informations.role') === 'manajer-konten' &&
+                                $artikel->article_status == 'published' &&
+                                !$userRating))
                         <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
                             Penilaian</button>
                     @endif
+
                 </div>
 
                 <!-- User reviews -->
@@ -154,14 +161,15 @@
                         <div class="card-body">
                             <p>
                                 <strong>{{ $rating->user->username }} @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fas fa-star"
-                                        style="color: {{ $i <= $rating->rating_value ? '#FFD700' : '#ccc' }};"></i>
-                                @endfor</strong>
-                                <br>
+                                        <i class="fas fa-star"
+                                            style="color: {{ $i <= $rating->rating_value ? '#FFD700' : '#ccc' }};"></i>
+                                    @endfor
+                                </strong>
                                 @if ($rating->rater_user_id == auth()->id())
-                                    <strong>(Anda)</strong>
+                                    <strong class="text-muted">(You)</strong>
                                 @endif
-                                {{ $rating->rating_date}}
+                                <br>
+                                {{ $rating->rating_date }}
                                 <br>
 
                             </p>
