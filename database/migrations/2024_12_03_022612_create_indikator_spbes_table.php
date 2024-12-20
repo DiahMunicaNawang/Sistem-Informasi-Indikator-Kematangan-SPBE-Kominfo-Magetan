@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('current_level');
             $table->text('target_level');
             $table->string('related_documentation')->nullable();
-            $table->string('person_in_charge')->nullable();
+            $table->string('person_in_charge');
             $table->timestamp('date_added');
             $table->timestamp('last_updated_date');
         });
