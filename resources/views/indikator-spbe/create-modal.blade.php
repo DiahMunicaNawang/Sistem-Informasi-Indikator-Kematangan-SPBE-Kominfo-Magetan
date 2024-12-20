@@ -6,7 +6,8 @@
                 <h5 class="modal-title" id="createIndikatorModalLabel">Tambah Indikator SPBE Baru</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="createIndikatorForm" action="{{ route('indikator-spbe.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="createIndikatorForm" action="{{ route('indikator-spbe.store') }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -20,7 +21,8 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <label class="form-label required">Penanggung Jawab</label>
-                            <input type="text" class="form-control @error('person_in_charge', 'store') is-invalid @enderror"
+                            <input type="text"
+                                class="form-control @error('person_in_charge', 'store') is-invalid @enderror"
                                 name="person_in_charge" value="{{ old('person_in_charge') }}">
                             @error('person_in_charge', 'store')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -85,14 +87,17 @@
 
                         <div class="mb-3 col-md-12">
                             <label class="form-label required">Penjelasan</label>
-                            <textarea class="form-control @error('explanation', 'store') is-invalid @enderror" name="explanation" rows="3">{{ old('explanation') }}</textarea>
+                            <textarea id="explanationCreate" class="form-control @error('explanation', 'store') is-invalid @enderror"
+                                name="explanation" rows="3">{{ old('explanation') }}</textarea>
                             @error('explanation', 'store')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="mb-3 col-md-12">
                             <label class="form-label required">Informasi Aturan</label>
-                            <textarea class="form-control @error('rule_information', 'store') is-invalid @enderror" name="rule_information" rows="3">{{ old('rule_information') }}</textarea>
+                            <textarea class="form-control @error('rule_information', 'store') is-invalid @enderror" name="rule_information"
+                                rows="3">{{ old('rule_information') }}</textarea>
                             @error('rule_information', 'store')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -106,8 +111,8 @@
                         </div>
                         <div class="mb-3 col-md-12">
                             <label for="related_documentation">Dokumentasi Terkait (opsional)</label>
-                            <input type="file" class="form-control" id="related_documentation"
-                                name="related_documentation">
+                            <input type="file" class="form-control @error('related_documentation', 'store') is-invalid @enderror" id="related_documentation"
+                                name="related_documentation" accept="application/pdf">
                             <small class="form-text text-muted">Upload a PDF file.</small>
                             @error('related_documentation', 'store')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -120,7 +125,9 @@
                             <select name="articles[]" id="articlesSelectCreate" class="form-control"
                                 multiple="multiple">
                                 @foreach ($articles as $article)
-                                    <option value="{{ $article->id }}" {{ in_array($article->id, old('articles', [])) ? 'selected' : '' }}>{{ $article->title }}</option>
+                                    <option value="{{ $article->id }}"
+                                        {{ in_array($article->id, old('articles', [])) ? 'selected' : '' }}>
+                                        {{ $article->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -131,7 +138,9 @@
                             <select name="forums[]" id="forumsSelectCreate" class="form-control"
                                 multiple="multiple">
                                 @foreach ($forums as $forum)
-                                    <option value="{{ $forum->id }}" {{ in_array($forum->id, old('forums', [])) ? 'selected' : '' }}>{{ $forum->title }}</option>
+                                    <option value="{{ $forum->id }}"
+                                        {{ in_array($forum->id, old('forums', [])) ? 'selected' : '' }}>
+                                        {{ $forum->title }}</option>
                                 @endforeach
                             </select>
                         </div>

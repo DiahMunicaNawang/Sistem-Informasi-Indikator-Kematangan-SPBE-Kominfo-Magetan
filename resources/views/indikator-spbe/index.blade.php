@@ -150,6 +150,7 @@
 
             @if ($errors->update->any())
                 $('#editIndikatorModal').modal('show');
+                editIndikator();
             @endif
         });
 
@@ -160,12 +161,13 @@
         }
 
         function showIndikatorDetail(id) {
+            console.log('idb', id)
             $.ajax({
                 url: '{{ route('indikator-spbe.show', ':id') }}'.replace(':id', id),
                 method: 'GET',
                 success: function(data) {
                     indikatorData = data;
-                    console.log('Indikator Data:', data); // Tambahkan logging ini
+                    console.log('Indikator Data:', data.indikator.explanation); // Tambahkan logging ini
 
                     $('#detailName').text(data.indikator.name);
                     $('#detailPersonInCharge').text(data.indikator.person_in_charge);
@@ -218,6 +220,9 @@
 
                     // Tampilkan modal
                     $('#detailIndikatorModal').modal('show');
+
+                    // Simpan indikatorId ke sessionStorage agar saat edit memiliki id
+                    sessionStorage.setItem('indikatorId', data.indikator.id);
                 },
                 error: function() {
                     alert('Terjadi kesalahan, coba lagi!');
@@ -228,69 +233,91 @@
         }
 
         function editIndikator() {
-            $('#editIndikatorForm').attr('action', `/indikator-spbe/${indikatorData.indikator.id}`);
-            // Isi inputan nama
-            $('#editName').val(indikatorData.indikator.name);
 
-            // Isi inputan penanggung jawab
-            $('#editPersonInCharge').val(indikatorData.indikator.person_in_charge);
+            const indikatorId = sessionStorage.getItem('indikatorId');
 
-            // Current Level
-            if (indikatorData.indikator.current_level) {
-                const currentRadio = indikatorData.indikator.current_level.split(' - ')[0].trim(); // Ambil "Level x"
-                $(`input[name="current_level_radio"][value="${currentRadio}"]`).prop('checked', true); // Pilih radio
-                $('#editCurrentLevelDescription').val(indikatorData.indikator.current_level.split(' - ')[1]?.trim() ||
-                    ''); // Ambil deskripsi
-            }
+            $.ajax({
+                url: '{{ route('indikator-spbe.show', ':id') }}'.replace(':id', indikatorId),
+                method: 'GET',
+                success: function(data) {
+                    const actionUrl = '{{ route('indikator-spbe.update', ':id') }}'.replace(':id',
+                    indikatorId);
+                    $('#editIndikatorForm').attr('action', actionUrl); // Mengganti action form
 
-            // Target Level
-            if (indikatorData.indikator.target_level) {
-                const targetRadio = indikatorData.indikator.target_level.split(' - ')[0].trim(); // Ambil "Level x"
-                $(`input[name="target_level_radio"][value="${targetRadio}"]`).prop('checked', true); // Pilih radio
-                $('#editTargetLevelDescription').val(indikatorData.indikator.target_level.split(' - ')[1]?.trim() ||
-                    ''); // Ambil deskripsi
-            }
+                    // Isi inputan nama
+                    $('#editName').val(data.indikator.name);
+
+                    // Isi inputan penanggung jawab
+                    $('#editPersonInCharge').val(data.indikator.person_in_charge);
+
+                    // Current Level
+                    if (data.indikator.current_level) {
+                        const currentRadio = data.indikator.current_level.split(' - ')[0]
+                            .trim(); // Ambil "Level x"
+                        $(`input[name="current_level_radio"][value="${currentRadio}"]`).prop('checked',
+                            true); // Pilih radio
+                        $('#editCurrentLevelDescription').val(data.indikator.current_level.split(' - ')[1]
+                            ?.trim() ||
+                            ''); // Ambil deskripsi
+                    }
+
+                    // Target Level
+                    if (data.indikator.target_level) {
+                        const targetRadio = data.indikator.target_level.split(' - ')[0]
+                            .trim(); // Ambil "Level x"
+                        $(`input[name="target_level_radio"][value="${targetRadio}"]`).prop('checked',
+                            true); // Pilih radio
+                        $('#editTargetLevelDescription').val(data.indikator.target_level.split(' - ')[1]
+                            ?.trim() ||
+                            ''); // Ambil deskripsi
+                    }
+
+                    // Isi inputan penjelasan
+                    if (explanationEditEditor) {
+                        explanationEditEditor.setData(data.indikator.explanation || '');
+                    }
+
+                    // Isi inputan informasi aturan
+                    $('#editRuleInformation').val(data.indikator.rule_information);
+
+                    // Isi inputan kriteria
+                    $('#editCriteria').val(data.indikator.criteria);
+
+                    // Isi inputan dokumentasi terkait
+                    if (data.indikator.related_documentation) {
+                        let docUrl = '{{ asset('storage/related_documentations/') }}/' + data.indikator
+                            .related_documentation;
+                        $('#detailDocumentationEdit').attr('href', docUrl).show();
+                    } else {
+                        $('#detailDocumentationEdit').hide();
+                    }
+
+                    // Gunakan data tambahan jika ada
+                    const allArticles = data.indikator.articles || [];
+                    const allForums = data.indikator.forums || [];
+
+                    // Set artikel yang sudah terpilih
+                    if (allArticles && allArticles.length > 0) {
+                        const articleIds = allArticles.map(article => article.id);
+                        $('#articlesSelectEdit').val(articleIds).trigger('change');
+                        console.log('Selected Articles:', $('#articlesSelectEdit').val());
+                    }
+
+                    // Set forum yang sudah terpilih
+                    if (allForums && allForums.length > 0) {
+                        const forumIds = allForums.map(forum => forum.id);
+                        $('#forumsSelectEdit').val(forumIds).trigger('change');
+                        console.log('Selected Forums:', $('#forumsSelectEdit').val());
+                    }
 
 
-            // Isi inputan penjelasan
-            $('#editExplanation').val(indikatorData.indikator.explanation);
-
-            // Isi inputan informasi aturan
-            $('#editRuleInformation').val(indikatorData.indikator.rule_information);
-
-            // Isi inputan kriteria
-            $('#editCriteria').val(indikatorData.indikator.criteria);
-
-            // Isi inputan dokumentasi terkait
-            if (indikatorData.indikator.related_documentation) {
-                let docUrl = '{{ asset('storage/related_documentations/') }}/' + indikatorData.indikator
-                    .related_documentation;
-                $('#detailDocumentationEdit').attr('href', docUrl).show();
-            } else {
-                $('#detailDocumentationEdit').hide();
-            }
-
-            // Gunakan data tambahan jika ada
-            const allArticles = indikatorData.indikator.articles || [];
-            const allForums = indikatorData.indikator.forums || [];
-            console.log(allArticles, allForums);
-
-            // Set artikel yang sudah terpilih
-            if (allArticles && allArticles.length > 0) {
-                const articleIds = allArticles.map(article => article.id);
-                $('#articlesSelectEdit').val(articleIds).trigger('change');
-                console.log('Selected Articles:', $('#articlesSelectEdit').val());
-            }
-
-            // Set forum yang sudah terpilih
-            if (allForums && allForums.length > 0) {
-                const forumIds = allForums.map(forum => forum.id);
-                $('#forumsSelectEdit').val(forumIds).trigger('change');
-                console.log('Selected Forums:', $('#forumsSelectEdit').val());
-            }
-
-            $('#detailIndikatorModal').modal('hide');
-            $('#editIndikatorModal').modal('show');
+                    $('#detailIndikatorModal').modal('hide');
+                    $('#editIndikatorModal').modal('show');
+                },
+                error: function() {
+                    alert('Terjadi kesalahan, coba lagi!');
+                }
+            });
         }
 
         function deleteIndikator(indikatorData) {
@@ -411,5 +438,36 @@
                 }
             });
         }
+    </script>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#explanationCreate'), {
+                toolbar: [
+                    'heading', '|', 'bold', 'italic', 'link',
+                    'bulletedList', 'numberedList', 'blockQuote'
+                ]
+            })
+            .then(editor => {
+                explanationEditEditor = editor; // Simpan referensi editor
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#explanationEdit'), {
+                toolbar: [
+                    'heading', '|', 'bold', 'italic', 'link',
+                    'bulletedList', 'numberedList', 'blockQuote'
+                ]
+            })
+            .then(editor => {
+                explanationEditEditor = editor; // Simpan referensi editor
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
 @endsection

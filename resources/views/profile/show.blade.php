@@ -128,7 +128,7 @@
 
                         <!--begin::Col-->
                         <div class="col-lg-8 fv-row">
-                            <a href="" class="btn btn-outline btn-outline-primary">Ubah Password</a>
+                            <a href="{{ route('profile.change-password-form') }}" class="btn btn-outline btn-outline-primary">Ubah Password</a>
                         </div>
                         <!--end::Col-->
                     </div>

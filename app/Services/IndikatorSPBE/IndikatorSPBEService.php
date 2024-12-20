@@ -96,7 +96,6 @@ class IndikatorSPBEService
             'target_level' => $data['target_level_radio'] . " - " . $data['target_level'],
             'related_documentation' => $fileName,
             'person_in_charge' => $data['person_in_charge'],
-            'date_added' => $data['date_added'],
             'last_updated_date' => now(),
             'status' => 'active',
         ]);
