@@ -162,6 +162,7 @@
         }
 
         function showIndikatorDetail(id) {
+            console.log('idb', id)
             $.ajax({
                 url: '{{ route('indikator-spbe.show', ':id') }}'.replace(':id', id),
                 method: 'GET',

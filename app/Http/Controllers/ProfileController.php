@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileChangePasswordRequest;
 use App\Http\Requests\ProfileRequest;
 use App\Services\ProfileService;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class ProfileController extends Controller
     public function show($id)
     {
         $data = $this->profileService->showProfile($id);
-        return view('profile.index', $data);
+        return view('profile.show', $data);
     }
 
     /**
@@ -36,5 +37,14 @@ class ProfileController extends Controller
     public function removeAvatar($id) {
         $this->profileService->removeAvatar($id);
         return redirect()->route('profile.show', session('user_informations.user_id'))->with('success', 'Avatar berhasil dihapus');
+    }
+
+    public function changePasswordForm() {
+        return view('profile.change-password-form');
+    }
+
+    public function changePassword(ProfileChangePasswordRequest $request, $id) {
+        $this->profileService->changePassword($request->all(), $id);
+        return redirect()->route('profile.show', session('user_informations.user_id'))->with('success', 'Password berhasil direset');
     }
 }

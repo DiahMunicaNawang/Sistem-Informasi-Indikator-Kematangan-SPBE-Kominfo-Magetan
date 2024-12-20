@@ -36,8 +36,11 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('user', UserController::class);
 
     // Profile
-    Route::resource('profile', ProfileController::class);
+    Route::get('profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('profile/remove-avatar/{id}', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+    Route::get('profile/change-password/form', [ProfileController::class, 'changePasswordForm'])->name('profile.change-password-form');
+    Route::put('profile/change-password-reset/{id}', [ProfileController::class, 'changePassword'])->name('profile.change-password');
 
     // Indikator SPBE
     Route::resource('/indikator-spbe', IndikatorSPBEController::class);

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -53,6 +54,18 @@ class ProfileService
         ]);
         
         session()->put('user_informations.avatar', null);
+
+        return $user;
+    }
+
+    public function changePassword(array $data, int $id) {
+        $user = User::findOrFail($id);
+
+        if (Hash::check($data['old_password'], $user->password)) {
+            $user->update([
+                'password' => Hash::make($data['new_password'])
+            ]);
+        }
 
         return $user;
     }
