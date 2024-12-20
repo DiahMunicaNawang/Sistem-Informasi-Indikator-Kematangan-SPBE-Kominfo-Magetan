@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="editIndikatorModalLabel">Edit Indikator SPBE</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editIndikatorForm" method="POST" enctype="multipart/form-data">
+            <form id="editIndikatorForm" method="POST" action="{{ route('indikator-spbe.update', ':id') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
@@ -87,7 +87,7 @@
 
                         <div class="mb-3 col-md-12">
                             <label class="form-label required">Penjelasan</label>
-                            <textarea class="form-control @error('explanation', 'update') is-invalid @enderror" name="explanation"
+                            <textarea id="explanationEdit" class="form-control @error('explanation', 'update') is-invalid @enderror" name="explanation"
                                 id="editExplanation" rows="3">{{ old('explanation') }}</textarea>
                             @error('explanation', 'update')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -113,8 +113,8 @@
                             <label for="related_documentation">Dokumentasi Terkait (opsional)</label>
                             <div class="flex-wrap gap-2 d-flex">
                                 <div class="flex-grow-1">
-                                    <input type="file" class="form-control" id="related_documentation"
-                                    name="related_documentation">
+                                    <input type="file" class="form-control @error('related_documentation', 'update') is-invalid @enderror" id="related_documentation"
+                                    name="related_documentation" accept="application/pdf">
                                 </div>
                                 <div>
                                     <a href="#" id="detailDocumentationEdit" target="_blank" class="btn btn-light-danger">
@@ -124,7 +124,7 @@
                             </div>
                             <small class="form-text text-muted">Upload a PDF file.</small>
                             @error('related_documentation', 'update')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
