@@ -1,4 +1,4 @@
-`@extends('layouts.main.index')
+@extends('layouts.main.index')
 
 @section('back-button')
     <a href="{{ url()->previous() }}">
@@ -6,25 +6,9 @@
     </a>
 @endsection
 
-@section('page-name', 'Buat Artikel')
+@section('page-name', 'Edit Artikel')
 
 @section('content')
-    @if ($errors->any())
-        <div class="alert alert-danger" role="alert">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
     <style>
         /* Default light theme variables */
         :root {
@@ -68,29 +52,39 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
+    @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="container mt-5">
-        <form action="{{ route('article.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('article.update', $article->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
+
             <!-- Judul -->
             <div class="mb-3">
                 <label for="judul" class="form-label">Judul</label>
                 <input type="text" name="judul" id="judul" class="form-control"
-                    placeholder="Masukkan Judul Artikel">
+                    value="{{ old('judul', $article->title) }}">
             </div>
 
             <!-- Ringkasan Artikel -->
             <div class="mb-3">
                 <label for="ringkasan" class="form-label">Ringkasan Artikel</label>
                 <input type="text" name="ringkasan" id="ringkasan" class="form-control"
-                    placeholder="Masukkan Ringkasan Artikel">
+                    value="{{ old('ringkasan', $article->article_summary) }}">
             </div>
 
             <!-- Konten -->
             <div class="mb-3">
                 <label for="konten" class="form-label">Konten</label>
-                <textarea name="konten" id="konten" class="form-control" rows="10"
-                    placeholder="Masukkan konten artikel di sini"></textarea>
+                <textarea name="konten" id="konten" class="form-control" rows="10">{{ old('konten', $article->article_content) }}</textarea>
             </div>
 
             <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
@@ -109,14 +103,12 @@
 
             <!-- Kategori -->
             <div class="mb-3">
-                <label for="kategori" class="form-label">Kategori
-                    @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
-                        | <a href="{{ route('article.createCategory') }}"">Add Category</a>
-                    @endif
-                </label>
+                <label for="kategori" class="form-label">Kategori</label>
                 <select name="kategori" id="kategori" class="form-select">
-                    @foreach ($artikel_category as $data)
-                        <option value="{{ $data->id }}">{{ $data->category_name }}</option>
+                    @foreach ($article_category as $data)
+                        <option value="{{ $data->id }}" {{ $article->category_id == $data->id ? 'selected' : '' }}>
+                            {{ $data->category_name }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -127,31 +119,30 @@
                 <select name="indikator[]" id="indikator" class="form-control" multiple="multiple">
                     @foreach ($indikatorSpbe as $indikator)
                         <option value="{{ $indikator->id }}"
-                            {{ in_array($indikator->id, old('indikator', $indikatorOld)) ? 'selected' : '' }}>
+                            {{ in_array($indikator->id, $article->indikatorSpbes->pluck('id')->toArray()) ? 'selected' : '' }}>
                             {{ $indikator->name }}
                         </option>
                     @endforeach
                 </select>
-                @error('indikator')
-                    <p class="text-danger">{{ $message }}</p>
-                @enderror
             </div>
 
             <!-- Image Thumbnail -->
             <div class="mb-3">
                 <label for="image" class="form-label">Image thumbnail</label>
                 <input type="file" name="image" id="image" class="form-control">
+                @if ($article->image)
+                    <p>Current Image:</p>
+                    <img src="{{ asset('storage/' . $article->image) }}" alt="Article Image" width="150">
+                @endif
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 
-
     <script>
         $(document).ready(function() {
-            // Initialize Select2
             $('#indikator').select2({
                 placeholder: 'Pilih indikator terkait',
                 allowClear: true

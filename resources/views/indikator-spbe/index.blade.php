@@ -49,7 +49,7 @@
                                 </td>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $indikator->name }}</td>
-                                <td>{{ $indikator->explanation }}</td>
+                                <td>{!! Str::limit(strip_tags($indikator->explanation), 100, '...') !!}</td>
                                 <td>{{ $indikator->criteria }}</td>
                                 <td>{{ $indikator->current_level }}</td>
                                 <td>{{ $indikator->target_level }}</td>
@@ -74,15 +74,14 @@
                         @endforeach
                     </tbody>
                 </table>
-
-                @if ($indikators->hasPages())
-                    <div class="mt-4 d-flex justify-content-end">
-                        {{ $indikators->links() }}
-                    </div>
-                @endif
             </div>
         </div>
     </div>
+    @if ($indikators->hasPages())
+        <div class="mt-4 d-flex justify-content-end">
+            {{ $indikators->links('pagination::bootstrap-5') }}
+        </div>
+    @endif
 
     <!-- New Create Indikator Modal -->
     @include('indikator-spbe.create-modal')
@@ -241,7 +240,7 @@
                     $('#detailPersonInCharge').text(data.indikator.person_in_charge);
                     $('#detailCurrentLevel').text(data.indikator.current_level);
                     $('#detailTargetLevel').text(data.indikator.target_level);
-                    $('#detailExplanation').text(data.indikator.explanation);
+                    $('#detailExplanation').html(data.indikator.explanation);
                     $('#detailRuleInformation').text(data.indikator.rule_information);
                     $('#detailCriteria').text(data.indikator.criteria);
 
