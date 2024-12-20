@@ -3,15 +3,17 @@
 namespace App\Services\Article;
 
 use App\Models\Article\Article;
-use App\Models\Article\ArticleRating;
-use App\Models\Article\ArticleCategory;
-use App\Models\Article\ArticleValidation;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Article\ArticleRating;
+use App\Models\Article\ArticleCategory;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Article\ArticleValidation;
 use Illuminate\Database\Eloquent\Builder;
 use App\Mail\ArticleValidationNotification;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Article\StoreArticleRequest;
 
 class ArticleService
 {
@@ -52,7 +54,7 @@ class ArticleService
         if (isset($data['indikator']) && is_array($data['indikator'])) {
             $now = now();
             $pivotData = [];
-            foreach ($data['indikator'] as $indikatorId){
+            foreach ($data['indikator'] as $indikatorId) {
                 $pivotData[$indikatorId] = [
                     'created_at' => $now,
                     'updated_at' => $now,
@@ -112,6 +114,41 @@ class ArticleService
             ->orderByDesc('updated_at')
             ->get();
     }
+
+    // Update Artikel
+    public function updateArticle($data, $id)
+    {
+        // Ambil artikel berdasarkan ID
+        $article = Article::findOrFail($id);
+
+        // Update data artikel
+        $article->title = $data['judul'];
+        $article->article_summary = $data['ringkasan'];
+        $article->article_content = $data['konten'];
+        $article->category_id = $data['kategori'];
+
+        // Handle image upload
+        if (isset($data['image']) && $data['image']->isValid()) {
+            // Hapus gambar lama jika ada
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
+
+            // Simpan gambar baru
+            $imagePath = $data['image']->store('article_images', 'public');
+            $article->image = $imagePath;
+        }
+
+        $article->save();
+
+        // Sync Indikator Terkait
+        if (isset($data['indikator'])) {
+            $article->indikatorSpbes()->sync($data['indikator']);
+        }
+
+        return $article;
+    }
+
 
     // Mendapatkan artikel untuk validasi
     public function getArticleForValidation($id)

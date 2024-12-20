@@ -14,7 +14,7 @@ return new class extends Migration
     {
         DB::statement("DROP TYPE IF EXISTS indikator_spbe_status_enum");
         DB::statement("CREATE TYPE indikator_spbe_status_enum AS ENUM ('active', 'inactive')");
-        
+
         Schema::create('indikator_spbes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -24,12 +24,12 @@ return new class extends Migration
             $table->text('current_level');
             $table->text('target_level');
             $table->string('related_documentation')->nullable();
-            $table->string('person_in_charge');
+            $table->string('person_in_charge')->nullable();
             $table->timestamp('date_added');
             $table->timestamp('last_updated_date');
         });
 
-        
+
         DB::statement('ALTER TABLE indikator_spbes ADD COLUMN status indikator_spbe_status_enum DEFAULT \'active\'');
     }
 

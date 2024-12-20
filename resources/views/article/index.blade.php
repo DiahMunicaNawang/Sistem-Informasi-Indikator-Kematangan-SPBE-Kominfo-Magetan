@@ -1,11 +1,5 @@
 @extends('layouts.main.index')
 
-@section('back-button')
-    <a href="{{ route('indikator-spbe.index') }}" class="btn btn-light">
-        <i class="fas fa-arrow-left"></i>
-    </a>
-@endsection
-
 
 @section('content')
     @if (session('success'))
@@ -93,52 +87,70 @@
         }
     </style>
 
-    <h1 class="header-title">Jelajahi Artikel</h1>
+    <h1 class="header-title text-primary">Jelajahi Artikel</h1>
 
-    <div class="mx-4 mb-3 button-container">
-        <form action="{{ route('article.index') }}" method="GET" class="mb-2 search-form d-flex">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Cari artikel..."
-                    value="{{ request()->get('search') }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Cari
-                </button>
+    <div class="mb-4 row g-3 align-items-center">
+
+        @if (session('user_informations.role') === 'super-admin' ||
+                session('user_informations.role') === 'pengguna-terdaftar' ||
+                session('user_informations.role') === 'manajer-konten')
+            <div class="col-12 col-md-auto">
+                <a href="{{ route('article.create') }}" class="btn-sm btn btn-light-success w-100">
+                    <i class="bi bi-plus-circle me-2"></i>Add Article
+                </a>
             </div>
-        </form>
+        @endif
 
-        <div class="button-group">
-            @if (session('user_informations.role') === 'super-admin' ||
-                    session('user_informations.role') === 'pengguna-terdaftar' ||
-                    session('user_informations.role') === 'manajer-konten')
-                <a href="{{ route('article.checkArticle') }}" class="btn btn-primary">
-                    <i class="fas fa-eye"></i> Lihat Artikel Saya
+        @if (session('user_informations.role') === 'super-admin' ||
+                session('user_informations.role') === 'pengguna-terdaftar' ||
+                session('user_informations.role') === 'manajer-konten')
+            <div class="col-12 col-md-auto">
+                <a href="{{ route('article.checkArticle') }}" class="btn-sm btn btn-light-primary w-100">
+                    <i class="bi bi-archive me-2"></i>Check My Article
                 </a>
-            @endif
+            </div>
+        @endif
 
-            @if (session('user_informations.role') === 'super-admin' ||
-                    session('user_informations.role') === 'pengguna-terdaftar' ||
-                    session('user_informations.role') === 'manajer-konten')
-                <a href="{{ route('article.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Buat Artikel
+        @if (session('user_informations.role') === 'super-admin' ||
+                session('user_informations.role') === 'pengguna-terdaftar' ||
+                session('user_informations.role') === 'manajer-konten' ||
+                session('user_informations.role') === 'pengguna-umum')
+            <div class="col-12 col-md-auto">
+                <a href="{{ route('article.printPDF', ['search' => request()->get('search')]) }}"
+                    class="btn-sm btn btn-light-info w-100">
+                    <i class="bi bi-printer me-2"></i>Print Article
                 </a>
-            @endif
+            </div>
+        @endif
 
-            @if (session('user_informations.role') === 'super-admin' ||
-                    session('user_informations.role') === 'pengguna-terdaftar' ||
-                    session('user_informations.role') === 'manajer-konten' ||
-                    session('user_informations.role') === 'pengguna-umum')
-                <a href="{{ route('article.printPDF', ['search' => request()->get('search')]) }}" class="btn btn-primary">
-                    <i class="fas fa-print"></i> Cetak Artikel PDF
+        @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
+            <div class="col-12 col-md-auto">
+                <a href="{{ route('article.validateIndex') }}" class="btn-sm btn btn-light-danger w-100">
+                    <i class="bi bi-tags me-2"></i>Validation Article
                 </a>
-            @endif
-
-            @if (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten')
-                <a href="{{ route('article.validateIndex') }}" class="btn btn-primary">
-                    <i class="fas fa-check -circle"></i> Validasi Index
-                </a>
-            @endif
+            </div>
+        @endif
+        <div class="col-12 col-md">
+            <form action="{{ route('article.index') }}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control form-control-sm"
+                        placeholder="Cari artikel....." value="{{ request()->get('search') }}">
+                    <button class="btn-sm btn btn-primary" type="submit">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+                </div>
+            </form>
+            <script>
+                document.querySelector('form').addEventListener('submit', function() {
+                    // Tambahkan efek loading atau disable tombol saat proses pencarian
+                    const button = this.querySelector('button[type="submit"]');
+                    button.disabled = true;
+                    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mencari...';
+                });
+            </script>
         </div>
     </div>
+
 
     @if ($artikel->isEmpty())
         <div class="text-center alert alert-warning">

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Article\ArticleService;
 use App\Http\Requests\Article\StoreArticleRequest;
+use App\Models\Article\ArticleCategory;
 use App\Models\IndikatorSPBE;
 
 class ArtikelController extends Controller
@@ -64,6 +65,26 @@ class ArtikelController extends Controller
     {
         $this->articleService->deleteArticle($id);
         return redirect()->route('article.validateIndex')->with('success', 'Artikel berhasil di hapus');
+    }
+
+    public function edit($id)
+    {
+        $article = Article::findOrFail($id);
+        $article_category = ArticleCategory::get();
+        $indikatorSpbe = IndikatorSPBE::get();
+
+        return view('article.article-edit', compact('article', 'article_category', 'indikatorSpbe'));
+    }
+
+    // update
+    public function update(StoreArticleRequest $request, $id)
+    {
+        $validatedData = $request->validated();
+
+        // Panggil service untuk update artikel
+        $this->articleService->updateArticle($validatedData, $id);
+
+        return redirect()->route('article.index')->with('success', 'Artikel berhasil diperbarui!');
     }
 
 
@@ -125,11 +146,16 @@ class ArtikelController extends Controller
     }
 
 
-    // PrintPDF
+    // PrintPDF (tanpa services)
     public function printPDF(Request $request)
     {
         // Ambil keyword pencarian
         $search = $request->get('search');
+
+        // Validasi jika search kosong
+        if (empty($search)) {
+            return back()->with('error', 'Kata kunci pencarian tidak boleh kosong.');
+        }
 
         // Query artikel berdasarkan pencarian
         $articles = Article::with('ratings', 'category')
