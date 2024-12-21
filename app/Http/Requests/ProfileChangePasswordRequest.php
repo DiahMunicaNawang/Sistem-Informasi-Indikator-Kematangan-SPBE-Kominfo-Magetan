@@ -23,8 +23,8 @@ class ProfileChangePasswordRequest extends FormRequest
     {
         return [
             'old_password' => 'required|string|min:8',
-            'new_password' => 'required|string|min:8|confirmed',
-            'new_password_confirmation' => 'required|string|min:8',
+            'new_password' => 'required|string|min:8|confirmed:new_password_confirmation',
+            'new_password_confirmation' => 'required|string|min:8|confirmed:new_password',
         ];
     }
 
@@ -34,7 +34,7 @@ class ProfileChangePasswordRequest extends FormRequest
             'old_password.required' => 'Password lama wajib diisi!',
             'new_password.required' => 'Password baru wajib diisi!',
             'new_password_confirmation.required' => 'Konfirmasi password baru wajib diisi!',
-            'new_password.confirmed' => 'Password baru tidak cocok!',
+            'new_password.confirmed' => 'Konfirmasi password baru tidak cocok!',
             'new_password_confirmation.confirmed' => 'Konfirmasi password baru tidak cocok!',
             'old_password.min' => 'Password lama harus memiliki minimal 8 karakter!',
             'new_password.min' => 'Password baru harus memiliki minimal 8 karakter!',

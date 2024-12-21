@@ -13,7 +13,7 @@ class IndikatorSPBEService
 
     public function getAllIndikators()
     {
-        $indikators = IndikatorSPBE::with(['articles', 'forums'])->orderBy('date_added', 'desc')->paginate(10);
+        $indikators = IndikatorSPBE::with(['articles', 'forums'])->orderBy('date_added', 'asc')->paginate(10);
 
         $allArticles = Article::where('article_status', 'published')->get();
         $allForums = ForumDiscussion::where('approval_status', 'accepted')->orderBy('discussion_created_at', 'desc')->get();
@@ -65,8 +65,25 @@ class IndikatorSPBEService
     {
         $indikator = IndikatorSPBE::with(['articles', 'forums'])->findOrFail($id);
 
+        // Get IDs of already attached items
+        $attachedArticleIds = $indikator->articles->pluck('id')->toArray();
+        $attachedForumIds = $indikator->forums->pluck('id')->toArray();
+
+        // Get available (unattached) articles and forums
+        $availableArticles = Article::whereNotIn('id', $attachedArticleIds)
+            ->where('article_status', 'published')
+            ->select('id', 'title')
+            ->get();
+
+        $availableForums = ForumDiscussion::whereNotIn('id', $attachedForumIds)
+            ->where('approval_status', 'accepted')
+            ->select('id', 'title')
+            ->get();
+
         return [
-            'indikator' => $indikator
+            'indikator' => $indikator,
+            'availableArticles' => $availableArticles,
+            'availableForums' => $availableForums
         ];
     }
 

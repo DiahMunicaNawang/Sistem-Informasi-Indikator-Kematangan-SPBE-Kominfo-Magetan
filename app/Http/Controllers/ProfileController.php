@@ -44,7 +44,12 @@ class ProfileController extends Controller
     }
 
     public function changePassword(ProfileChangePasswordRequest $request, $id) {
-        $this->profileService->changePassword($request->all(), $id);
-        return redirect()->route('profile.show', session('user_informations.user_id'))->with('success', 'Password berhasil direset');
+        try {
+            $this->profileService->changePassword($request->all(), $id);
+            return redirect()->route('profile.show', session('user_informations.user_id'))->with('success', 'Password berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // Set session error
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
