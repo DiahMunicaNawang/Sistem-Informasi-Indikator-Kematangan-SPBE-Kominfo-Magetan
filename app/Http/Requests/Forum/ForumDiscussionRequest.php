@@ -22,7 +22,7 @@ class ForumDiscussionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
+            'title' => 'required|max:255',
             'description' => 'required',
             'forum_category_id' => 'required',
         ];
@@ -31,7 +31,8 @@ class ForumDiscussionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Nama kategori wajib diisi!',
+            'title.required' => 'Judul forum wajib diisi!',
+            'title.max' => 'Judul forum maksimal 255 karakter!',
             'description.required' => 'Deskripsi wajib diisi!',
             'forum_category_id.required' => 'Kategori forum wajib diisi!',
         ];

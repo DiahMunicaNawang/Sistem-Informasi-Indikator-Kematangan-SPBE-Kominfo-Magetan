@@ -31,8 +31,8 @@ class ForumResponseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'content.required' => 'Konten komentar wajib diisi!',
-            'content.max' => 'Konten komentar maksimal 1000 karakter!',
+            'content.required' => 'Tanggapan wajib diisi!',
+            'content.max' => 'Tanggapan maksimal 1000 karakter!',
             'forum_discussion_id.exists' => 'Diskusi forum tidak ditemukan!',
             'parent_id.exists' => 'Komentar parent tidak ditemukan!'
         ];
