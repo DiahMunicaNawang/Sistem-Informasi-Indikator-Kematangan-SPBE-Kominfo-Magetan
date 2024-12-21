@@ -24,7 +24,7 @@
         <div class="mb-4 border-0 card" id="response-{{ $response->id }}">
             <div class="card-body">
                 <!-- Response Header -->
-                <div class="gap-3 mb-3 d-flex justify-content-between align-items-center">
+                <div class="flex-wrap gap-3 mb-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex">
                         <div class="symbol symbol-50px me-5">
                             <img src="{{ $response->user->avatar ? asset('storage/avatars/' . $response->user->avatar) : asset('assets/media/avatars/blank.png') }}" alt="{{ $response->user->username }}" />
@@ -39,7 +39,7 @@
                     </div>
 
                     @if ($response->user_id === session('user_informations.user_id'))
-                        <div class="gap-2 d-flex justify-content-end flex-column flex-md-row">
+                        <div class="gap-2 d-flex justify-content-end">
                             <button type="button" class="btn btn-light btn-sm"
                                 onclick="toggleEditForm('{{ $response->id }}')">
                                 <i class="p-0 bi bi-pencil"></i>
@@ -120,7 +120,7 @@
                             <div class="mb-3" id="response-{{ $reply->id }}">
                                 <div class="card-body pe-0">
                                     <!-- Reply Header -->
-                                    <div class="gap-3 mb-3 d-flex justify-content-between align-items-center">
+                                    <div class="flex-wrap gap-3 mb-3 d-flex justify-content-between align-items-center">
                                         <div class="d-flex">
                                             <div class="symbol symbol-50px me-5">
                                                 <img src="{{ $reply->user->avatar ? asset('storage/avatars/' . $reply->user->avatar) : asset('assets/media/avatars/blank.png') }}" alt="{{ $reply->user->username }}" />
@@ -135,7 +135,7 @@
                                         </div>
 
                                         @if ($reply->user_id === session('user_informations.user_id'))
-                                            <div class="gap-2 d-flex justify-content-end flex-column flex-md-row">
+                                            <div class="gap-2 d-flex justify-content-end">
                                                 <button type="button" class="btn btn-light btn-sm"
                                                     onclick="toggleEditForm('{{ $reply->id }}')">
                                                     <i class="p-0 bi bi-pencil"></i>

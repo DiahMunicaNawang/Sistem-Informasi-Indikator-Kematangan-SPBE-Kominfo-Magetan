@@ -9,77 +9,78 @@
 @section('page-name', 'Daftar Pengajuan Forum')
 
 @section('content')
-    <article class="gap-3 mt-6 d-flex flex-column">
+    <article class="gap-3 d-flex flex-column">
         @foreach ($forum_discussions as $forum_discussion)
             <div class="row g-4">
                 <div class="col-12">
                     <div class="shadow-sm card h-100 hover-shadow">
                         <div class="card-body">
                             {{-- Discussion Header --}}
-                            <div class="mb-3 d-flex justify-content-between align-items-start">
-                                <div class="gap-5 d-flex">
+                            <div class="flex-wrap mb-3 d-flex justify-content-between align-items-start">
+                                <div class="flex-wrap gap-5 d-flex">
                                     <div class="position-relative">
                                         <div class="symbol symbol-50px">
                                             <img src="{{ $forum_discussion->user->avatar ? asset('storage/avatars/' . $forum_discussion->user->avatar) : asset('assets/media/avatars/blank.png') }}"
                                                 alt="{{ $forum_discussion->user->username }}">
                                         </div>
                                     </div>
+
                                     <div>
                                         <h6 class="mb-0">{{ $forum_discussion->user->username }}</h6>
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock me-1"></i>
+                                            {{ \Carbon\Carbon::parse($forum_discussion->discussion_created_at)->format('H:i - d M Y') }}
+                                        </small>
+                                    </div>
 
-                                        <div class="gap-2 d-flex align-items-center">
-                                            <small class="text-muted">
-                                                <i class="bi bi-clock me-1"></i>
-                                                {{ \Carbon\Carbon::parse($forum_discussion->discussion_created_at)->format('H:i - d M Y') }}
-                                            </small>
+                                    <div class="gap-2 mb-1 d-flex align-items-center">
+                                        {{-- Status Diskusi --}}
+                                        <span
+                                            class="badge {{ $forum_discussion->availability_status == 'open' ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger' }}"
+                                            style="font-size: 0.8rem; padding: 0.35em 0.8em;">
+                                            <i
+                                                class="bi {{ $forum_discussion->availability_status == 'open' ? 'bi-unlock text-success' : 'bi-lock text-danger' }} me-1"></i>
+                                            {{ $forum_discussion->availability_status == 'open' ? 'Diskusi Aktif' : 'Diskusi Ditutup' }}
+                                        </span>
 
-                                            {{-- Status Diskusi --}}
-                                            <span
-                                                class="badge {{ $forum_discussion->availability_status == 'open' ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger' }}"
-                                                style="font-size: 0.8rem; padding: 0.35em 0.8em;">
-                                                <i
-                                                    class="bi {{ $forum_discussion->availability_status == 'open' ? 'bi-unlock text-success' : 'bi-lock text-danger' }} me-1"></i>
-                                                {{ $forum_discussion->availability_status == 'open' ? 'Diskusi Aktif' : 'Diskusi Ditutup' }}
-                                            </span>
+                                        {{-- Status Approval --}}
+                                        @php
+                                            $approvalStatusClass = [
+                                                'process' => 'bg-warning bg-opacity-10 text-warning',
+                                                'accepted' => 'bg-success bg-opacity-10 text-success',
+                                                'rejected' => 'bg-danger bg-opacity-10 text-danger',
+                                            ];
 
-                                            {{-- Status Approval --}}
-                                            @php
-                                                $approvalStatusClass = [
-                                                    'process' => 'bg-warning bg-opacity-10 text-warning',
-                                                    'accepted' => 'bg-success bg-opacity-10 text-success',
-                                                    'rejected' => 'bg-danger bg-opacity-10 text-danger',
-                                                ];
+                                            $approvalStatusIcon = [
+                                                'process' => 'bi-hourglass-split text-warning',
+                                                'accepted' => 'bi-check-circle text-success',
+                                                'rejected' => 'bi-x-circle text-danger',
+                                            ];
 
-                                                $approvalStatusIcon = [
-                                                    'process' => 'bi-hourglass-split text-warning',
-                                                    'accepted' => 'bi-check-circle text-success',
-                                                    'rejected' => 'bi-x-circle text-danger',
-                                                ];
-
-                                                $approvalStatusText = [
-                                                    'process' => 'Menunggu Persetujuan',
-                                                    'accepted' => 'Disetujui',
-                                                    'rejected' => 'Ditolak',
-                                                ];
-                                            @endphp
-                                            <span
-                                                class="badge {{ $approvalStatusClass[$forum_discussion->approval_status] }}"
-                                                style="font-size: 0.8rem; padding: 0.35em 0.8em;">
-                                                <i
-                                                    class="bi {{ $approvalStatusIcon[$forum_discussion->approval_status] }} me-1"></i>
-                                                {{ $approvalStatusText[$forum_discussion->approval_status] }}
-                                            </span>
-                                        </div>
+                                            $approvalStatusText = [
+                                                'process' => 'Menunggu Persetujuan',
+                                                'accepted' => 'Disetujui',
+                                                'rejected' => 'Ditolak',
+                                            ];
+                                        @endphp
+                                        <span
+                                            class="badge {{ $approvalStatusClass[$forum_discussion->approval_status] }}"
+                                            style="font-size: 0.8rem; padding: 0.35em 0.8em;">
+                                            <i
+                                                class="bi {{ $approvalStatusIcon[$forum_discussion->approval_status] }} me-1"></i>
+                                            {{ $approvalStatusText[$forum_discussion->approval_status] }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Discussion Content --}}
                             <div class="mb-3">
-                                <div class="gap-3 d-flex align-items-center">
-                                    <h5 class="m-0 card-title">{{ $forum_discussion->title }}</h5>
-                                    <span class="gap-1 badge bg-light text-primary d-flex align-items-center">
-                                        {{-- <i class="bi bi-tag text-primary"></i> --}}
+                                <div class="flex-row gap-2 d-flex">
+                                    <h5 class="m-0 mb-2 card-title" style="word-wrap: break-word; word-break: break-word;">
+                                        {{ $forum_discussion->title }}
+                                    </h5>
+                                    <span class="gap-1 badge bg-light text-primary d-inline-flex align-items-center align-self-start">
                                         {{ $forum_discussion->forum_category->name }}
                                     </span>
                                 </div>
@@ -88,17 +89,19 @@
                                     {{ $forum_discussion->short_description }}
                                 </p>
 
-                                @foreach ($forum_discussion->indikators as $indikator)
-                                    <span class="gap-1 badge bg-light text-muted align-items-center">
-                                        <i class="bi bi-link-45deg text-muted"></i>
-                                        {{ $indikator->name }}
-                                    </span>
-                                @endforeach
+                                <div class="flex-wrap gap-1 d-flex">
+                                    @foreach ($forum_discussion->indikators as $indikator)
+                                        <span class="gap-1 lh-sm align-items-center badge bg-light text-wrap text-start text-muted">
+                                            <i class="bi bi-link-45deg text-muted"></i>
+                                            {{ $indikator->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
                             </div>
 
 
                             {{-- Discussion Footer --}}
-                            <div class="pt-3 d-flex justify-content-between align-items-center border-top">
+                            <div class="flex-wrap gap-3 pt-3 d-flex justify-content-between align-items-center border-top">
                                 <div class="text-muted small">
                                     <i class="bi bi-chat-dots me-1"></i>
                                     {{ $forum_discussion->responses_count ?? 0 }} Tanggapan
