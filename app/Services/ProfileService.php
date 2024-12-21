@@ -38,6 +38,9 @@ class ProfileService
             'email' => $data['email'],
             'avatar' => $fileName
         ]);
+
+        session()->put('user_informations.username', $data['username']);
+        session()->put('user_informations.email', $data['email']);
         
         return $user;
     }
@@ -61,12 +64,20 @@ class ProfileService
     public function changePassword(array $data, int $id) {
         $user = User::findOrFail($id);
 
-        if (Hash::check($data['old_password'], $user->password)) {
-            $user->update([
-                'password' => Hash::make($data['new_password'])
-            ]);
+        if (!Hash::check($data['old_password'], $user->password)) {
+            throw new \Exception('Password lama salah!');
         }
-
+    
+        // Cegah penggunaan password baru yang sama dengan password lama
+        if ($data['old_password'] === $data['new_password']) {
+            throw new \Exception('Password baru tidak boleh sama dengan password lama!');
+        }
+    
+        // Update password
+        $user->update([
+            'password' => Hash::make($data['new_password']),
+        ]);
+    
         return $user;
     }
 }

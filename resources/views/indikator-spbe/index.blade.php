@@ -37,7 +37,9 @@
                         @foreach ($indikators as $indikator)
                             <tr>
                                 <td class="text-center">
-                                    @if ($indikator->status === 'active')
+                                    @if (
+                                        $indikator->status === 'active' ||
+                                            (session('user_informations.role') === 'super-admin' || session('user_informations.role') === 'manajer-konten'))
                                         <i class="cursor-pointer bi bi-eye fs-3 text-info"
                                             onclick="showIndikatorDetail({{ $indikator->id }})">
                                             <span class="path1"></span>
@@ -47,7 +49,7 @@
                                         <span class="text-muted">-</span>
                                     @endif
                                 </td>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ ($indikators->currentPage() - 1) * $indikators->perPage() + $loop->iteration }}</td>
                                 <td>{{ $indikator->name }}</td>
                                 <td>{!! Str::limit(strip_tags($indikator->explanation), 100, '...') !!}</td>
                                 <td>{{ $indikator->criteria }}</td>
@@ -161,13 +163,11 @@
         }
 
         function showIndikatorDetail(id) {
-            console.log('idb', id)
             $.ajax({
                 url: '{{ route('indikator-spbe.show', ':id') }}'.replace(':id', id),
                 method: 'GET',
                 success: function(data) {
                     indikatorData = data;
-                    console.log('Indikator Data:', data.indikator.explanation); // Tambahkan logging ini
 
                     $('#detailName').text(data.indikator.name);
                     $('#detailPersonInCharge').text(data.indikator.person_in_charge);
@@ -185,6 +185,22 @@
                     } else {
                         $('#detailDocumentation').hide();
                     }
+
+                    // Reset and update the article select options
+                    $('#articlesSelectAdd').empty();
+                    data.availableArticles.forEach(function(article) {
+                        $('#articlesSelectAdd').append(new Option(article.title, article.id));
+                    });
+
+                    // Reset and update the forum select options
+                    $('#forumsSelectAdd').empty();
+                    data.availableForums.forEach(function(forum) {
+                        $('#forumsSelectAdd').append(new Option(forum.title, forum.id));
+                    });
+
+                    // Refresh Select2 if you're using it
+                    $('#articlesSelectAdd').trigger('change');
+                    $('#forumsSelectAdd').trigger('change');
 
                     let articlesHtml = '';
                     data.indikator.articles.forEach(function(article) {
@@ -241,7 +257,7 @@
                 method: 'GET',
                 success: function(data) {
                     const actionUrl = '{{ route('indikator-spbe.update', ':id') }}'.replace(':id',
-                    indikatorId);
+                        indikatorId);
                     $('#editIndikatorForm').attr('action', actionUrl); // Mengganti action form
 
                     // Isi inputan nama
@@ -300,14 +316,12 @@
                     if (allArticles && allArticles.length > 0) {
                         const articleIds = allArticles.map(article => article.id);
                         $('#articlesSelectEdit').val(articleIds).trigger('change');
-                        console.log('Selected Articles:', $('#articlesSelectEdit').val());
                     }
 
                     // Set forum yang sudah terpilih
                     if (allForums && allForums.length > 0) {
                         const forumIds = allForums.map(forum => forum.id);
                         $('#forumsSelectEdit').val(forumIds).trigger('change');
-                        console.log('Selected Forums:', $('#forumsSelectEdit').val());
                     }
 
 
@@ -321,7 +335,6 @@
         }
 
         function deleteIndikator(indikatorData) {
-            console.log(indikatorData)
             if (indikatorData) {
                 Swal.fire({
                     title: 'Konfirmasi Hapus',
