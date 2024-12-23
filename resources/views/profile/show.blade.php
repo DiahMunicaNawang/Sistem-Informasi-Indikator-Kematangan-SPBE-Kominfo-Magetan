@@ -5,16 +5,6 @@
 @section('content')
     <!--begin::Basic info-->
     <div class="mb-5 card mb-xl-10">
-        <!--begin::Card header-->
-        <div class="border-0 cursor-pointer card-header" role="button" data-bs-toggle="collapse"
-            data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
-            <!--begin::Card title-->
-            <div class="m-0 card-title">
-                <h3 class="m-0 fw-bold">Profile Details</h3>
-            </div>
-            <!--end::Card title-->
-        </div>
-        <!--begin::Card header-->
 
         <!--begin::Content-->
         <div id="kt_account_settings_profile_details" class="collapse show">
@@ -137,9 +127,8 @@
 
                 <!--begin::Actions-->
                 <div class="py-6 card-footer d-flex justify-content-end px-9">
-                    <button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
-                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Save
-                        Changes</button>
+                    <button type="reset" class="btn btn-light btn-active-light-primary me-2">Batalkan</button>
+                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Simpan Perubahan</button>
                 </div>
                 <!--end::Actions-->
             </form>

@@ -20,6 +20,10 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
+        if ($id != session('user_informations.user_id')) {
+            return redirect()->route('profile.show', session('user_informations.user_id'))->with('warning', 'Tidak diizinkan mengakses halaman orang lain');
+        }
+
         $data = $this->profileService->showProfile($id);
         return view('profile.show', $data);
     }
