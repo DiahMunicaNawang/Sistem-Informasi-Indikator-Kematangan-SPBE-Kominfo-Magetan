@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
+use App\Services\Auth\RegisterUserService;
 
 class RegisteredUserController extends Controller
 {
-    //
+    protected $registerUserService;
+
+    public function __construct(RegisterUserService $registerUserService)
+    {
+        $this->registerUserService = $registerUserService;
+    }
+
     public function create()
     {
         return view('auth.register.register');
@@ -21,27 +22,14 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
         ]);
 
-        $user_role = Role::where('name', 'pengguna-umum')->first();
+        $this->registerUserService->registerUser($validated);
 
-        // Buat pengguna baru
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $user_role->id,
-        ]);
-
-        // Kirim email verifikasi
-        event(new Registered($user)); // Event untuk registrasi
-
-        Auth::login($user);
-        // Redirect ke halaman verifikasi
         return redirect()->route('verification.notice');
-}
+    }
 }

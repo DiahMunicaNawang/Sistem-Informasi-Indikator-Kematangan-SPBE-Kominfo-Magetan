@@ -5,11 +5,20 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
+
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function login()
     {
         return view('auth/login');
@@ -17,40 +26,21 @@ class AuthController extends Controller
 
     public function authenticating(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'login' => ['required'],
             'password' => ['required']
         ]);
 
-        $login = $credentials['login'];
-        $user = User::where('email', $login)
-            ->orWhere('username', $login)
-            ->first();
+        $result = $this->authService->validateLogin(
+            $request->login,
+            $request->password
+        );
 
-        if ($user && Auth::attempt(['id' => $user->id, 'password' => $credentials['password']])) {
-            if (!$user->hasVerifiedEmail()) {
-                return redirect('/login')->with('warning', 'Silakan verifikasi email Anda terlebih dahulu.');
-            }
-
-            $request->session()->regenerate();
-            $user_informations = Auth::user();
-
-            session([
-                'user_informations' => [
-                    'user_id' => $user_informations->id,
-                    'username' => $user_informations->username,
-                    'email' => $user_informations->email,
-                    'role' => $user_informations->role->name,
-                    'avatar' => $user_informations->avatar
-                ]
-            ]);
-
-            return redirect()->intended('/');
+        if (!$result['success']) {
+            return redirect('/login')->with('status', $result['message']);
         }
 
-        Session::flash('status', 'Username atau Password salah');
-        Session::flash('message', 'SALAH BRO');
-        return redirect('/login');
+        return redirect()->intended('/');
     }
 
     public function logout(Request $request)
