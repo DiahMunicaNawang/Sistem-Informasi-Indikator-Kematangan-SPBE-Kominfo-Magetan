@@ -77,9 +77,29 @@ class ArtikelController extends Controller
     }
 
     // update
-    public function update(StoreArticleRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validated();
+        // Validasi manual
+        $validatedData = $request->validate([
+            'judul' => 'required|max:255|min:4',
+            'ringkasan' => 'required|max:500',
+            'konten' => 'required',
+            'kategori' => 'required|exists:article_categories,id',
+            'image' => 'nullable|image|max:2048',
+            'indikator' => 'required',
+        ], [
+            'judul.required' => 'Judul artikel wajib diisi.',
+            'judul.max' => 'Judul artikel tidak boleh lebih dari 255 karakter.',
+            'judul.min' => 'Judul artikel harus lebih banyak lagi.',
+            'ringkasan.required' => 'Ringkasan artikel wajib diisi.',
+            'ringkasan.max' => 'Ringkasan artikel tidak boleh lebih dari 500 karakter.',
+            'konten.required' => 'Konten artikel wajib diisi.',
+            'kategori.required' => 'Kategori wajib dipilih.',
+            'kategori.exists' => 'Kategori yang dipilih tidak valid.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+            'indikator.required' => 'Indikator artikel wajib diisi.',
+        ]);
 
         // Panggil service untuk update artikel
         $this->articleService->updateArticle($validatedData, $id);

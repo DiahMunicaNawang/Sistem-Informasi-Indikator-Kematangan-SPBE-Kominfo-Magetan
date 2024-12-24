@@ -145,15 +145,18 @@
                         </div>
 
 
+                        <!-- Only show the button if the article is published and the user is not the article creator -->
                         @if (
-                            (!$userRating && auth()->id() != $artikel->user_id && session('user_informations.role') === 'super-admin') ||
-                                session('user_informations.role') === 'pengguna-terdaftar' ||
-                                (session('user_informations.role') === 'manajer-konten' &&
-                                    $artikel->article_status == 'published'
-                                    ))
+                            $artikel->article_status === 'published' && // Ensure article is published
+                                !$userRating && // Ensure user hasn't rated yet
+                                auth()->id() != $artikel->user_id && // Ensure user isn't the article creator
+                                (session('user_informations.role') === 'super-admin' ||
+                                    session('user_informations.role') === 'pengguna-terdaftar' ||
+                                    session('user_informations.role') === 'manajer-konten'))
                             <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
                                 Penilaian</button>
                         @endif
+
 
                     </div>
 
