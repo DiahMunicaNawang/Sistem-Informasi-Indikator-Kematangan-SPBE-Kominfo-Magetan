@@ -13,9 +13,11 @@ class RoleMenuSeeder extends Seeder
     {
         // Get Roles
         $super_admin = Role::where('name', 'super-admin')->first();
+        $admin_instansi = Role::where('name', 'admin-instansi')->first();
         $manajer_konten = Role::where('name', 'manajer-konten')->first();
         $pengguna_terdaftar = Role::where('name', 'pengguna-terdaftar')->first();
         $pengguna_umum = Role::where('name', 'pengguna-umum')->first();
+        $tenaga_ahli = Role::where('name', 'tenaga-ahli')->first();
 
         // Get Categories
         $home = Menu::where('name', 'Home')->first();
@@ -67,6 +69,24 @@ class RoleMenuSeeder extends Seeder
         ]);
 
         $pengguna_umum->menus()->attach([
+            $home->id,
+            $kelola_pelayanan->id,
+            $dashboard->id,
+            $indikator_spbe->id,
+            $article->id,
+            $forum->id,
+        ]);
+
+        $admin_instansi->menus()->attach([
+            $home->id,
+            $kelola_pelayanan->id,
+            $dashboard->id,
+            $indikator_spbe->id,
+            $article->id,
+            $forum->id,
+        ]);
+
+        $tenaga_ahli->menus()->attach([
             $home->id,
             $kelola_pelayanan->id,
             $dashboard->id,
