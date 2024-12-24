@@ -10,6 +10,16 @@
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <form class="form w-100" action="{{ route('password.resetEmail') }}" method="POST">
     @csrf
     <!--begin::Heading-->
