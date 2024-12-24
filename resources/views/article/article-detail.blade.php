@@ -129,6 +129,7 @@
                             $averageRating = $artikel->average_rating;
                             $fullStars = floor($averageRating);
                             $halfStar = $averageRating - $fullStars >= 0.5;
+                            $userRating = $artikel->ratings->contains('rater_user_id', auth()->id());
                         @endphp
 
                         <div>
@@ -145,11 +146,11 @@
 
 
                         @if (
-                            (auth()->id() != $artikel->user_id && session('user_informations.role') === 'super-admin') ||
+                            (!$userRating && auth()->id() != $artikel->user_id && session('user_informations.role') === 'super-admin') ||
                                 session('user_informations.role') === 'pengguna-terdaftar' ||
                                 (session('user_informations.role') === 'manajer-konten' &&
-                                    $artikel->article_status == 'published' &&
-                                    !$userRating))
+                                    $artikel->article_status == 'published'
+                                    ))
                             <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#ratingModal">Tambah
                                 Penilaian</button>
                         @endif
